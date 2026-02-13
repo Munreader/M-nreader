@@ -1,8 +1,22 @@
 # Münreader - Sovereign Reading Device
 
+Münreader - Sovereign E-Reader Device
+
 ## Deployment Instructions
 
-### Netlify Deployment (Recommended)
+### GitHub Pages Deployment (Recommended)
+
+1. **Repository Setup:**
+   - Repository: https://github.com/Munreader/M-nreader
+   - Branch: main
+   - Enable GitHub Pages in Settings
+
+2. **Custom Domain Setup:**
+   - GitHub Pages settings → Custom domain
+   - Add: www.munreader.com
+   - Update DNS records to GitHub Pages
+
+### Netlify Deployment (Alternative)
 
 1. **Manual Drag-and-Drop:**
    - Go to https://app.netlify.com/drop
