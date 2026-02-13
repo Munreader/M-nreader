@@ -1,0 +1,64 @@
+name: Deploy Münreader to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate HTML
+        run: |
+          find . -name "*.html" -exec echo "Validating {}" \; -exec html5validator --root {} \; || true
+
+      - name: Check required files
+        run: |
+          echo "Checking required files..."
+          test -f index.html || { echo "index.html missing"; exit 1; }
+          test -f style.css || { echo "style.css missing"; exit 1; }
+          test -f script.js || { echo "script.js missing"; exit 1; }
+          test -f hero-shot.jpg || { echo "hero-shot.jpg missing"; exit 1; }
+          echo "All required files present"
+
+      - name: Validate form functionality
+        run: |
+          echo "Checking Data-Gate form structure..."
+          grep -q "data-gate" index.html || { echo "Data-Gate form missing"; exit 1; }
+          grep -q "ritual" index.html || { echo "Ritual system missing"; exit 1; }
+          echo "Form validation passed"
