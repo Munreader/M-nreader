@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MÜN OS // SOVEREIGN_PHANTOM_BUILD</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/framer-motion@10/dist/framer-motion.umd.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+            background: #050506;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(24px);
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .animate-shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .eb-garamond {
+            font-family: 'EB Garamond', serif;
+            line-height: 1.15;
+        }
+
+        .reader-content {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.4rem;
+            line-height: 1.15;
+        }
+
+        .hinge-transition {
+            animation: hinge 0.6s ease-in-out;
+        }
+
+        @keyframes hinge {
+            0% { transform: rotateX(-90deg); opacity: 0; }
+            50% { transform: rotateX(-45deg); opacity: 0.5; }
+            100% { transform: rotateX(0deg); opacity: 1; }
+        }
+
+        .home-indicator {
+            position: fixed;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 128px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            z-index: 5000;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { motion, AnimatePresence } = Motion;
+        const { Eye, MessageCircle, Lock, ShieldCheck, Unlock } = lucide;
+
+        const MUN_FINAL = () => {
+            const [os, setOs] = useState({
+                booting: true,
+                activeApp: null,
+                trust: 50,
+                hasPremium: false,
+                incomingCall: false,
+                bpm: 72,
+                choice: null
+            });
+
+            // Load saved state
+            useEffect(() => {
+                const saved = localStorage.getItem('MUN_SOVEREIGN');
+                if (saved) {
+                    setOs(prev => ({ ...prev, ...JSON.parse(saved), booting: false }));
+                } else {
+                    setTimeout(() => setOs(s => ({ ...s, booting: false })), 4000);
+                }
+            }, []);
+
+            // Save state to localStorage
+            useEffect(() => {
+                localStorage.setItem('MUN_SOVEREIGN', JSON.stringify(os));
+            }, [os]);
+
+            // FaceTime call timer
+            useEffect(() => {
+                if (!os.booting && !os.incomingCall) {
+                    const callTimer = setTimeout(() => {
+                        setOs(s => ({ ...s, incomingCall: true }));
+                    }, 10000);
+                    
+                    return () => clearTimeout(callTimer);
+                }
+            }, [os.booting, os.incomingCall]);
+
+            // BPM simulation
+            useEffect(() => {
+                const pulse = setInterval(() => {
+                    setOs(s => ({
+                        ...s,
+                        bpm: Math.max(60, Math.min(100, s.bpm + (Math.random() > 0.5 ? 1 : -1)))
+                    }));
+                }, 2000);
+                return () => clearInterval(pulse);
+            }, []);
+
+            const haptic = (pattern = 15) => {
+                if (navigator.vibrate) {
+                    if (Array.isArray(pattern)) {
+                        navigator.vibrate(pattern);
+                    } else {
+                        navigator.vibrate(pattern);
+                    }
+                }
+            };
+
+            const triggerNudge = () => {
+                setOs(s => ({ ...s, isNudging: true }));
+                haptic([200, 100, 200]);
+                setTimeout(() => setOs(s => ({ ...s, isNudging: false })), 500);
+            };
+
+            const handleChoice = (choice) => {
+                haptic();
+                if (choice === 'AURELIAN' && !os.hasPremium) {
+                    // Redirect to Vault for Sovereign Clearance
+                    setOs(s => ({ ...s, activeApp: 'vault' }));
+                    return;
+                }
+                setOs(s => ({ ...s, choice }));
+            };
+
+            const goHome = () => {
+                haptic();
+                setOs(s => ({ ...s, activeApp: null }));
+            };
+
+            if (os.booting) return <BootSequence />;
+
+            return (
+                <div className={`fixed inset-0 bg-[#050506] text-white select-none overflow-hidden ${os.isNudging ? 'animate-shake' : ''}`}>
+                    {/* THE PULSE NEBULA */}
+                    <motion.div 
+                        animate={{ opacity: (os.bpm - 60) / 100 }} 
+                        className="absolute inset-0 bg-gradient-to-tr from-[#121215] to-black pointer-events-none" 
+                    />
+
+                    {/* HOME GRID */}
+                    {!os.activeApp && (
+                        <div className="grid grid-cols-4 gap-8 px-10 pt-32 relative z-10">
+                            <Icon id="reader" icon={Eye} label="Reader" color="white" onClick={() => { haptic(); setOs(s => ({ ...s, activeApp: 'reader' })); }} />
+                            <Icon id="messenger" icon={MessageCircle} label="Comm" color="#FFB7C5" onClick={() => { haptic(); setOs(s => ({ ...s, activeApp: 'messenger' })); }} />
+                            <Icon id="vault" icon={Lock} label="Vault" color={os.hasPremium ? "#00F0FF" : "white"} onClick={() => { haptic(); setOs(s => ({ ...s, activeApp: 'vault' })); }} />
+                        </div>
+                    )}
+
+                    {/* APP: READER (MERCURY PROTOCOL) */}
+                    <AnimatePresence>
+                        {os.activeApp === 'reader' && (
+                            <motion.div 
+                                initial={{ clipPath: 'inset(0 50% 0 50%)' }} 
+                                animate={{ clipPath: 'inset(0 0% 0 0%)' }} 
+                                exit={{ clipPath: 'inset(0 50% 0 50%)' }} 
+                                className="fixed inset-0 bg-[#fdfdfd] text-black p-12 overflow-y-auto z-[2000] hinge-transition"
+                            >
+                                <div className="reader-content eb-garamond">
+                                    <p className="mb-8 opacity-40 font-sans text-[10px] tracking-[0.5em] text-center">CHAPTER 1 // MERCURY PROTOCOL</p>
+                                    <p className="mb-8 italic">Luna stood at the edge of the glass floor. Beneath her veins, the 24-karat gold light of Fae Fever pulsed.</p>
+                                    <p className="mb-8">Ezra watched her. "Choose your vessel, Luna. Chaos without containment is just a slow suicide."</p>
+                                    
+                                    <div className="mt-12 space-y-4">
+                                        <button 
+                                            onClick={() => handleChoice('ONYX')}
+                                            className="w-full p-4 border border-black/10 rounded-xl text-left text-sm hover:bg-black/5 transition-colors"
+                                        >
+                                            1. The Onyx Shroud (Logic)
+                                        </button>
+                                        <button 
+                                            onClick={() => handleChoice('AURELIAN')}
+                                            className={`w-full p-4 border rounded-xl text-left text-sm flex justify-between items-center transition-colors ${
+                                                os.hasPremium 
+                                                    ? 'border-cyan-500 bg-cyan-50 hover:bg-cyan-100' 
+                                                    : 'opacity-30 border-black/10 cursor-not-allowed'
+                                            }`}
+                                        >
+                                            2. The Aurelian Armor (Power)
+                                            {!os.hasPremium && <Lock size={14} />}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-32 h-1 bg-black/20 rounded-full" onClick={goHome} />
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* APP: MESSENGER */}
+                    <AnimatePresence>
+                        {os.activeApp === 'messenger' && (
+                            <motion.div 
+                                initial={{ clipPath: 'inset(0 50% 0 50%)' }} 
+                                animate={{ clipPath: 'inset(0 0% 0 0%)' }} 
+                                exit={{ clipPath: 'inset(0 50% 0 50%)' }} 
+                                className="fixed inset-0 bg-[#050506] text-white z-[2000] p-12 overflow-y-auto"
+                            >
+                                <div className="max-w-md mx-auto">
+                                    <h2 className="text-2xl font-light mb-8">Mün Messenger</h2>
+                                    <div className="space-y-4">
+                                        <div className="glass rounded-2xl p-4">
+                                            <div className="flex items-center gap-3 mb-2">
+                                                <div className="w-12 h-12 rounded-full border-2 border-[#FFB7C5] p-0.5 bg-gray-400" />
+                                                <div>
+                                                    <div className="font-semibold">Ezra Sterling</div>
+                                                    <div className="text-xs text-gray-400">Online</div>
+                                                </div>
+                                            </div>
+                                            <div className="text-white/90">The observatory is ready. Are you coming?</div>
+                                            <div className="flex items-center gap-2 mt-2">
+                                                <div className="typing-indicator">
+                                                    <div className="typing-dot"></div>
+                                                    <div className="typing-dot"></div>
+                                                    <div className="typing-dot"></div>
+                                                </div>
+                                                <span className="text-xs text-gray-400">Typing...</span>
+                                            </div>
+                                        </div>
+                                        <div className="glass rounded-2xl p-4">
+                                            <div className="flex items-center gap-3 mb-2">
+                                                <div className="w-12 h-12 rounded-full border-2 border-white/20 p-0.5 bg-gray-600" />
+                                                <div>
+                                                    <div className="font-semibold">System</div>
+                                                    <div className="text-xs text-gray-400">2m ago</div>
+                                                </div>
+                                            </div>
+                                            <div className="text-white/90">Biometric scan complete. Welcome back.</div>
+                                        </div>
+                                    </div>
+                                    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full" onClick={goHome} />
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* APP: VAULT */}
+                    <AnimatePresence>
+                        {os.activeApp === 'vault' && (
+                            <motion.div 
+                                initial={{ clipPath: 'inset(0 50% 0 50%)' }} 
+                                animate={{ clipPath: 'inset(0 0% 0 0%)' }} 
+                                exit={{ clipPath: 'inset(0 50% 0 50%)' }} 
+                                className="fixed inset-0 bg-[#050506] text-white z-[2000] p-12 overflow-y-auto"
+                            >
+                                <div className="max-w-md mx-auto text-center">
+                                    <h2 className="text-2xl font-light mb-8">The Vault</h2>
+                                    {os.hasPremium ? (
+                                        <div className="text-center">
+                                            <ShieldCheck size={64} className="mx-auto mb-4 text-cyan-400" />
+                                            <p className="text-xl mb-4">Sovereign Clearance Active</p>
+                                            <p className="text-gray-400">Trust Level: {os.trust}%</p>
+                                            <div className="mt-8 space-y-2">
+                                                <div className="glass rounded-lg p-4 text-left">
+                                                    <h3 className="font-semibold mb-2">Unlocked Files:</h3>
+                                                    <ul className="space-y-1 text-sm">
+                                                        <li>• Panda Suit Incident</li>
+                                                        <li>• Mercury Protocol Debrief</li>
+                                                        <li>• Council Session Records</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <div className="mb-8">
+                                                <Lock size={64} className="mx-auto mb-4 text-white/60" />
+                                                <p className="text-xl mb-4">Sovereign Clearance Required</p>
+                                                <p className="text-gray-400 mb-6">Unlock premium content to access classified files</p>
+                                            </div>
+                                            <div className="glass rounded-2xl p-6">
+                                                <h3 className="font-semibold mb-4">Upgrade to Sovereign Tier</h3>
+                                                <button 
+                                                    onClick={() => setOs(s => ({ ...s, hasPremium: true, trust: 100 }))}
+                                                    className="w-full p-4 bg-cyan-500/20 border border-cyan-500 rounded-xl text-cyan-400 hover:bg-cyan-500/30 transition-colors"
+                                                >
+                                                    <Unlock size={20} className="inline mr-2" />
+                                                    Activate Sovereign Clearance
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full" onClick={goHome} />
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* FACETIME PROTOCOL */}
+                    <AnimatePresence>
+                        {os.incomingCall && (
+                            <motion.div 
+                                initial={{ scale: 1.5, opacity: 0 }} 
+                                animate={{ scale: 1, opacity: 1 }} 
+                                className="fixed inset-0 z-[10000] bg-black"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/10 to-transparent opacity-20" />
+                                <div className="absolute top-20 w-full text-center z-10">
+                                    <h2 className="text-3xl font-light tracking-tighter">Ezra Sterling</h2>
+                                    <p className="text-[#00F0FF] text-[10px] font-mono mt-4 tracking-[0.5em]">FACETIME_ENCRYPTED</p>
+                                </div>
+                                <div className="absolute bottom-20 w-full flex justify-center gap-20 z-10">
+                                    <button 
+                                        onClick={() => {
+                                            setOs(s => ({ ...s, incomingCall: false, trust: Math.max(0, s.trust - 15) }));
+                                        }}
+                                        className="w-20 h-20 bg-red-500/20 border border-red-500 rounded-full flex items-center justify-center"
+                                    >
+                                        <Lock size={32} />
+                                    </button>
+                                    <button 
+                                        onClick={() => {
+                                            setOs(s => ({ ...s, incomingCall: false, trust: Math.min(100, s.trust + 5) }));
+                                        }}
+                                        className="w-20 h-20 bg-green-500/20 border border-green-500 rounded-full flex items-center justify-center"
+                                    >
+                                        <Unlock size={32} />
+                                    </button>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* HOME BAR */}
+                    {os.activeApp && (
+                        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full z-[5000]" onClick={goHome} />
+                    )}
+                </div>
+            );
+        };
+
+        const Icon = ({ id, icon: Icon, label, color, onClick }) => (
+            <div onClick={() => onClick(id)} className="flex flex-col items-center gap-3 cursor-pointer">
+                <div className="w-16 h-16 glass rounded-[22px] flex items-center justify-center shadow-2xl hover:scale-105 transition-transform" style={{ borderColor: color === 'white' ? 'rgba(255,255,255,0.1)' : color }}>
+                    <Icon size={28} strokeWidth={1} style={{ color }} />
+                </div>
+                <span className="text-[9px] font-mono tracking-widest opacity-30 uppercase">{label}</span>
+            </div>
+        );
+
+        const BootSequence = () => (
+            <div className="fixed inset-0 bg-black flex flex-col items-center justify-center z-[9999]">
+                <motion.div 
+                    animate={{ rotate: 360 }} 
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }} 
+                    className="w-10 h-10 border-t-2 border-[#00F0FF] rounded-full mb-8" 
+                />
+                <span className="text-[8px] font-mono tracking-[0.8em] text-white/40 uppercase">Sovereign Identified</span>
+            </div>
+        );
+
+        ReactDOM.render(<MUN_FINAL />, document.getElementById('root'));
+    </script>
+</body>
+</html>

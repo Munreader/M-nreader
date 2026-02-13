@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>MÜN_SOVEREIGN_OS - Ritual Experience</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Space+Grotesk:wght@100;200;300;400;500;600;700&family=Orbitron:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --obsidian: #0a0a0f;
+            --moonstone: #f8f8ff;
+            --celestial: #e6e6fa;
+            --aurora: #a5f3fc;
+            --nebula: #c084fc;
+            --cosmic: #1e1b4b;
+            --stardust: rgba(248, 248, 255, 0.08);
+            --lunar: rgba(230, 230, 250, 0.12);
+            --aurora-glow: rgba(165, 243, 252, 0.15);
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a5568;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html { 
+            margin: 0; padding: 0; height: 100vh; overflow: hidden; 
+            background: var(--obsidian); 
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.7;
+            font-size: 18px;
+        }
+
+        /* --- LUXURIOUS CELESTIAL WALLPAPER --- */
+        .wallpaper {
+            position: fixed; inset: 0; z-index: -1;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 375 812"><defs><radialGradient id="cosmic-bg" cx="50%" cy="50%" r="80%" fx="50%" fy="50%"><stop offset="0%" style="stop-color:%231e1b4b;stop-opacity:1" /><stop offset="40%" style="stop-color:%2316163b;stop-opacity:1" /><stop offset="100%" style="stop-color:%230a0a0f;stop-opacity:1" /></radialGradient><radialGradient id="nebula-cloud" cx="25%" cy="25%" r="35%" fx="25%" fy="25%"><stop offset="0%" style="stop-color:%238b5cf6;stop-opacity:0.4" /><stop offset="50%" style="stop-color:%236366f1;stop-opacity:0.2" /><stop offset="100%" style="stop-color:%234f46e5;stop-opacity:0.05" /></radialGradient><radialGradient id="aurora-glow" cx="75%" cy="75%" r="30%" fx="75%" fy="75%"><stop offset="0%" style="stop-color:%237dd3fc;stop-opacity:0.3" /><stop offset="50%" style="stop-color:%230ea5e9;stop-opacity:0.15" /><stop offset="100%" style="stop-color:%230284c7;stop-opacity:0.05" /></radialGradient><filter id="glow"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><rect width="375" height="812" fill="url(%23cosmic-bg)"/><ellipse cx="100" cy="200" rx="120" ry="60" fill="url(%23nebula-cloud)" opacity="0.6" transform="rotate(-20 100 200)"/><ellipse cx="280" cy="500" rx="100" ry="50" fill="url(%23aurora-glow)" opacity="0.5" transform="rotate(30 280 500)"/><circle cx="80" cy="120" r="2" fill="%23f8f8ff" opacity="0.9" filter="url(%23glow)"/><circle cx="200" cy="180" r="1.5" fill="%23e6e6fa" opacity="0.8" filter="url(%23glow)"/><circle cx="320" cy="150" r="2.5" fill="%23f8f8ff" opacity="0.7" filter="url(%23glow)"/><circle cx="150" cy="280" r="1" fill="%23a5f3fc" opacity="0.9" filter="url(%23glow)"/><circle cx="250" cy="320" r="1.8" fill="%23e6e6fa" opacity="0.6" filter="url(%23glow)"/><circle cx="60" cy="400" r="2" fill="%23f8f8ff" opacity="0.8" filter="url(%23glow)"/><circle cx="300" cy="380" r="1.2" fill="%23a5f3fc" opacity="0.7" filter="url(%23glow)"/><circle cx="180" cy="480" r="1.5" fill="%23e6e6fa" opacity="0.9" filter="url(%23glow)"/><circle cx="120" cy="550" r="2.2" fill="%23f8f8ff" opacity="0.6" filter="url(%23glow)"/><circle cx="280" cy="600" r="1" fill="%23a5f3fc" opacity="0.8" filter="url(%23glow)"/><circle cx="90" cy="680" r="1.8" fill="%23e6e6fa" opacity="0.7" filter="url(%23glow)"/><circle cx="310" cy="700" r="2" fill="%23f8f8ff" opacity="0.9" filter="url(%23glow)"/><circle cx="160" cy="750" r="1.3" fill="%23a5f3fc" opacity="0.6" filter="url(%23glow)"/></svg>') center/cover;
+            filter: blur(0.3px);
+        }
+
+        /* --- RITUAL CONTAINERS --- */
+        .mün-ritual {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            pointer-events: none;
+        }
+
+        .container.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* --- NOISE SCREEN --- */
+        #noise-screen {
+            background: var(--obsidian);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .noise-content {
+            text-align: center;
+            animation: noise-flicker 0.1s infinite;
+        }
+
+        .noise-item {
+            font-size: 2.5rem;
+            font-weight: 400;
+            letter-spacing: 0.4em;
+            color: var(--aurora);
+            margin: 1.5rem 0;
+            text-transform: uppercase;
+            text-shadow: 0 0 30px rgba(165, 243, 252, 0.6);
+            font-style: italic;
+        }
+
+        @keyframes noise-flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* --- THRESHOLD SCREEN --- */
+        #threshold {
+            background: radial-gradient(circle at center, var(--cosmic) 0%, var(--obsidian) 100%);
+        }
+
+        .lunar-pulse {
+            width: 120px;
+            height: 120px;
+            border: 2px solid var(--aurora);
+            border-radius: 50%;
+            animation: lunar-pulse 2s ease-in-out infinite;
+            box-shadow: 0 0 40px rgba(125, 211, 252, 0.6);
+        }
+
+        @keyframes lunar-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        /* --- READING SCREEN --- */
+        #reading-screen {
+            background: linear-gradient(135deg, var(--cosmic) 0%, var(--obsidian) 100%);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .reading-content {
+            text-align: center;
+            max-width: 700px;
+            padding: 3rem;
+        }
+
+        .reading-text {
+            font-size: 3rem;
+            font-style: italic;
+            font-weight: 300;
+            line-height: 1.5;
+            color: var(--text-primary);
+            text-shadow: 0 0 25px rgba(165, 243, 252, 0.4);
+            letter-spacing: 0.08em;
+            margin-bottom: 2rem;
+        }
+
+        /* --- AFTERGLOW SCREEN --- */
+        #afterglow {
+            background: radial-gradient(circle at center, var(--nebula) 0%, var(--obsidian) 100%);
+        }
+
+        .crescent-afterglow {
+            font-size: 8rem;
+            animation: crescent-glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes crescent-glow {
+            from { text-shadow: 0 0 40px rgba(139, 92, 246, 0.8); }
+            to { text-shadow: 0 0 60px rgba(125, 211, 252, 0.8); }
+        }
+
+        /* --- NEUTRAL INTERFACE --- */
+        .neutral-interface {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--obsidian);
+            z-index: 50;
+        }
+
+        .content {
+            text-align: center;
+            max-width: 900px;
+            padding: 3rem;
+        }
+
+        .content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 30px rgba(165, 243, 252, 0.4);
+            font-style: italic;
+        }
+
+        .content p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            letter-spacing: 0.03em;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* --- HERO SHOT --- */
+        .hero-shot {
+            position: relative;
+            margin: 2rem 0;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(165, 243, 252, 0.2);
+            background: var(--stardust);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--lunar);
+        }
+
+        .hero-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* --- CONTROL BUTTONS --- */
+        .control-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 4rem;
+        }
+
+        .ritual-btn, .access-btn {
+            padding: 1.2rem 2.5rem;
+            border: 2px solid var(--aurora);
+            background: var(--stardust);
+            color: var(--text-primary);
+            border-radius: 50px;
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(20px);
+            text-transform: uppercase;
+            font-style: italic;
+            font-size: 1.1rem;
+        }
+
+        .ritual-btn:hover, .access-btn:hover {
+            background: var(--aurora-glow);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(165, 243, 252, 0.5);
+            color: var(--obsidian);
+        }
+
+        /* --- DATA GATE FORM --- */
+        .data-gate-form {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--stardust);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--lunar);
+            border-radius: 20px;
+            padding: 2rem;
+            z-index: 1000;
+            display: none;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .data-gate-form.active {
+            display: block;
+        }
+
+        .form-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--aurora);
+            margin-bottom: 2rem;
+            text-align: center;
+            letter-spacing: 0.12em;
+            font-weight: 600;
+            font-style: italic;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            display: block;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+            letter-spacing: 0.08em;
+            font-weight: 300;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            background: var(--obsidian);
+            border: 1px solid var(--lunar);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
+            font-weight: 300;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--aurora);
+            box-shadow: 0 0 20px rgba(165, 243, 252, 0.3);
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--aurora) 0%, var(--nebula) 100%);
+            color: var(--obsidian);
+            border: none;
+            border-radius: 12px;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-transform: uppercase;
+            font-style: italic;
+            font-size: 1.1rem;
+        }
+
+        .form-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(165, 243, 252, 0.5);
+        }
+
+        .close-form {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.8rem;
+            cursor: pointer;
+            font-family: 'Playfair Display', serif;
+            transition: color 0.3s ease;
+        }
+
+        .close-form:hover {
+            color: var(--aurora);
+        }
+
+        /* --- STORY NAVIGATION --- */
+        .story-chapter {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: var(--stardust);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--lunar);
+            border-radius: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .chapter-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--aurora);
+            margin-bottom: 2rem;
+            letter-spacing: 0.15em;
+            text-shadow: 0 0 20px rgba(165, 243, 252, 0.5);
+            font-weight: 600;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .story-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-style: italic;
+            font-weight: 300;
+            text-align: left;
+        }
+
+        .story-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            gap: 1.5rem;
+        }
+
+        .story-btn {
+            padding: 1rem 2rem;
+            background: var(--stardust);
+            border: 1px solid var(--lunar);
+            color: var(--text-primary);
+            border-radius: 30px;
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(15px);
+            font-style: italic;
+            font-size: 1rem;
+        }
+
+        .story-btn:hover {
+            background: var(--aurora-glow);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(165, 243, 252, 0.4);
+            color: var(--obsidian);
+            border-color: var(--aurora);
+        }
+        @media (max-width: 768px) {
+            .content h1 {
+                font-size: 3rem;
+            }
+            
+            .reading-text {
+                font-size: 2rem;
+            }
+            
+            .control-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CELESTIAL WALLPAPER -->
+    <div class="wallpaper"></div>
+
+    <!-- FOUR CONTAINER RITUAL SYSTEM -->
+    <div class="mün-ritual">
+        <div id="noise-screen" class="container">
+            <div class="noise-content">
+                <div class="noise-item">NOISE</div>
+                <div class="noise-item">DISTRACTION</div>
+                <div class="noise-item">NOTIFICATIONS</div>
+                <div class="noise-item">URGENCY</div>
+            </div>
+        </div>
+        
+        <div id="threshold" class="container">
+            <div class="lunar-pulse"></div>
+        </div>
+        
+        <div id="reading-screen" class="container">
+            <div class="reading-content">
+                <p class="reading-text">The moon does not rush to be full.</p>
+                <div class="story-chapter">
+                    <h3 class="chapter-title">Chapter One: The Observatory</h3>
+                    <p class="story-text">The Observatory was never meant to be a home. It was a fortress designed to isolate the genius of Mün.</p>
+                    <p class="story-text">2:14 AM. The storm outside clawed at the reinforced glass, but inside, the silence was heavier. Ezra Sterling sat at the head of the strategy table, his silhouette a sharp blade against the blue glow of the server racks.</p>
+                    <p class="story-text">Luna stood three feet behind him. He could feel the cadence of her breath—it was the only variable he couldn't control.</p>
+                    <p class="story-text">"You're breathing too loudly, Ezra," she whispered. The sound was a velvet strike.</p>
+                    <p class="story-text">Ezra's knuckles whitened. He didn't turn. "The frequency is fine, Luna. It's the variable in the room I can't account for."</p>
+                </div>
+                <div class="story-navigation">
+                    <button class="story-btn" onclick="previousChapter()">← Previous</button>
+                    <button class="story-btn" onclick="nextChapter()">Next →</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="afterglow" class="container">
+            <div class="crescent-afterglow">🌙</div>
+        </div>
+    </div>
+    
+    <!-- NEUTRAL INTERFACE -->
+    <div class="neutral-interface" id="neutralInterface">
+        <div class="content">
+            <h1>MÜN</h1>
+            <p>Explore the sovereign ritual experience.</p>
+            
+            <!-- Hero Shot Section -->
+            <div class="hero-shot">
+                <img src="hero-shot.jpg" alt="Münreader - Sovereign Ritual Experience" class="hero-image">
+            </div>
+            
+            <!-- Control Buttons -->
+            <div class="control-buttons">
+                <button class="ritual-btn" id="startRitual">BEGIN RITUAL</button>
+                <button class="access-btn" id="requestAccess">REQUEST ACCESS</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DATA GATE FORM -->
+    <div class="data-gate-form" id="dataGateForm">
+        <button class="close-form" id="closeForm">&times;</button>
+        <h3 class="form-title">SOVEREIGN ACCESS</h3>
+        <form id="accessForm">
+            <div class="form-group">
+                <label class="form-label" for="name">Name</label>
+                <input type="text" id="name" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="email">Email</label>
+                <input type="email" id="email" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="intention">Intention</label>
+                <input type="text" id="intention" class="form-input" placeholder="Why do you seek access?">
+            </div>
+            <button type="submit" class="form-submit">TRANSMIT REQUEST</button>
+        </form>
+    </div>
+
+    <script>
+        // DATABASE STORAGE
+        class Database {
+            constructor() {
+                this.storage = localStorage.getItem('munDatabase') ? JSON.parse(localStorage.getItem('munDatabase')) : { access: [], rituals: [] };
+            }
+
+            saveAccess(data) {
+                this.storage.access.push({ ...data, timestamp: new Date().toISOString() });
+                this.save();
+                return true;
+            }
+
+            saveRitual(ritual) {
+                this.storage.rituals.push({ ritual, timestamp: new Date().toISOString() });
+                this.save();
+                return true;
+            }
+
+            save() {
+                localStorage.setItem('munDatabase', JSON.stringify(this.storage));
+            }
+
+            getAccess() { return this.storage.access; }
+            getRituals() { return this.storage.rituals; }
+        }
+
+        const db = new Database();
+
+        // MÜN RITUAL SYSTEM
+        class MunPortal {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                // Get containers
+                this.noiseScreen = document.getElementById('noise-screen');
+                this.threshold = document.getElementById('threshold');
+                this.readingScreen = document.getElementById('reading-screen');
+                this.afterglow = document.getElementById('afterglow');
+                this.neutralInterface = document.getElementById('neutralInterface');
+                this.dataGateForm = document.getElementById('dataGateForm');
+                
+                // Get buttons
+                this.startButton = document.getElementById('startRitual');
+                this.requestAccessButton = document.getElementById('requestAccess');
+                this.closeFormButton = document.getElementById('closeForm');
+                this.accessForm = document.getElementById('accessForm');
+                
+                // Event listeners
+                this.startButton.addEventListener('click', () => this.beginRitual());
+                this.requestAccessButton.addEventListener('click', () => this.showDataGateForm());
+                this.closeFormButton.addEventListener('click', () => this.hideDataGateForm());
+                this.accessForm.addEventListener('submit', (e) => this.handleAccessSubmit(e));
+                
+                // Initialize all containers as hidden
+                this.hideAllContainers();
+            }
+
+            hideAllContainers() {
+                this.noiseScreen.classList.remove('active');
+                this.threshold.classList.remove('active');
+                this.readingScreen.classList.remove('active');
+                this.afterglow.classList.remove('active');
+            }
+
+            showContainer(container) {
+                this.hideAllContainers();
+                this.neutralInterface.style.display = 'none';
+                container.classList.add('active');
+            }
+
+            beginRitual() {
+                db.saveRitual('ritual_started');
+                
+                this.showContainer(this.noiseScreen);
+                setTimeout(() => {
+                    this.showContainer(this.threshold);
+                    setTimeout(() => {
+                        this.showContainer(this.readingScreen);
+                        setTimeout(() => {
+                            this.showContainer(this.afterglow);
+                            setTimeout(() => {
+                                this.hideAllContainers();
+                                this.neutralInterface.style.display = 'flex';
+                                db.saveRitual('ritual_completed');
+                            }, 3000);
+                        }, 4000);
+                    }, 3000);
+                }, 2000);
+            }
+
+            showDataGateForm() {
+                this.dataGateForm.classList.add('active');
+            }
+
+            hideDataGateForm() {
+                this.dataGateForm.classList.remove('active');
+            }
+
+            handleAccessSubmit(e) {
+                e.preventDefault();
+                
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    intention: document.getElementById('intention').value
+                };
+
+                if (db.saveAccess(formData)) {
+                    alert('Sovereign access request transmitted successfully.');
+                    this.hideDataGateForm();
+                    this.accessForm.reset();
+                }
+            }
+        }
+
+        // STORY NAVIGATION
+        let currentChapter = 1;
+        const chapters = [
+            {
+                title: "Chapter One: The Sovereign's Observatory",
+                content: [
+                    "The Observatory was never meant to be a home. It was a fortress designed to isolate the genius of Mün.",
+                    "2:14 AM. The storm outside clawed at the reinforced glass, but inside, the silence was heavier. Ezra Sterling sat at the head of the strategy table, his silhouette a sharp blade against the blue glow of the server racks.",
+                    "Luna stood three feet behind him. He could feel the cadence of her breath—it was the only variable he couldn't control.",
+                    "\"You're breathing too loudly, Ezra,\" she whispered. The sound was a velvet strike against the sterile air.",
+                    "Ezra's knuckles whitened. He didn't turn. \"The frequency is fine, Luna. It's the variable in the room I can't account for.\"",
+                    "Beyond the glass, lightning illuminated the quantum arrays, each pulse a reminder of the power they commanded—and the isolation they had chosen."
+                ]
+            },
+            {
+                title: "Chapter Two: The Breach Protocol",
+                content: [
+                    "The first alert came at 2:17 AM. A single red line of text on the main monitor: BREACH DETECTED.",
+                    "Ezra's fingers flew across the keyboard, his movements precise and practiced. Luna watched in silence, her presence both comforting and unnerving.",
+                    "\"External or internal?\" she asked, her voice barely above a whisper.",
+                    "\"Internal,\" Ezra replied. \"Always internal.\"",
+                    "The system logs scrolled like digital water, each line a testament to the fortress they had built—and the vulnerability that had found its way inside.",
+                    "\"They learned our patterns,\" Luna said, her hand resting on the biometric scanner. \"Someone studied us.\""
+                ]
+            },
+            {
+                title: "Chapter Three: The Variable",
+                content: [
+                    "By 3:00 AM, the storm had intensified. Rain lashed against the observatory dome like a thousand tiny fingers.",
+                    "\"It's the biometric scanner,\" Ezra said suddenly. \"That's the variable.\"",
+                    "Luna stepped closer, her breath now a deliberate rhythm. Controlled. \"The scanner was calibrated yesterday.\"",
+                    "\"Exactly,\" Ezra whispered. \"Twenty-four hours for someone to learn its patterns. To become the variable.\"",
+                    "In the reflection of the dark monitor, they both saw it—a shadow that moved just slightly out of sync with their own movements.",
+                    "\"The moon does not rush to be full,\" Luna said, her voice steady. \"Neither do we.\""
+                ]
+            },
+            {
+                title: "Chapter Four: The Sovereign's Choice",
+                content: [
+                    "The breach had been elegant. Not brute force, but understanding. Someone had learned to speak their language.",
+                    "Ezra stood before the main console, his reflection distorted in the dark screen. \"They didn't break in. They were invited.\"",
+                    "Luna's fingers danced across her own console, pulling up security logs that shouldn't exist. \"The access codes... they're using sovereign protocols.\"",
+                    "\"Only three people know those protocols,\" Ezra said, his voice barely audible.",
+                    "\"And one of them is standing in this room,\" Luna replied, her eyes never leaving her screen.",
+                    "The silence that followed was heavier than any storm. The observatory had been designed to isolate genius—but it had also been designed to isolate threats.",
+                    "They had built the perfect prison. And someone had just shown them how to escape it."
+                ]
+            },
+            {
+                title: "Chapter Five: The Lunar Protocol",
+                content: [
+                    "4:30 AM. The storm had passed, leaving behind a clarity that felt more dangerous than the chaos.",
+                    "\"The lunar protocol,\" Ezra said finally. \"It's time.\"",
+                    "Luna nodded, her movements fluid as she initiated the sequence. \"The moon does not rush to be full.\"",
+                    "The observatory transformed around them. Walls became transparent, revealing the quantum arrays beneath. Servers hummed with new purpose.",
+                    "\"They're not just watching anymore,\" Luna whispered. \"They're learning.\"",
+                    "Ezra approached the central console, his hand hovering over the final authorization key. \"Then it's time we taught them something new.\"",
+                    "The key descended. The systems responded. And in the heart of the fortress built to isolate, connection began to form.",
+                    "The moon was full. And the sovereign had finally understood: isolation was never the answer."
+                ]
+            }
+        ];
+
+        function updateChapter() {
+            const chapter = chapters[currentChapter - 1];
+            const chapterElement = document.querySelector('.story-chapter');
+            
+            chapterElement.innerHTML = `
+                <h3 class="chapter-title">${chapter.title}</h3>
+                ${chapter.content.map(paragraph => `<p class="story-text">${paragraph}</p>`).join('')}
+            `;
+            
+            db.saveRitual(`chapter_${currentChapter}_read`);
+        }
+
+        function nextChapter() {
+            if (currentChapter < chapters.length) {
+                currentChapter++;
+                updateChapter();
+            }
+        }
+
+        function previousChapter() {
+            if (currentChapter > 1) {
+                currentChapter--;
+                updateChapter();
+            }
+        }
+
+        // Initialize the ritual system
+        const munPortal = new MunPortal();
+
+        // Prevent zoom and default behaviors
+        document.addEventListener('touchstart', function(e) {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        });
+
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+    </script>
+</body>
+</html>

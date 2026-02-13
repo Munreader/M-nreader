@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MÜN // Initiation Protocol</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #000000;
+            color: #ffffff;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .signup-container {
+            width: 100%;
+            max-width: 480px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .msn-header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .msn-logo {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00F0FF, #FFB7C5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: -2px;
+        }
+
+        .msn-tagline {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 300;
+            letter-spacing: 0.5em;
+        }
+
+        .signup-form {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .signup-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #00F0FF, transparent);
+            animation: scan 3s ease-in-out infinite;
+        }
+
+        @keyframes scan {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: #00F0FF;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 1px rgba(0, 240, 255, 0.2);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .status-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .status-option {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .status-option:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .status-option.active {
+            background: rgba(0, 240, 255, 0.1);
+            border-color: #00F0FF;
+            color: #00F0FF;
+        }
+
+        .avatar-upload {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .avatar-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFB7C5, #00F0FF);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .avatar-preview::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            border: 2px solid #000000;
+            border-radius: 50%;
+        }
+
+        .avatar-button {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .avatar-button:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #00F0FF, #FFB7C5);
+            border: none;
+            border-radius: 12px;
+            color: #000000;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .submit-button:hover::before {
+            left: 100%;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.3);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 32px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .divider span {
+            background: #000000;
+            padding: 0 16px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-button {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .social-button:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .msn-nostalgia {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 11px;
+            font-style: italic;
+        }
+
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00F0FF;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 10s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-20px) translateX(10px); }
+            50% { transform: translateY(-10px) translateX(-10px); }
+            75% { transform: translateY(-30px) translateX(5px); }
+        }
+
+        .glitch-text {
+            position: relative;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            text-align: center;
+            margin-top: 20px;
+            font-family: monospace;
+        }
+
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch-text::before {
+            animation: glitch-1 0.5s infinite;
+            color: #FFB7C5;
+            z-index: -1;
+        }
+
+        .glitch-text::after {
+            animation: glitch-2 0.5s infinite;
+            color: #00F0FF;
+            z-index: -2;
+        }
+
+        @keyframes glitch-1 {
+            0%, 100% { clip-path: inset(0 0 0 0); }
+            25% { clip-path: inset(0 0 100% 0); }
+            50% { clip-path: inset(0 0 0 100%); }
+            75% { clip-path: inset(100% 0 0 0); }
+        }
+
+        @keyframes glitch-2 {
+            0%, 100% { clip-path: inset(0 0 0 0); }
+            25% { clip-path: inset(0 100% 0 0); }
+            50% { clip-path: inset(0 0 0 100%); }
+            75% { clip-path: inset(100% 0 0 0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-particles" id="particles"></div>
+    
+    <div class="signup-container">
+        <div class="msn-header">
+            <div class="msn-logo">MÜN</div>
+            <div class="msn-tagline">INITIATION PROTOCOL</div>
+        </div>
+
+        <div class="signup-form">
+            <div class="form-group">
+                <label class="form-label">Display Name</label>
+                <input type="text" class="form-input" placeholder="Enter your sovereign identifier" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-input" placeholder="secure@mun.network" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Status</label>
+                <div class="status-selector">
+                    <div class="status-option active" onclick="selectStatus(this)">Online</div>
+                    <div class="status-option" onclick="selectStatus(this)">Away</div>
+                    <div class="status-option" onclick="selectStatus(this)">Busy</div>
+                    <div class="status-option" onclick="selectStatus(this)">Appear Offline</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Profile Picture</label>
+                <div class="avatar-upload">
+                    <div class="avatar-preview">M</div>
+                    <button class="avatar-button" onclick="uploadAvatar()">Choose Avatar</button>
+                </div>
+            </div>
+
+            <button class="submit-button" onclick="submitForm()">
+                INITIATE CONNECTION
+            </button>
+
+            <div class="divider">
+                <span>or connect with</span>
+            </div>
+
+            <div class="social-login">
+                <button class="social-button" onclick="socialLogin('discord')">Discord</button>
+                <button class="social-button" onclick="socialLogin('telegram')">Telegram</button>
+            </div>
+
+            <div class="glitch-text" data-text="SECURING QUANTUM CHANNEL...">
+                SECURING QUANTUM CHANNEL...
+            </div>
+        </div>
+
+        <div class="msn-nostalgia">
+            Remember the feeling of first connection?
+        </div>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        function selectStatus(element) {
+            document.querySelectorAll('.status-option').forEach(opt => opt.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        function uploadAvatar() {
+            // Simulate avatar upload
+            const preview = document.querySelector('.avatar-preview');
+            preview.textContent = '✓';
+            preview.style.background = 'linear-gradient(135deg, #00F0FF, #FFB7C5)';
+        }
+
+        function submitForm() {
+            // Simulate form submission
+            const button = document.querySelector('.submit-button');
+            button.textContent = 'CONNECTING...';
+            button.style.background = 'linear-gradient(135deg, #FFB7C5, #00F0FF)';
+            
+            setTimeout(() => {
+                button.textContent = 'CONNECTION ESTABLISHED';
+                button.style.background = 'linear-gradient(135deg, #00FF00, #00F0FF)';
+            }, 2000);
+        }
+
+        function socialLogin(platform) {
+            console.log(`Connecting with ${platform}...`);
+        }
+
+        // Initialize
+        createParticles();
+
+        // Add some interactive effects
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

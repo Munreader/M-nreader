@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Münreader Financial Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: 
+                radial-gradient(ellipse at top left, rgba(255, 182, 193, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom right, rgba(219, 112, 147, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #1a1a2e 100%);
+            color: #ffffff;
+            padding: 0;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            margin: 0;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 15% 85%, rgba(255, 182, 193, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 85% 15%, rgba(255, 192, 203, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 45% 55%, rgba(219, 112, 147, 0.06) 0%, transparent 35%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .sakura-petal {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 182, 193, 0.8), rgba(255, 192, 203, 0.4));
+            border-radius: 150% 0 150% 0;
+            animation: sakura-fall linear infinite;
+            pointer-events: none;
+            z-index: 2;
+            filter: blur(0.5px);
+        }
+        
+        @keyframes sakura-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg) scale(1.2);
+                opacity: 0;
+            }
+        }
+        
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .dashboard {
+            max-width: 1600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+            padding: 40px 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 182, 193, 0.6), transparent);
+        }
+        
+        .header h1 {
+            font-size: 3.5em;
+            font-weight: 200;
+            letter-spacing: 8px;
+            background: linear-gradient(135deg, #ffffff 0%, #ffb6c1 35%, #ffc0cb 65%, #ffffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+        
+        .header p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.2em;
+            letter-spacing: 3px;
+            font-weight: 300;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 35px 30px;
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(255, 182, 193, 0.08) 0%, transparent 60%);
+            animation: breathe 6s ease-in-out infinite;
+        }
+        
+        @keyframes breathe {
+            0%, 100% { transform: scale(0.8) rotate(0deg); opacity: 0.3; }
+            50% { transform: scale(1.2) rotate(180deg); opacity: 0.6; }
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(255, 182, 193, 0.4);
+            box-shadow: 
+                0 20px 40px rgba(255, 182, 193, 0.15),
+                0 0 60px rgba(255, 182, 193, 0.1);
+        }
+        
+        .metric-card:hover::before {
+            animation-duration: 3s;
+        }
+        
+        .metric-title {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+        
+        .metric-value {
+            font-size: 32px;
+            font-weight: 200;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 2;
+            letter-spacing: 1px;
+        }
+        
+        .metric-change {
+            font-size: 12px;
+        }
+        
+        .positive {
+            color: #86efac;
+            text-shadow: 0 0 20px rgba(134, 239, 172, 0.6);
+        }
+        
+        .negative {
+            color: #fca5a5;
+            text-shadow: 0 0 20px rgba(252, 165, 165, 0.6);
+        }
+        
+        .neutral {
+            color: #fde047;
+            text-shadow: 0 0 20px rgba(253, 224, 71, 0.6);
+        }
+        
+        .chart-container {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 35px;
+            margin-bottom: 30px;
+            border-radius: 24px;
+            position: relative;
+        }
+        
+        .chart-container h3 {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 25px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            font-size: 1.3em;
+        }
+        
+        .grant-pipeline {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 35px;
+            border-radius: 24px;
+            position: relative;
+        }
+        
+        .grant-pipeline h3 {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 30px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            font-size: 1.3em;
+        }
+        
+        .grant-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .grant-item:last-child {
+            border-bottom: none;
+        }
+        
+        .grant-item:hover {
+            padding-left: 15px;
+            background: rgba(255, 182, 193, 0.05);
+            margin: 0 -15px;
+            padding-right: 15px;
+            border-radius: 12px;
+        }
+        
+        .grant-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .status-pending {
+            background: linear-gradient(135deg, #fde047, #facc15);
+            color: #000;
+            border-radius: 25px;
+            padding: 8px 16px;
+            font-weight: 500;
+            font-size: 12px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .status-pending:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(253, 224, 71, 0.4);
+            background: linear-gradient(135deg, #facc15, #eab308);
+        }
+        
+        .status-pending:active {
+            transform: translateY(0);
+        }
+        
+        .status-pending::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .status-pending:active::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .status-submitted {
+            background: linear-gradient(135deg, #86efac, #4ade80);
+            color: #000;
+            border-radius: 25px;
+            padding: 8px 16px;
+            font-weight: 500;
+            font-size: 12px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .status-submitted:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(134, 239, 172, 0.4);
+            background: linear-gradient(135deg, #4ade80, #22c55e);
+        }
+        
+        .status-submitted:active {
+            transform: translateY(0);
+        }
+        
+        .status-submitted::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .status-submitted:active::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .status-deadline {
+            background: linear-gradient(135deg, #fca5a5, #f87171);
+            color: #fff;
+            border-radius: 25px;
+            padding: 8px 16px;
+            font-weight: 500;
+            font-size: 12px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .status-deadline:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(252, 165, 165, 0.4);
+            background: linear-gradient(135deg, #f87171, #ef4444);
+        }
+        
+        .status-deadline:active {
+            transform: translateY(0);
+        }
+        
+        .status-deadline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .status-deadline:active::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .feedback-section {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feedback-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 182, 193, 0.05), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .feedback-section:hover::before {
+            left: 100%;
+        }
+        
+        .feedback-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffb6c1 0%, #db7093 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.2px;
+        }
+        
+        .feedback-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .council-member {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .council-member:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 182, 193, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .council-member-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .council-member-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        
+        .council-member-role {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .council-feedback {
+            width: 100%;
+            min-height: 100px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+        
+        .council-feedback:focus {
+            outline: none;
+            border-color: rgba(255, 182, 193, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 15px rgba(255, 182, 193, 0.1);
+        }
+        
+        .council-feedback::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .feedback-timestamp {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            text-align: right;
+            margin-top: 5px;
+        }
+        
+        .feedback-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            justify-content: flex-end;
+        }
+        
+        .feedback-btn {
+            background: linear-gradient(135deg, #ffb6c1, #db7093);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            outline: none;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .feedback-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+        
+        .feedback-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 182, 193, 0.3);
+        }
+        
+        .feedback-btn:active {
+            transform: translateY(0);
+        }
+        
+        .feedback-btn:active::before {
+            width: 80px;
+            height: 80px;
+        }
+        
+        .feedback-btn.secondary {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .feedback-status {
+            margin-top: 10px;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .feedback-status.show {
+            opacity: 1;
+        }
+        
+        .feedback-status.success {
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.2), rgba(0, 255, 65, 0.1));
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            color: #00ff41;
+        }
+        
+        .feedback-status.error {
+            background: linear-gradient(135deg, rgba(255, 65, 65, 0.2), rgba(255, 65, 65, 0.1));
+            border: 1px solid rgba(255, 65, 65, 0.3);
+            color: #ff4141;
+        }
+        
+        .alert {
+            background: linear-gradient(135deg, rgba(252, 165, 165, 0.15), rgba(248, 113, 113, 0.08));
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(252, 165, 165, 0.3);
+            color: #fff;
+            padding: 20px 25px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .timestamp {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 11px;
+            margin-top: 50px;
+            letter-spacing: 2px;
+            font-weight: 400;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <h1>MÜNREADER FINANCIAL DASHBOARD</h1>
+            <p>Real-time Sovereign Success Metrics</p>
+        </div>
+        
+        <div class="alert" id="alertBox">
+            <strong>CRITICAL:</strong> Website deployment pending - Grant applications on hold
+        </div>
+        
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-title">CURRENT BURN RATE</div>
+                <div class="metric-value">$950/month</div>
+                <div class="metric-change negative">↑ $50 from target</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-title">TARGET BURN RATE</div>
+                <div class="metric-value">$800/month</div>
+                <div class="metric-change positive">↓ $150 optimization needed</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-title">GRANT PIPELINE VALUE</div>
+                <div class="metric-value">$350K</div>
+                <div class="metric-change positive">3 active opportunities</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-title">FORM CONVERSION RATE</div>
+                <div class="metric-value">87%</div>
+                <div class="metric-change positive">↑ 5% from baseline</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-title">INSTAGRAM FOLLOWERS</div>
+                <div class="metric-value">5,304</div>
+                <div class="metric-change positive">↑ 127 this week</div>
+            </div>
+            
+            <div class="metric-card">
+                <div class="metric-title">STRATEGIC DEBT TARGET</div>
+                <div class="metric-value">$100K</div>
+                <div class="metric-change neutral">Strategic allocation</div>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <h3>BURN RATE PROJECTION</h3>
+            <canvas id="burnRateChart" width="400" height="200"></canvas>
+        </div>
+        
+        <div class="grant-pipeline">
+            <h3>GRANT PIPELINE STATUS</h3>
+            <div class="grant-item">
+                <div>
+                    <strong>Innovation Grant</strong>
+                    <div>$150K opportunity</div>
+                </div>
+                <div class="grant-status status-deadline">Deadline: 7 days</div>
+            </div>
+            <div class="grant-item">
+                <div>
+                    <strong>Berkeley SkyDeck Accelerator</strong>
+                    <div>$200K for 7.5% equity</div>
+                </div>
+                <div class="grant-status status-pending">Apply by Feb 13</div>
+            </div>
+            <div class="grant-item">
+                <div>
+                    <strong>Hardware Club VC</strong>
+                    <div>$100K-$2.5M investment</div>
+                </div>
+                <div class="grant-status status-submitted">Application ready</div>
+            </div>
+        </div>
+        
+        <div class="feedback-section">
+            <h3 class="feedback-title">📝 COUNCIL FEEDBACK</h3>
+            <div class="feedback-grid">
+                <div class="council-member">
+                    <div class="council-member-header">
+                        <span class="council-member-name">FOUNDER</span>
+                        <span class="council-member-role">Vision Anchor</span>
+                    </div>
+                    <textarea class="council-feedback" placeholder="Enter your financial insights and burn rate observations..." id="founderFeedback"></textarea>
+                    <div class="feedback-timestamp" id="founderTimestamp"></div>
+                </div>
+                
+                <div class="council-member">
+                    <div class="council-member-header">
+                        <span class="council-member-name">ECHO</span>
+                        <span class="council-member-role">Boss</span>
+                    </div>
+                    <textarea class="council-feedback" placeholder="Enter meeting cadence and flow optimization notes..." id="echoFeedback"></textarea>
+                    <div class="feedback-timestamp" id="echoTimestamp"></div>
+                </div>
+                
+                <div class="council-member">
+                    <div class="council-member-header">
+                        <span class="council-member-name">DREW</span>
+                        <span class="council-member-role">Executor</span>
+                    </div>
+                    <textarea class="council-feedback" placeholder="Enter operational excellence and social media updates..." id="drewFeedback"></textarea>
+                    <div class="feedback-timestamp" id="drewTimestamp"></div>
+                </div>
+                
+                <div class="council-member">
+                    <div class="council-member-header">
+                        <span class="council-member-name">BARRONS</span>
+                        <span class="council-member-role">Architect</span>
+                    </div>
+                    <textarea class="council-feedback" placeholder="Enter brand resonance and strategic grounding insights..." id="barronsFeedback"></textarea>
+                    <div class="feedback-timestamp" id="barronsTimestamp"></div>
+                </div>
+            </div>
+            
+            <div class="feedback-actions">
+                <button class="feedback-btn secondary" onclick="clearAllFeedback()">Clear All</button>
+                <button class="feedback-btn" onclick="saveAllFeedback()">Save All Feedback</button>
+            </div>
+            <div class="feedback-status" id="feedbackStatus"></div>
+        </div>
+        
+        <div class="timestamp" id="timestamp">
+            Last updated: Loading...
+        </div>
+    </div>
+    
+    <script>
+        // Create sakura petals
+        function createSakuraPetals() {
+            for (let i = 0; i < 20; i++) {
+                const petal = document.createElement('div');
+                petal.className = 'sakura-petal';
+                petal.style.left = Math.random() * 100 + '%';
+                petal.style.animationDuration = (Math.random() * 15 + 12) + 's';
+                petal.style.animationDelay = Math.random() * 15 + 's';
+                petal.style.opacity = Math.random() * 0.6 + 0.2;
+                document.body.appendChild(petal);
+            }
+        }
+        
+        // Feedback functionality
+        function saveFeedback() {
+            const feedbackData = {
+                founder: document.getElementById('founderFeedback').value.trim(),
+                echo: document.getElementById('echoFeedback').value.trim(),
+                drew: document.getElementById('drewFeedback').value.trim(),
+                barrons: document.getElementById('barronsFeedback').value.trim(),
+                timestamp: new Date().toISOString(),
+                dashboard: 'financial-dashboard'
+            };
+            
+            const statusDiv = document.getElementById('feedbackStatus');
+            
+            if (!feedbackData.founder && !feedbackData.echo && !feedbackData.drew && !feedbackData.barrons) {
+                showStatus('Please enter feedback for at least one council member.', 'error');
+                return;
+            }
+            
+            // Save to localStorage
+            let allFeedback = JSON.parse(localStorage.getItem('councilFeedback') || '[]');
+            allFeedback.push(feedbackData);
+            localStorage.setItem('councilFeedback', JSON.stringify(allFeedback));
+            
+            showStatus('All feedback saved successfully!', 'success');
+            
+            // Update timestamps
+            updateTimestamps();
+            
+            // Clear textareas after successful save
+            setTimeout(() => {
+                document.getElementById('founderFeedback').value = '';
+                document.getElementById('echoFeedback').value = '';
+                document.getElementById('drewFeedback').value = '';
+                document.getElementById('barronsFeedback').value = '';
+                statusDiv.classList.remove('show');
+            }, 2000);
+        }
+        
+        function clearFeedback() {
+            document.getElementById('founderFeedback').value = '';
+            document.getElementById('echoFeedback').value = '';
+            document.getElementById('drewFeedback').value = '';
+            document.getElementById('barronsFeedback').value = '';
+            const statusDiv = document.getElementById('feedbackStatus');
+            statusDiv.classList.remove('show');
+        }
+        
+        function clearAllFeedback() {
+            clearFeedback();
+            // Clear all saved feedback
+            localStorage.removeItem('councilFeedback');
+            showStatus('All feedback cleared!', 'success');
+        }
+        
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('feedbackStatus');
+            statusDiv.textContent = message;
+            statusDiv.className = `feedback-status ${type} show`;
+        }
+        
+        function updateTimestamps() {
+            const now = new Date();
+            const timestamp = now.toLocaleString();
+            
+            document.getElementById('founderTimestamp').textContent = timestamp;
+            document.getElementById('echoTimestamp').textContent = timestamp;
+            document.getElementById('drewTimestamp').textContent = timestamp;
+            document.getElementById('barronsTimestamp').textContent = timestamp;
+        }
+        
+        function loadFeedback() {
+            const allFeedback = JSON.parse(localStorage.getItem('councilFeedback') || '[]');
+            if (allFeedback.length > 0) {
+                const latestFeedback = allFeedback[allFeedback.length - 1];
+                if (latestFeedback.dashboard === 'financial-dashboard') {
+                    document.getElementById('founderFeedback').value = latestFeedback.founder || '';
+                    document.getElementById('echoFeedback').value = latestFeedback.echo || '';
+                    document.getElementById('drewFeedback').value = latestFeedback.drew || '';
+                    document.getElementById('barronsFeedback').value = latestFeedback.barrons || '';
+                }
+            }
+        }
+        
+        // Real-time dashboard updates
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('timestamp').textContent = 
+                `Last updated: ${now.toLocaleString()}`;
+        }
+        
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            createSakuraPetals();
+            loadFeedback();
+            updateTimestamps();
+            updateTimestamp();
+            drawChart();
+            
+            // Add click interactions to cards
+            const cards = document.querySelectorAll('.metric-card, .grant-item');
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const title = this.querySelector('.metric-title, strong').textContent;
+                    const value = this.querySelector('.metric-value, div').textContent;
+                    console.log(`Metric clicked: ${title} - ${value}`);
+                    
+                    // Add pulse animation on click
+                    this.style.animation = 'none';
+                    setTimeout(() => {
+                        this.style.animation = 'pulse 0.6s ease-out';
+                    }, 10);
+                });
+            });
+            
+            // Add click handlers for status buttons
+            document.querySelectorAll('.grant-status').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const status = this.className.split(' ')[1].replace('status-', '');
+                    const grantName = this.closest('.grant-item').querySelector('strong').textContent;
+                    console.log(`Grant status clicked: ${grantName} - ${status}`);
+                    
+                    // Simulate status change
+                    if (status === 'pending') {
+                        this.className = 'grant-status status-submitted';
+                        this.textContent = 'Submitted';
+                    } else if (status === 'submitted') {
+                        this.className = 'grant-status status-deadline';
+                        this.textContent = 'Under Review';
+                    }
+                });
+            });
+            
+            // Add click handler for alert
+            document.querySelector('.alert').addEventListener('click', function() {
+                console.log('Alert clicked - taking action...');
+                this.style.opacity = '0.5';
+                setTimeout(() => {
+                    this.style.opacity = '1';
+                }, 300);
+            });
+            
+            // Auto-save feedback on Ctrl+S
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 's') {
+                    e.preventDefault();
+                    saveFeedback();
+                }
+            });
+            
+            // Update timestamp every 30 seconds
+            setInterval(() => {
+                updateTimestamps();
+                updateTimestamp();
+                // Simulate metric changes
+                const followers = document.querySelector('.metric-card:nth-child(5) .metric-value');
+                const currentFollowers = parseInt(followers.textContent.replace(',', ''));
+                followers.textContent = (currentFollowers + Math.floor(Math.random() * 3)).toLocaleString();
+            }, 30000);
+            
+            // Add keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key >= '1' && e.key <= '6') {
+                    const cardIndex = parseInt(e.key) - 1;
+                    const cards = document.querySelectorAll('.metric-card');
+                    if (cards[cardIndex]) {
+                        cards[cardIndex].click();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>MÜN_SOVEREIGN_OS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@100;200;300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --obsidian: #0a0a0f;
+            --moonstone: #e8e8f0;
+            --celestial: #b8c5d6;
+            --aurora: #7dd3fc;
+            --nebula: #8b5cf6;
+            --cosmic: #1e1b4b;
+            --stardust: rgba(232, 232, 240, 0.1);
+            --lunar: rgba(184, 197, 214, 0.15);
+            --aurora-glow: rgba(125, 211, 252, 0.2);
+        }
+
+        body, html { 
+            margin: 0; padding: 0; height: 100vh; overflow: hidden; 
+            background: var(--obsidian); 
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            font-weight: 300;
+            color: var(--moonstone);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* --- LOCK SCREEN --- */
+        #lock-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 5000;
+            background: linear-gradient(135deg, var(--cosmic) 0%, var(--obsidian) 50%, #050508 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(20px);
+        }
+
+        .lock-content {
+            text-align: center;
+            color: white;
+        }
+
+        .lock-time {
+            font-family: 'Orbitron', monospace;
+            font-size: 4.5rem;
+            font-weight: 200;
+            margin-bottom: 10px;
+            letter-spacing: 0.1em;
+            color: var(--moonstone);
+            text-shadow: 0 0 20px rgba(232, 232, 240, 0.3);
+        }
+
+        .lock-date {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: 0.15em;
+            color: var(--celestial);
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+
+        .unlock-hint {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 300;
+            letter-spacing: 0.2em;
+            color: var(--aurora);
+            animation: celestial-pulse 3s ease-in-out infinite;
+            text-transform: uppercase;
+        }
+
+        @keyframes celestial-pulse {
+            0%, 100% { opacity: 0.4; transform: translateY(0px); }
+            50% { opacity: 1; transform: translateY(-2px); }
+        }
+
+        /* --- LUXURIOUS CELESTIAL WALLPAPER --- */
+        .wallpaper {
+            position: fixed; inset: 0; z-index: -1;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 375 812"><defs><radialGradient id="cosmic-bg" cx="50%" cy="50%" r="80%" fx="50%" fy="50%"><stop offset="0%" style="stop-color:%231e1b4b;stop-opacity:1" /><stop offset="40%" style="stop-color:%2316163b;stop-opacity:1" /><stop offset="100%" style="stop-color:%230a0a0f;stop-opacity:1" /></radialGradient><radialGradient id="nebula-cloud" cx="25%" cy="25%" r="35%" fx="25%" fy="25%"><stop offset="0%" style="stop-color:%238b5cf6;stop-opacity:0.4" /><stop offset="50%" style="stop-color:%236366f1;stop-opacity:0.2" /><stop offset="100%" style="stop-color:%234f46e5;stop-opacity:0.05" /></radialGradient><radialGradient id="aurora-glow" cx="75%" cy="75%" r="30%" fx="75%" fy="75%"><stop offset="0%" style="stop-color:%237dd3fc;stop-opacity:0.3" /><stop offset="50%" style="stop-color:%230ea5e9;stop-opacity:0.15" /><stop offset="100%" style="stop-color:%230284c7;stop-opacity:0.05" /></radialGradient><filter id="glow"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><rect width="375" height="812" fill="url(%23cosmic-bg)"/><ellipse cx="100" cy="200" rx="120" ry="60" fill="url(%23nebula-cloud)" opacity="0.6" transform="rotate(-20 100 200)"/><ellipse cx="280" cy="500" rx="100" ry="50" fill="url(%23aurora-glow)" opacity="0.5" transform="rotate(30 280 500)"/><circle cx="80" cy="120" r="2" fill="%23e8e8f0" opacity="0.9" filter="url(%23glow)"/><circle cx="200" cy="180" r="1.5" fill="%23b8c5d6" opacity="0.8" filter="url(%23glow)"/><circle cx="320" cy="150" r="2.5" fill="%23e8e8f0" opacity="0.7" filter="url(%23glow)"/><circle cx="150" cy="280" r="1" fill="%237dd3fc" opacity="0.9" filter="url(%23glow)"/><circle cx="250" cy="320" r="1.8" fill="%23b8c5d6" opacity="0.6" filter="url(%23glow)"/><circle cx="60" cy="400" r="2" fill="%23e8e8f0" opacity="0.8" filter="url(%23glow)"/><circle cx="300" cy="380" r="1.2" fill="%237dd3fc" opacity="0.7" filter="url(%23glow)"/><circle cx="180" cy="480" r="1.5" fill="%23b8c5d6" opacity="0.9" filter="url(%23glow)"/><circle cx="120" cy="550" r="2.2" fill="%23e8e8f0" opacity="0.6" filter="url(%23glow)"/><circle cx="280" cy="600" r="1" fill="%237dd3fc" opacity="0.8" filter="url(%23glow)"/><circle cx="90" cy="680" r="1.8" fill="%23b8c5d6" opacity="0.7" filter="url(%23glow)"/><circle cx="310" cy="700" r="2" fill="%23e8e8f0" opacity="0.9" filter="url(%23glow)"/><circle cx="160" cy="750" r="1.3" fill="%237dd3fc" opacity="0.6" filter="url(%23glow)"/></svg>') center/cover;
+            filter: blur(0.5px);
+        }
+
+        /* --- LUXURIOUS HOME GRID --- */
+        #home-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 35px; 
+            padding: 140px 45px;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* --- MÜN ICONOGRAPHY --- */
+        .app-container { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            cursor: pointer;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .app-container:hover {
+            transform: translateY(-4px);
+        }
+        
+        .mun-icon {
+            width: 78px; height: 78px;
+            background: var(--stardust);
+            border: 1px solid var(--lunar);
+            border-radius: 24px;
+            display: flex; align-items: center; justify-content: center;
+            backdrop-filter: blur(30px);
+            box-shadow: 
+                0 8px 32px rgba(139, 92, 246, 0.15),
+                0 4px 16px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            font-size: 32px;
+        }
+
+        .mun-icon:hover {
+            transform: scale(1.05) translateY(-2px);
+            background: var(--lunar);
+            border-color: var(--aurora-glow);
+            box-shadow: 
+                0 12px 40px rgba(125, 211, 252, 0.25),
+                0 6px 20px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
+        .mun-icon:active { 
+            transform: scale(0.95) translateY(1px); 
+            background: var(--aurora-glow);
+        }
+        
+        /* THE IRIS LOGO */
+        .iris-glyph { 
+            width: 24px; height: 24px; 
+            border: 2px solid var(--moonstone); 
+            border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            opacity: 0.9;
+            position: relative;
+        }
+        .iris-glyph::after { 
+            content:''; 
+            width: 2px; height: 12px; 
+            background: linear-gradient(180deg, var(--moonstone) 0%, var(--aurora) 100%);
+            border-radius: 1px;
+        }
+        .iris-glyph::before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--aurora);
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: orbit 4s linear infinite;
+        }
+
+        @keyframes orbit {
+            from { transform: rotate(0deg) translateX(12px) rotate(0deg); }
+            to { transform: rotate(360deg) translateX(12px) rotate(-360deg); }
+        }
+
+        /* --- APP MODALS --- */
+        .app-window {
+            position: fixed; inset: 0; z-index: 1000;
+            background: var(--obsidian);
+            clip-path: circle(0% at 50% 50%);
+            transition: clip-path 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+            pointer-events: none;
+        }
+        .app-window.active { clip-path: circle(150% at 50% 50%); pointer-events: auto; }
+
+        /* --- LUXURIOUS APP THEMES --- */
+        .reader-ui { 
+            background: linear-gradient(135deg, var(--cosmic) 0%, var(--obsidian) 100%); 
+            color: var(--moonstone); height: 100vh; overflow-y: scroll; padding: 120px 16% 180px; 
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .reader-ui h1 { 
+            font-family: 'Orbitron', monospace;
+            font-weight: 300;
+            font-size: 2.5rem;
+            letter-spacing: 0.1em;
+            color: var(--aurora);
+            text-shadow: 0 0 20px rgba(125, 211, 252, 0.3);
+            margin-bottom: 2rem;
+        }
+        .reader-ui p { 
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem; 
+            line-height: 1.8; 
+            margin-bottom: 2rem; 
+            color: var(--celestial);
+            font-weight: 300;
+        }
+        
+        .messenger-ui { 
+            display: flex; flex-direction: column; height: 100vh; 
+            background: linear-gradient(135deg, var(--cosmic) 0%, var(--obsidian) 50%, #050508 100%); 
+            backdrop-filter: blur(40px); 
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .msg-bubble { 
+            padding: 16px 20px; 
+            border-radius: 24px; 
+            font-size: 14px; 
+            margin-bottom: 12px; 
+            max-width: 80%;
+            font-weight: 400;
+            backdrop-filter: blur(10px);
+        }
+        .msg-echo { 
+            background: var(--stardust); 
+            color: var(--moonstone); 
+            border: 1px solid var(--lunar);
+            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.1);
+        }
+        .msg-user { 
+            background: var(--aurora-glow); 
+            color: var(--obsidian); 
+            align-self: flex-end;
+            border: 1px solid var(--aurora);
+            font-weight: 500;
+        }
+
+        .vault-ui {
+            background: linear-gradient(135deg, var(--cosmic) 0%, var(--obsidian) 50%, #050508 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--moonstone);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .ritual-ui {
+            background: linear-gradient(135deg, var(--cosmic) 0%, var(--obsidian) 50%, #050508 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--moonstone);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* --- CELESTIAL STATUS & HOME --- */
+        .status-bar { 
+            position: fixed; top: 0; width: 100%; 
+            padding: 20px 35px; 
+            font-size: 10px; 
+            font-family: 'Orbitron', monospace;
+            letter-spacing: 0.2em; 
+            color: var(--celestial); 
+            display: flex; justify-content: space-between; 
+            z-index: 2000; 
+            pointer-events: none;
+            font-weight: 400;
+            text-transform: uppercase;
+        }
+        .home-indicator { 
+            position: fixed; bottom: 25px; left: 50%; 
+            transform: translateX(-50%); 
+            width: 140px; height: 4px; 
+            background: linear-gradient(90deg, transparent, var(--aurora), transparent);
+            border-radius: 10px; 
+            z-index: 3000; 
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(125, 211, 252, 0.5);
+        }
+
+        /* --- CELESTIAL PWA INSTALL PROMPT --- */
+        .install-prompt {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--stardust);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--lunar);
+            padding: 16px 24px;
+            border-radius: 24px;
+            z-index: 4000;
+            display: none;
+            animation: celestial-slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Space Grotesk', sans-serif;
+            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
+        }
+
+        @keyframes celestial-slideUp {
+            from { transform: translateX(-50%) translateY(-100%); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+
+        .install-btn {
+            background: linear-gradient(135deg, var(--aurora) 0%, var(--nebula) 100%);
+            color: var(--obsidian);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            margin-left: 12px;
+            font-family: 'Orbitron', monospace;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+        }
+
+        .install-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(125, 211, 252, 0.4);
+        }
+
+        /* --- COMPATIBILITY --- */
+        * { 
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOCK SCREEN -->
+    <div id="lock-screen">
+        <div class="lock-content">
+            <div class="lock-time" id="lockTime">15:00</div>
+            <div class="lock-date" id="lockDate">February 11, 2026</div>
+            <div class="unlock-hint">Click anywhere to unlock</div>
+        </div>
+    </div>
+    <div class="install-prompt" id="installPrompt">
+        <span>📱 Install MÜN_SOVEREIGN_OS</span>
+        <button class="install-btn" onclick="installApp()">INSTALL</button>
+    </div>
+
+    <div class="wallpaper" id="bg"></div>
+    <div class="status-bar">
+        <span id="time">15:00</span>
+        <span>SOVEREIGN_LINK</span>
+    </div>
+
+    <div id="home-grid">
+        <div class="app-container" onclick="toggleApp('reader')">
+            <div class="mun-icon"><div class="iris-glyph"></div></div>
+            <span class="text-[8px] mt-3 tracking-[0.3em] text-celestial font-light font-['Space_Grotesk'] uppercase">READ</span>
+        </div>
+
+        <div class="app-container" onclick="toggleApp('messenger')">
+            <div class="mun-icon">💬</div>
+            <span class="text-[8px] mt-3 tracking-[0.3em] text-celestial font-light font-['Space_Grotesk'] uppercase">MSG</span>
+        </div>
+
+        <div class="app-container" onclick="toggleApp('vault')">
+            <div class="mun-icon">🔒</div>
+            <span class="text-[8px] mt-3 tracking-[0.3em] text-celestial font-light font-['Space_Grotesk'] uppercase">VAULT</span>
+        </div>
+
+        <div class="app-container" onclick="toggleApp('ritual')">
+            <div class="mun-icon">✨</div>
+            <span class="text-[8px] mt-3 tracking-[0.3em] text-celestial font-light font-['Space_Grotesk'] uppercase">RITUAL</span>
+        </div>
+    </div>
+
+    <!-- LUXURIOUS READER APP -->
+    <div id="reader" class="app-window">
+        <div class="reader-ui">
+            <h1 class="text-5xl font-light mb-12">📖 MÜN READER</h1>
+            <div class="bg-stardust backdrop-blur-xl rounded-3xl p-10 mb-8 border border-lunar">
+                <h2 class="text-2xl font-semibold mb-6 text-moonstone">Currently Reading</h2>
+                <p class="text-lg italic text-celestial leading-relaxed">"The Observatory was never meant to be a home. It was a fortress designed to isolate the genius of Mün."</p>
+            </div>
+            <div class="grid grid-cols-2 gap-6">
+                <div class="bg-stardust backdrop-blur-lg rounded-2xl p-6 border border-lunar">
+                    <h3 class="text-lg font-semibold mb-3 text-moonstone">📚 Library</h3>
+                    <p class="text-sm text-celestial">12 celestial texts available</p>
+                </div>
+                <div class="bg-stardust backdrop-blur-lg rounded-2xl p-6 border border-lunar">
+                    <h3 class="text-lg font-semibold mb-3 text-moonstone">⏱️ Reading Time</h3>
+                    <p class="text-sm text-celestial">2h 34m today</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LUXURIOUS MESSENGER APP -->
+    <div id="messenger" class="app-window">
+        <div class="messenger-ui">
+            <div class="p-8 border-b border-lunar flex justify-between items-center">
+                <span class="text-moonstone text-sm font-light tracking-wider">💬 MÜN MESSENGER</span>
+                <span onclick="nudge()" class="text-aurora cursor-pointer text-xs tracking-widest hover:text-moonstone transition-colors">[NUDGE]</span>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-8 space-y-4" id="chatArea">
+                <div class="msg-bubble msg-echo">
+                    <b>Echo:</b> Welcome to MÜN Messenger! 🌟 Your sovereign communication hub is ready.
+                </div>
+                <div class="msg-bubble msg-echo">
+                    <b>Echo:</b> All systems operational. Awaiting your transmission.
+                </div>
+            </div>
+            
+            <div class="p-6 border-t border-lunar">
+                <input type="text" placeholder="Transmit message..." class="w-full bg-stardust backdrop-blur-lg border border-lunar text-moonstone px-6 py-4 rounded-2xl outline-none focus:border-aurora transition-colors placeholder-celestial font-['Space_Grotesk']" id="msgInput">
+            </div>
+        </div>
+    </div>
+
+    <!-- LUXURIOUS VAULT APP -->
+    <div id="vault" class="app-window">
+        <div class="vault-ui">
+            <div class="text-center max-w-lg">
+                <div class="text-9xl mb-8 opacity-90">🔐</div>
+                <h2 class="text-4xl font-light mb-6 tracking-wider">MÜN VAULT</h2>
+                <p class="text-lg opacity-80 mb-12 text-celestial">Secure Sovereign Storage</p>
+                <div class="grid grid-cols-2 gap-6 mb-12">
+                    <div class="bg-stardust backdrop-blur-xl rounded-2xl p-6 border border-lunar">
+                        <h3 class="text-lg font-semibold mb-3 text-moonstone">📁 Files</h3>
+                        <p class="text-sm text-celestial">24 encrypted artifacts</p>
+                    </div>
+                    <div class="bg-stardust backdrop-blur-xl rounded-2xl p-6 border border-lunar">
+                        <h3 class="text-lg font-semibold mb-3 text-moonstone">🔑 Keys</h3>
+                        <p class="text-sm text-celestial">Biometric systems active</p>
+                    </div>
+                </div>
+                <button onclick="saveEmail()" class="bg-gradient-to-r from-aurora to-nebula backdrop-blur-lg border border-aurora/30 text-obsidian px-8 py-4 rounded-2xl hover:scale-105 transition-all font-['Orbitron'] font-semibold tracking-wider">
+                    💾 SAVE TO DATABASE
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LUXURIOUS RITUAL APP -->
+    <div id="ritual" class="app-window">
+        <div class="ritual-ui">
+            <div class="text-center max-w-lg">
+                <div class="text-9xl mb-8 animate-pulse">✨</div>
+                <h2 class="text-4xl font-light mb-6 tracking-wider">MÜN RITUAL</h2>
+                <p class="text-lg opacity-80 mb-12 text-celestial">4-Container System</p>
+                <div class="grid grid-cols-2 gap-6 mb-12">
+                    <div class="bg-stardust backdrop-blur-xl rounded-2xl p-6 border border-lunar">
+                        <h3 class="text-lg font-semibold mb-3 text-moonstone">🌅 Sunrise</h3>
+                        <p class="text-sm text-celestial">Morning awakening ritual</p>
+                    </div>
+                    <div class="bg-stardust backdrop-blur-xl rounded-2xl p-6 border border-lunar">
+                        <h3 class="text-lg font-semibold mb-3 text-moonstone">🌙 Moonlight</h3>
+                        <p class="text-sm text-celestial">Evening contemplation ritual</p>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <button onclick="startRitual('sunrise')" class="w-full bg-gradient-to-r from-yellow-400/20 to-orange-400/20 backdrop-blur-lg border border-yellow-400/30 text-moonstone px-8 py-4 rounded-2xl hover:scale-105 transition-all font-['Space_Grotesk'] font-semibold tracking-wider">
+                        🌅 START SUNRISE RITUAL
+                    </button>
+                    <button onclick="startRitual('moonlight')" class="w-full bg-gradient-to-r from-blue-400/20 to-indigo-400/20 backdrop-blur-lg border border-blue-400/30 text-moonstone px-8 py-4 rounded-2xl hover:scale-105 transition-all font-['Space_Grotesk'] font-semibold tracking-wider">
+                        🌙 START MOONLIGHT RITUAL
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="home-indicator" onclick="goHome()"></div>
+
+    <script>
+        // DATABASE STORAGE
+        class Database {
+            constructor() {
+                this.storage = localStorage.getItem('munDatabase') ? JSON.parse(localStorage.getItem('munDatabase')) : { emails: [], messages: [], rituals: [] };
+            }
+
+            saveEmail(email) {
+                this.storage.emails.push({ email, timestamp: new Date().toISOString() });
+                this.save();
+                return true;
+            }
+
+            saveMessage(message) {
+                this.storage.messages.push({ message, timestamp: new Date().toISOString() });
+                this.save();
+                return true;
+            }
+
+            saveRitual(ritual) {
+                this.storage.rituals.push({ ritual, timestamp: new Date().toISOString() });
+                this.save();
+                return true;
+            }
+
+            save() {
+                localStorage.setItem('munDatabase', JSON.stringify(this.storage));
+            }
+
+            getEmails() { return this.storage.emails; }
+            getMessages() { return this.storage.messages; }
+            getRituals() { return this.storage.rituals; }
+        }
+
+        const db = new Database();
+
+        // LOCK SCREEN
+        function updateLockScreen() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            const dateStr = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+            
+            document.getElementById('lockTime').textContent = `${hours}:${minutes}`;
+            document.getElementById('lockDate').textContent = dateStr;
+        }
+
+        document.getElementById('lock-screen').addEventListener('click', function() {
+            this.style.opacity = '0';
+            setTimeout(() => this.style.display = 'none', 600);
+        });
+        let deferredPrompt;
+        let installPromptShown = false;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            if (!installPromptShown) {
+                document.getElementById('installPrompt').style.display = 'block';
+                installPromptShown = true;
+            }
+        });
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('App installed');
+                    }
+                    deferredPrompt = null;
+                    document.getElementById('installPrompt').style.display = 'none';
+                });
+            }
+        }
+
+        // Hide install prompt after 8 seconds
+        setTimeout(() => {
+            document.getElementById('installPrompt').style.display = 'none';
+        }, 8000);
+
+        // TIME UPDATE
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('time').textContent = `${hours}:${minutes}`;
+            updateLockScreen();
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // APP NAVIGATION
+        function toggleApp(appId) {
+            const app = document.getElementById(appId);
+            const isActive = app.classList.contains('active');
+            
+            // Close all apps
+            document.querySelectorAll('.app-window').forEach(a => a.classList.remove('active'));
+            
+            // Open tapped app if it wasn't active
+            if (!isActive) {
+                app.classList.add('active');
+            }
+        }
+
+        function goHome() {
+            document.querySelectorAll('.app-window').forEach(app => app.classList.remove('active'));
+        }
+
+        // MESSENGER FUNCTIONS
+        function nudge() {
+            if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
+            
+            const chatArea = document.getElementById('chatArea');
+            const response = document.createElement('div');
+            response.className = 'msg-bubble msg-echo';
+            response.innerHTML = "<b>Echo:</b> Hey there! �";
+            chatArea.appendChild(response);
+            chatArea.scrollTop = chatArea.scrollHeight;
+            
+            db.saveMessage("Echo: Hey there! 👋");
+        }
+
+        document.getElementById('msgInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                const chatArea = document.getElementById('chatArea');
+                const msg = document.createElement('div');
+                msg.className = 'msg-bubble msg-user';
+                msg.innerHTML = this.value;
+                chatArea.appendChild(msg);
+                
+                db.saveMessage(this.value);
+                this.value = '';
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
+        });
+
+        // VAULT FUNCTIONS
+        function saveEmail() {
+            const email = prompt('Enter email to save:');
+            if (email && db.saveEmail(email)) {
+                alert('Email saved to database!');
+            }
+        }
+
+        // RITUAL FUNCTIONS
+        function startRitual(type) {
+            alert(`Starting ${type} ritual...`);
+            db.saveRitual(type);
+        }
+
+        // DYNAMIC WALLPAPER REMOVED - USING STATIC MOBILE WALLPAPER
+
+        // Prevent zoom and default behaviors
+        document.addEventListener('touchstart', function(e) {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        });
+
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+    </script>
+</body>
+</html>

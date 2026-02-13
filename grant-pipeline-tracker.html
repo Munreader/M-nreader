@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Münreader Grant Pipeline Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: 
+                radial-gradient(ellipse at top left, rgba(255, 182, 193, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom right, rgba(219, 112, 147, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #1a1a2e 100%);
+            color: #ffffff;
+            padding: 20px;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            margin: 0;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 15% 85%, rgba(255, 182, 193, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 85% 15%, rgba(255, 192, 203, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 45% 55%, rgba(219, 112, 147, 0.06) 0%, transparent 35%);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .sakura-petal {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 182, 193, 0.8), rgba(255, 192, 203, 0.4));
+            border-radius: 150% 0 150% 0;
+            animation: sakura-fall linear infinite;
+            pointer-events: none;
+            z-index: 2;
+        }
+        
+        @keyframes sakura-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .tracker {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            position: relative;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffb6c1 0%, #db7093 50%, #ffc0cb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #ffb6c1, transparent);
+            border-radius: 2px;
+        }
+        
+        .pipeline-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .overview-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            text-align: center;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            animation: breathe 4s ease-in-out infinite;
+        }
+        
+        .overview-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 182, 193, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .overview-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 182, 193, 0.2);
+            border-color: rgba(255, 182, 193, 0.3);
+        }
+        
+        .overview-card:hover::before {
+            left: 100%;
+        }
+        
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        .overview-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+            background: linear-gradient(135deg, #ffb6c1 0%, #db7093 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .overview-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .grant-details {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .grant-item {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .grant-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 182, 193, 0.05), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .grant-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 182, 193, 0.15);
+            border-color: rgba(255, 182, 193, 0.2);
+        }
+        
+        .grant-item:hover::before {
+            left: 100%;
+        }
+        
+        .grant-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .grant-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: -0.2px;
+        }
+        
+        .grant-amount {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffb6c1 0%, #db7093 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .grant-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .meta-item {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .meta-label {
+            color: rgba(255, 255, 255, 0.6);
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 11px;
+        }
+        
+        .meta-value {
+            font-weight: 600;
+            color: #ffffff;
+        }
+        
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .status-badge::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+        
+        .status-badge:active::before {
+            width: 100px;
+            height: 100px;
+        }
+        
+        .status-research {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .status-drafting {
+            background: linear-gradient(135deg, #ffaa00, #ff8800);
+            color: #000;
+            border: 1px solid #ffaa00;
+        }
+        
+        .status-ready {
+            background: linear-gradient(135deg, #00ff41, #00cc33);
+            color: #000;
+            border: 1px solid #00ff41;
+        }
+        
+        .status-submitted {
+            background: linear-gradient(135deg, #00aaff, #0088cc);
+            color: #fff;
+            border: 1px solid #00aaff;
+        }
+        
+        .status-deadline {
+            background: linear-gradient(135deg, #ff4141, #cc0000);
+            color: #fff;
+            border: 1px solid #ff4141;
+            animation: pulse-deadline 2s infinite;
+        }
+        
+        @keyframes pulse-deadline {
+            0%, 100% { 
+                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(255, 65, 65, 0.4);
+            }
+            50% { 
+                opacity: 0.8;
+                box-shadow: 0 0 0 10px rgba(255, 65, 65, 0);
+            }
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #ffb6c1, #db7093);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            outline: none;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 182, 193, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn:active::before {
+            width: 100px;
+            height: 100px;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
+        }
+        
+        .deadline-alert {
+            background: linear-gradient(135deg, rgba(255, 65, 65, 0.2), rgba(255, 65, 65, 0.1));
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 65, 65, 0.3);
+            color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .deadline-alert::before {
+            content: '⚡';
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-size: 20px;
+            animation: pulse-alert 2s infinite;
+        }
+        
+        .feedback-section {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feedback-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 182, 193, 0.05), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .feedback-section:hover::before {
+            left: 100%;
+        }
+        
+        .feedback-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffb6c1 0%, #db7093 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.2px;
+        }
+        
+        .feedback-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .council-member {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .council-member:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 182, 193, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .council-member-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .council-member-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+        
+        .council-member-role {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .council-feedback {
+            width: 100%;
+            min-height: 100px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+        
+        .council-feedback:focus {
+            outline: none;
+            border-color: rgba(255, 182, 193, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 15px rgba(255, 182, 193, 0.1);
+        }
+        
+        .council-feedback::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .feedback-timestamp {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            text-align: right;
+            margin-top: 5px;
+        }
+        
+        .feedback-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            justify-content: flex-end;
+        }
+        
+        .feedback-btn {
+            background: linear-gradient(135deg, #ffb6c1, #db7093);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            outline: none;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .feedback-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+        
+        .feedback-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 182, 193, 0.3);
+        }
+        
+        .feedback-btn:active {
+            transform: translateY(0);
+        }
+        
+        .feedback-btn:active::before {
+            width: 80px;
+            height: 80px;
+        }
+        
+        .feedback-btn.secondary {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .feedback-status {
+            margin-top: 10px;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .feedback-status.show {
+            opacity: 1;
+        }
+        
+        .feedback-status.success {
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.2), rgba(0, 255, 65, 0.1));
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            color: #00ff41;
+        }
+        
+        .feedback-status.error {
+            background: linear-gradient(135deg, rgba(255, 65, 65, 0.2), rgba(255, 65, 65, 0.1));
+            border: 1px solid rgba(255, 65, 65, 0.3);
+            color: #ff4141;
+        }
+        
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            height: 24px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffb6c1, #db7093);
+            border-radius: 12px;
+            transition: width 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-fill::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        </style>
+</head>
+<body>
+    <div class="tracker">
+        <div class="header">
+            <h1>GRANT PIPELINE TRACKER</h1>
+            <p>Non-Dilutive Capital Acquisition System</p>
+        </div>
+        
+        <div class="deadline-alert">
+            <strong>⚠️ URGENT:</strong> Innovation Grant deadline in 7 days - Submit immediately
+        </div>
+        
+        <div class="pipeline-overview">
+            <div class="overview-card">
+                <div class="overview-value">$350K</div>
+                <div class="overview-label">Total Pipeline Value</div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-value">3</div>
+                <div class="overview-label">Active Opportunities</div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-value">60%</div>
+                <div class="overview-label">Target Capture Rate</div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-value">7</div>
+                <div class="overview-label">Days to Next Deadline</div>
+            </div>
+        </div>
+        
+        <div class="grant-details">
+            <h3>ACTIVE GRANT OPPORTUNITIES</h3>
+            
+            <div class="grant-item">
+                <div class="grant-header">
+                    <div class="grant-title">Innovation Hardware Grant</div>
+                    <div class="grant-amount">$150,000</div>
+                </div>
+                
+                <div class="grant-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Organization</span>
+                        <span class="meta-value">Tech Innovation Fund</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Deadline</span>
+                        <span class="meta-value">Feb 17, 2026</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Status</span>
+                        <span class="meta-value">
+                            <span class="status-badge status-deadline">DEADLINE URGENT</span>
+                        </span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Probability</span>
+                        <span class="meta-value">75%</span>
+                    </div>
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 90%"></div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn" onclick="submitGrant('innovation')">SUBMIT NOW</button>
+                    <button class="btn btn-secondary" onclick="reviewGrant('innovation')">Review Application</button>
+                    <button class="btn btn-secondary" onclick="editGrant('innovation')">Edit Proposal</button>
+                </div>
+            </div>
+            
+            <div class="grant-item">
+                <div class="grant-header">
+                    <div class="grant-title">Hardware Accelerator Program</div>
+                    <div class="grant-amount">$100,000</div>
+                </div>
+                
+                <div class="grant-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Organization</span>
+                        <span class="meta-value">Hardware Lab</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Deadline</span>
+                        <span class="meta-value">Mar 1, 2026</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Status</span>
+                        <span class="meta-value">
+                            <span class="status-badge status-ready">READY TO SUBMIT</span>
+                        </span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Probability</span>
+                        <span class="meta-value">65%</span>
+                    </div>
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 95%"></div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn" onclick="submitGrant('accelerator')">Submit Application</button>
+                    <button class="btn btn-secondary" onclick="reviewGrant('accelerator')">Review Draft</button>
+                    <button class="btn btn-secondary" onclick="scheduleGrant('accelerator')">Schedule Submission</button>
+                </div>
+            </div>
+            
+            <div class="grant-item">
+                <div class="grant-header">
+                    <div class="grant-title">Design Excellence Fund</div>
+                    <div class="grant-amount">$100,000</div>
+                </div>
+                
+                <div class="grant-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Organization</span>
+                        <span class="meta-value">Design Council</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Deadline</span>
+                        <span class="meta-value">Feb 28, 2026</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Status</span>
+                        <span class="meta-value">
+                            <span class="status-badge status-submitted">SUBMITTED</span>
+                        </span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Probability</span>
+                        <span class="meta-value">55%</span>
+                    </div>
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%"></div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-secondary" onclick="trackGrant('design')">Track Status</button>
+                    <button class="btn btn-secondary" onclick="prepareGrant('design')">Prepare Follow-up</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="feedback-section">
+            <h3 class="feedback-title">📝 COUNCIL FEEDBACK</h3>
+            <div class="feedback-grid">
+                <div class="council-member">
+                    <div class="council-member-header">
+                        <span class="council-member-name">FOUNDER</span>
+                        <span class="council-member-role">Vision Anchor</span>
+                    </div>
+                    <textarea class="council-feedback" placeholder="Enter your grant strategy insights and application notes..." id="founderFeedback"></textarea>
+                    <div class="feedback-timestamp" id="founderTimestamp"></div>
+                </div>
+                
+                <div class="council-member">
+                    <div class="council-member-header">
+                        <span class="council-member-name">ECHO</span>
+                        <span class="council-member-role">Boss</span>
+                    </div>
+                    <textarea class="council-feedback" placeholder="Enter meeting cadence and flow optimization notes..." id="echoFeedback"></textarea>
+                    <div class="feedback-timestamp" id="echoTimestamp"></div>
+                </div>
+                
+                <div class="council-member">
+                    <div class="council-member-header">
+                        <span class="council-member-name">DREW</span>
+                        <span class="council-member-role">Executor</span>
+                    </div>
+                    <textarea class="council-feedback" placeholder="Enter operational excellence and social media updates..." id="drewFeedback"></textarea>
+                    <div class="feedback-timestamp" id="drewTimestamp"></div>
+                </div>
+                
+                <div class="council-member">
+                    <div class="council-member-header">
+                        <span class="council-member-name">BARRONS</span>
+                        <span class="council-member-role">Architect</span>
+                    </div>
+                    <textarea class="council-feedback" placeholder="Enter brand resonance and strategic grounding insights..." id="barronsFeedback"></textarea>
+                    <div class="feedback-timestamp" id="barronsTimestamp"></div>
+                </div>
+            </div>
+            
+            <div class="feedback-actions">
+                <button class="feedback-btn secondary" onclick="clearAllFeedback()">Clear All</button>
+                <button class="feedback-btn" onclick="saveAllFeedback()">Save All Feedback</button>
+            </div>
+            <div class="feedback-status" id="feedbackStatus"></div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px; color: #888; font-size: 12px;">
+            Last synchronized: <span id="lastSync">Loading...</span>
+        </div>
+    </div>
+    
+    <script>
+        // Create cherry blossom petals
+        function createSakuraPetals() {
+            const petalCount = 15;
+            for (let i = 0; i < petalCount; i++) {
+                const petal = document.createElement('div');
+                petal.className = 'sakura-petal';
+                petal.style.left = Math.random() * 100 + '%';
+                petal.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                petal.style.animationDelay = Math.random() * 10 + 's';
+                document.body.appendChild(petal);
+            }
+        }
+        
+        // Feedback functionality
+        function saveFeedback() {
+            const feedbackData = {
+                founder: document.getElementById('founderFeedback').value.trim(),
+                echo: document.getElementById('echoFeedback').value.trim(),
+                drew: document.getElementById('drewFeedback').value.trim(),
+                barrons: document.getElementById('barronsFeedback').value.trim(),
+                timestamp: new Date().toISOString(),
+                dashboard: 'grant-pipeline'
+            };
+            
+            const statusDiv = document.getElementById('feedbackStatus');
+            
+            if (!feedbackData.founder && !feedbackData.echo && !feedbackData.drew && !feedbackData.barrons) {
+                showStatus('Please enter feedback for at least one council member.', 'error');
+                return;
+            }
+            
+            // Save to localStorage
+            let allFeedback = JSON.parse(localStorage.getItem('councilFeedback') || '[]');
+            allFeedback.push(feedbackData);
+            localStorage.setItem('councilFeedback', JSON.stringify(allFeedback));
+            
+            showStatus('All feedback saved successfully!', 'success');
+            
+            // Update timestamps
+            updateTimestamps();
+            
+            // Clear textareas after successful save
+            setTimeout(() => {
+                document.getElementById('founderFeedback').value = '';
+                document.getElementById('echoFeedback').value = '';
+                document.getElementById('drewFeedback').value = '';
+                document.getElementById('barronsFeedback').value = '';
+                statusDiv.classList.remove('show');
+            }, 2000);
+        }
+        
+        function clearFeedback() {
+            document.getElementById('founderFeedback').value = '';
+            document.getElementById('echoFeedback').value = '';
+            document.getElementById('drewFeedback').value = '';
+            document.getElementById('barronsFeedback').value = '';
+            const statusDiv = document.getElementById('feedbackStatus');
+            statusDiv.classList.remove('show');
+        }
+        
+        function clearAllFeedback() {
+            clearFeedback();
+            // Clear all saved feedback
+            localStorage.removeItem('councilFeedback');
+            showStatus('All feedback cleared!', 'success');
+        }
+        
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('feedbackStatus');
+            statusDiv.textContent = message;
+            statusDiv.className = `feedback-status ${type} show`;
+        }
+        
+        function updateTimestamps() {
+            const now = new Date();
+            const timestamp = now.toLocaleString();
+            
+            document.getElementById('founderTimestamp').textContent = timestamp;
+            document.getElementById('echoTimestamp').textContent = timestamp;
+            document.getElementById('drewTimestamp').textContent = timestamp;
+            document.getElementById('barronsTimestamp').textContent = timestamp;
+        }
+        
+        function loadFeedback() {
+            const allFeedback = JSON.parse(localStorage.getItem('councilFeedback') || '[]');
+            if (allFeedback.length > 0) {
+                const latestFeedback = allFeedback[allFeedback.length - 1];
+                if (latestFeedback.dashboard === 'grant-pipeline') {
+                    document.getElementById('founderFeedback').value = latestFeedback.founder || '';
+                    document.getElementById('echoFeedback').value = latestFeedback.echo || '';
+                    document.getElementById('drewFeedback').value = latestFeedback.drew || '';
+                    document.getElementById('barronsFeedback').value = latestFeedback.barrons || '';
+                }
+            }
+        }
+        
+        // Grant pipeline management functions
+        function submitGrant(grantId) {
+            alert(`Submitting ${grantId} grant application...\n\nThis will:\n1. Finalize all application materials\n2. Submit through official portal\n3. Send confirmation email\n4. Update pipeline status\n\nProceed with submission?`);
+        }
+        
+        function reviewGrant(grantId) {
+            alert(`Opening ${grantId} grant application for review...\n\nReview checklist:\n✓ Sovereign positioning alignment\n✓ Financial projections accuracy\n✓ Technical feasibility validation\n✓ Brand consistency check\n✓ Impact metrics defined`);
+        }
+        
+        function editGrant(grantId) {
+            alert(`Opening ${grantId} grant proposal editor...`);
+        }
+        
+        function scheduleGrant(grantId) {
+            alert(`Scheduling ${grantId} grant submission...\n\nOptimal submission time: Tuesday 10:00 AM\nReason: Peak review period, weekend buffer`);
+        }
+        
+        function trackGrant(grantId) {
+            alert(`Tracking ${grantId} grant status...\n\nCurrent status: Under review\nEstimated decision: 2-3 weeks\nNext update: Feb 24, 2026`);
+        }
+        
+        function prepareGrant(grantId) {
+            alert(`Preparing follow-up for ${grantId} grant...\n\nFollow-up strategy:\n1. Wait 14 days post-submission\n2. Send polite status inquiry\n3. Offer additional materials\n4. Highlight recent milestones`);
+        }
+        
+        // Update timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('lastSync').textContent = now.toLocaleString();
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            createSakuraPetals();
+            loadFeedback();
+            updateTimestamps();
+            
+            // Add click interactions to cards
+            const cards = document.querySelectorAll('.overview-card, .grant-item');
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    console.log('Clicked:', this.querySelector('.overview-label, .grant-title').textContent);
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 200);
+                });
+            });
+            
+            // Add hover effects to status badges
+            const badges = document.querySelectorAll('.status-badge');
+            badges.forEach(badge => {
+                badge.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    console.log('Status clicked:', this.textContent);
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+            
+            // Auto-save feedback on Ctrl+S
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 's') {
+                    e.preventDefault();
+                    saveFeedback();
+                }
+            });
+            
+            // Update timestamp every minute
+            setInterval(updateTimestamps, 60000);
+        });
+    </script>
+</body>
+</html>

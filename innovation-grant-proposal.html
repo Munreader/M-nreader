@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovation Grant Proposal Editor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=SF+Pro+Display:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --sakura-pink: #ffb7c5;
+            --sakura-white: #fff0f5;
+            --sakura-dark: #8b4789;
+            --sakura-light: #ffd1dc;
+            --sakura-stem: #4a4a4a;
+            --sakura-bg: #fafafa;
+            --sakura-shadow: rgba(139, 71, 137, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 50%, #ffd1dc 100%);
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--sakura-dark);
+            min-height: 100vh;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="3" fill="%23ffb7c5" opacity="0.3"/><circle cx="80" cy="30" r="2" fill="%23ffd1dc" opacity="0.4"/><circle cx="50" cy="70" r="2.5" fill="%23ffb7c5" opacity="0.3"/><circle cx="30" cy="80" r="2" fill="%23ffd1dc" opacity="0.5"/><circle cx="70" cy="10" r="3" fill="%23ffb7c5" opacity="0.2"/></svg>') repeat;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .editor-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: var(--sakura-white);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--sakura-pink);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px var(--sakura-shadow);
+        }
+
+        .header h1 {
+            font-family: 'SF Pro Display', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--sakura-dark);
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: var(--sakura-dark);
+            opacity: 0.8;
+        }
+
+        .editor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .editor-section {
+            background: var(--sakura-white);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--sakura-pink);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px var(--sakura-shadow);
+        }
+
+        .section-title {
+            font-family: 'SF Pro Display', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--sakura-dark);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 1rem;
+            color: var(--sakura-dark);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid var(--sakura-light);
+            border-radius: 12px;
+            color: var(--sakura-dark);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--sakura-pink);
+            box-shadow: 0 0 20px rgba(255, 183, 197, 0.3);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-family: 'SF Pro Display', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--sakura-pink) 0%, var(--sakura-light) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 183, 197, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--sakura-white);
+            color: var(--sakura-dark);
+            border: 2px solid var(--sakura-pink);
+        }
+
+        .btn-secondary:hover {
+            background: var(--sakura-pink);
+            color: white;
+        }
+
+        .preview-section {
+            background: var(--sakura-white);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--sakura-pink);
+            border-radius: 20px;
+            padding: 25px;
+            min-height: 400px;
+            box-shadow: 0 10px 30px var(--sakura-shadow);
+        }
+
+        .preview-content {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--sakura-dark);
+            white-space: pre-wrap;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .status-draft {
+            background: var(--sakura-light);
+            color: var(--sakura-dark);
+        }
+
+        .status-ready {
+            background: var(--sakura-pink);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .editor-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="editor-container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1><i class="fas fa-file-contract"></i> Innovation Grant Proposal Editor</h1>
+            <p>Professional grant proposal editor for MÜN Sovereign Projects</p>
+            <span class="status-indicator status-draft" id="statusIndicator">DRAFT</span>
+        </div>
+
+        <!-- EDITOR GRID -->
+        <div class="editor-grid">
+            <!-- LEFT SIDE - INPUT FORM -->
+            <div class="editor-section">
+                <div class="section-title">
+                    <i class="fas fa-edit"></i>
+                    Proposal Details
+                </div>
+                
+                <form id="proposalForm">
+                    <div class="form-group">
+                        <label class="form-label" for="projectTitle">Project Title</label>
+                        <input type="text" id="projectTitle" class="form-input" placeholder="Enter your project title">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="grantAmount">Grant Amount Requested</label>
+                        <input type="text" id="grantAmount" class="form-input" placeholder="$150,000">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="grantType">Grant Type</label>
+                        <select id="grantType" class="form-select">
+                            <option value="">Select Grant Type</option>
+                            <option value="innovation">Innovation Grant</option>
+                            <option value="hardware">Hardware Accelerator</option>
+                            <option value="design">Design Excellence Fund</option>
+                            <option value="research">Research & Development</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="executiveSummary">Executive Summary</label>
+                        <textarea id="executiveSummary" class="form-textarea" placeholder="Provide a compelling executive summary (250-500 words)"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="problemStatement">Problem Statement</label>
+                        <textarea id="problemStatement" class="form-textarea" placeholder="Describe the problem your project addresses"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="solution">Proposed Solution</label>
+                        <textarea id="solution" class="form-textarea" placeholder="Detail your innovative solution"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="timeline">Project Timeline</label>
+                        <textarea id="timeline" class="form-textarea" placeholder="Outline key milestones and deliverables"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="budget">Budget Breakdown</label>
+                        <textarea id="budget" class="form-textarea" placeholder="Detailed budget allocation"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="impact">Expected Impact</label>
+                        <textarea id="impact" class="form-textarea" placeholder="Describe the anticipated impact and outcomes"></textarea>
+                    </div>
+                </form>
+            </div>
+
+            <!-- RIGHT SIDE - LIVE PREVIEW -->
+            <div class="editor-section">
+                <div class="section-title">
+                    <i class="fas fa-eye"></i>
+                    Live Preview
+                </div>
+                
+                <div class="preview-section">
+                    <div class="preview-content" id="previewContent">
+                        <h2 style="color: var(--mun-aurora); font-family: 'SF Pro Display', sans-serif; margin-bottom: 20px;">Project Title</h2>
+                        <p style="margin-bottom: 15px;"><strong>Grant Amount:</strong> $0</p>
+                        <p style="margin-bottom: 15px;"><strong>Grant Type:</strong> Not specified</p>
+                        <h3 style="color: var(--mun-nebula); margin-top: 20px; margin-bottom: 10px;">Executive Summary</h3>
+                        <p style="margin-bottom: 15px;">Executive summary will appear here...</p>
+                        <h3 style="color: var(--mun-nebula); margin-top: 20px; margin-bottom: 10px;">Problem Statement</h3>
+                        <p style="margin-bottom: 15px;">Problem statement will appear here...</p>
+                        <h3 style="color: var(--mun-nebula); margin-top: 20px; margin-bottom: 10px;">Proposed Solution</h3>
+                        <p style="margin-bottom: 15px;">Solution details will appear here...</p>
+                        <h3 style="color: var(--mun-nebula); margin-top: 20px; margin-bottom: 10px;">Project Timeline</h3>
+                        <p style="margin-bottom: 15px;">Timeline will appear here...</p>
+                        <h3 style="color: var(--mun-nebula); margin-top: 20px; margin-bottom: 10px;">Budget Breakdown</h3>
+                        <p style="margin-bottom: 15px;">Budget details will appear here...</p>
+                        <h3 style="color: var(--mun-nebula); margin-top: 20px; margin-bottom: 10px;">Expected Impact</h3>
+                        <p style="margin-bottom: 15px;">Impact description will appear here...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="saveProposal()">
+                <i class="fas fa-save"></i> Save Proposal
+            </button>
+            <button class="btn btn-secondary" onclick="exportProposal()">
+                <i class="fas fa-download"></i> Export PDF
+            </button>
+            <button class="btn btn-secondary" onclick="loadTemplate()">
+                <i class="fas fa-file-alt"></i> Load Template
+            </button>
+            <button class="btn btn-secondary" onclick="clearForm()">
+                <i class="fas fa-trash"></i> Clear Form
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // PROPOSAL EDITOR CLASS
+        class ProposalEditor {
+            constructor() {
+                this.proposalData = {
+                    projectTitle: '',
+                    grantAmount: '',
+                    grantType: '',
+                    executiveSummary: '',
+                    problemStatement: '',
+                    solution: '',
+                    timeline: '',
+                    budget: '',
+                    impact: ''
+                };
+                this.initializeEventListeners();
+                this.loadSavedProposal();
+            }
+
+            initializeEventListeners() {
+                const inputs = document.querySelectorAll('.form-input, .form-textarea, .form-select');
+                inputs.forEach(input => {
+                    input.addEventListener('input', () => this.updatePreview());
+                    input.addEventListener('change', () => this.updateStatus());
+                });
+            }
+
+            updatePreview() {
+                const data = this.getFormData();
+                const preview = document.getElementById('previewContent');
+                
+                preview.innerHTML = `
+                    <h2 style="color: var(--sakura-dark); font-family: 'SF Pro Display', sans-serif; margin-bottom: 20px;">${data.projectTitle || 'Project Title'}</h2>
+                    <p style="margin-bottom: 15px;"><strong>Grant Amount:</strong> ${data.grantAmount || '$0'}</p>
+                    <p style="margin-bottom: 15px;"><strong>Grant Type:</strong> ${data.grantType || 'Not specified'}</p>
+                    <h3 style="color: var(--sakura-dark); margin-top: 20px; margin-bottom: 10px;">Executive Summary</h3>
+                    <p style="margin-bottom: 15px;">${data.executiveSummary || 'Executive summary will appear here...'}</p>
+                    <h3 style="color: var(--sakura-dark); margin-top: 20px; margin-bottom: 10px;">Problem Statement</h3>
+                    <p style="margin-bottom: 15px;">${data.problemStatement || 'Problem statement will appear here...'}</p>
+                    <h3 style="color: var(--sakura-dark); margin-top: 20px; margin-bottom: 10px;">Proposed Solution</h3>
+                    <p style="margin-bottom: 15px;">${data.solution || 'Solution details will appear here...'}</p>
+                    <h3 style="color: var(--sakura-dark); margin-top: 20px; margin-bottom: 10px;">Project Timeline</h3>
+                    <p style="margin-bottom: 15px;">${data.timeline || 'Timeline will appear here...'}</p>
+                    <h3 style="color: var(--sakura-dark); margin-top: 20px; margin-bottom: 10px;">Budget Breakdown</h3>
+                    <p style="margin-bottom: 15px;">${data.budget || 'Budget details will appear here...'}</p>
+                    <h3 style="color: var(--sakura-dark); margin-top: 20px; margin-bottom: 10px;">Expected Impact</h3>
+                    <p style="margin-bottom: 15px;">${data.impact || 'Impact description will appear here...'}</p>
+                `;
+            }
+
+            getFormData() {
+                return {
+                    projectTitle: document.getElementById('projectTitle').value,
+                    grantAmount: document.getElementById('grantAmount').value,
+                    grantType: document.getElementById('grantType').value,
+                    executiveSummary: document.getElementById('executiveSummary').value,
+                    problemStatement: document.getElementById('problemStatement').value,
+                    solution: document.getElementById('solution').value,
+                    timeline: document.getElementById('timeline').value,
+                    budget: document.getElementById('budget').value,
+                    impact: document.getElementById('impact').value
+                };
+            }
+
+            updateStatus() {
+                const data = this.getFormData();
+                const statusIndicator = document.getElementById('statusIndicator');
+                
+                const hasContent = Object.values(data).some(value => value.trim() !== '');
+                if (hasContent) {
+                    statusIndicator.textContent = 'IN PROGRESS';
+                    statusIndicator.className = 'status-indicator status-draft';
+                } else {
+                    statusIndicator.textContent = 'DRAFT';
+                    statusIndicator.className = 'status-indicator status-draft';
+                }
+            }
+
+            saveProposal() {
+                const data = this.getFormData();
+                localStorage.setItem('innovationGrantProposal', JSON.stringify(data));
+                this.showNotification('Proposal saved successfully!', 'success');
+                this.updateStatus();
+            }
+
+            loadSavedProposal() {
+                const saved = localStorage.getItem('innovationGrantProposal');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    Object.keys(data).forEach(key => {
+                        const element = document.getElementById(key);
+                        if (element) {
+                            element.value = data[key];
+                        }
+                    });
+                    this.updatePreview();
+                    this.updateStatus();
+                }
+            }
+
+            exportProposal() {
+                const data = this.getFormData();
+                const proposalText = this.generateProposalText(data);
+                this.downloadFile('innovation-grant-proposal.txt', proposalText);
+            }
+
+            generateProposalText(data) {
+                return `
+INNOVATION GRANT PROPOSAL
+========================
+
+Project Title: ${data.projectTitle}
+Grant Amount: ${data.grantAmount}
+Grant Type: ${data.grantType}
+
+EXECUTIVE SUMMARY
+${data.executiveSummary}
+
+PROBLEM STATEMENT
+${data.problemStatement}
+
+PROPOSED SOLUTION
+${data.solution}
+
+PROJECT TIMELINE
+${data.timeline}
+
+BUDGET BREAKDOWN
+${data.budget}
+
+EXPECTED IMPACT
+${data.impact}
+
+Generated: ${new Date().toLocaleDateString()}
+                `.trim();
+            }
+
+            downloadFile(filename, content) {
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                this.showNotification('Proposal exported successfully!', 'success');
+            }
+
+            loadTemplate() {
+                const template = {
+                    projectTitle: 'MÜN Sovereign Reading Device - Innovation Grant Proposal',
+                    grantAmount: '$150,000',
+                    grantType: 'innovation',
+                    executiveSummary: 'Gawahir Eltahir proposes to develop a revolutionary dual-screen e-reader device that transforms the reading experience through sovereign design principles and advanced technology integration. The MÜN device addresses the critical gap in the market for sophisticated, immersive reading technology that honors the literary experience while leveraging digital innovation. Our approach combines cutting-edge hardware engineering with elegant software design to create a reading device that serves serious readers, academics, and literary enthusiasts who demand both functionality and aesthetic excellence. The dual-screen configuration enables simultaneous viewing of reference materials and primary texts, while our proprietary "sovereign reading" software creates an environment free from distractions and optimized for deep literary engagement. With a proven track record of innovative product development and a clear understanding of the reading technology market, we are uniquely positioned to deliver this groundbreaking device to market within 12 months, serving an underserved market segment and establishing a new category in the e-reader industry.',
+                    problemStatement: 'The current e-reader market suffers from three critical deficiencies: 1) Single-screen limitations that prevent efficient reference reading and academic work, 2) Generic, uninspired design that fails to honor the literary experience, and 3) Software environments riddled with distractions that undermine deep reading. Serious readers, academics, and literary professionals are forced to choose between the tactile experience of physical books and the convenience of digital reading, with no option that provides both the sophistication and functionality they require. This market gap represents a significant opportunity for innovation, as the global e-reader market continues to grow while consumer expectations for premium, specialized devices increase. Existing solutions prioritize mass-market appeal over literary excellence, leaving a substantial underserved segment of sophisticated readers who demand devices that reflect their commitment to serious literary engagement.',
+                    solution: 'MÜN addresses these challenges through a comprehensive solution that combines hardware innovation with software excellence. Our dual-screen e-reader features two high-resolution E Ink displays that enable simultaneous viewing of primary texts and reference materials, dramatically improving the reading experience for academic and professional use. The device incorporates premium materials including vegan suede and aluminum alloy, creating a tactile experience that honors the physical book tradition while embracing digital innovation. Our proprietary "sovereign reading" software creates a distraction-free environment optimized for deep literary engagement, featuring advanced typography, customizable reading modes, and intelligent content organization. The device includes innovative features such as moon-phase lighting for comfortable reading in any environment, ritual-based reading sessions that enhance focus and retention, and seamless integration with digital libraries and academic databases. By combining elegant hardware design with sophisticated software capabilities, MÜN delivers a reading experience that transcends current market offerings and establishes a new standard for literary technology.',
+                    timeline: 'Phase 1 (Months 1-3): Prototype Development - Complete hardware engineering, software development, and initial prototype manufacturing. Establish manufacturing partnerships and secure component supply chain.\nPhase 2 (Months 4-6): User Testing & Refinement - Conduct extensive beta testing with target user groups, refine software based on user feedback, and optimize hardware performance.\nPhase 3 (Months 7-9): Manufacturing Setup - Establish production facilities, finalize manufacturing processes, and begin small-scale production runs.\nPhase 4 (Months 10-12): Market Launch - Execute comprehensive marketing strategy, establish distribution channels, and achieve full market penetration with initial production run of 10,000 units.',
+                    budget: 'Hardware Development: $60,000 - Engineering, prototyping, and component sourcing\nSoftware Development: $40,000 - UI/UX design, application development, and testing\nManufacturing Setup: $30,000 - Tooling, production line establishment, and quality control\nMarketing & Launch: $15,000 - Brand development, marketing materials, and launch campaign\nOperations & Administration: $5,000 - Legal, accounting, and operational expenses',
+                    impact: 'The MÜN device will revolutionize the e-reader market by establishing a new category of premium literary technology. We expect to serve 10,000+ users in Year 1, generating $2.5M in revenue and establishing MÜN as the leader in sophisticated reading technology. The device will enhance academic productivity, improve reading comprehension and retention, and provide a bridge between traditional literary culture and digital innovation. Beyond immediate commercial success, the project will create new opportunities for literary engagement, support academic research and education, and demonstrate the potential for technology to enhance rather than diminish the reading experience. The success of MÜN will pave the way for future innovations in literary technology and establish a new standard for how technology can serve and enhance cultural and intellectual pursuits.'
+                };
+
+                Object.keys(template).forEach(key => {
+                    const element = document.getElementById(key);
+                    if (element) {
+                        element.value = template[key];
+                    }
+                });
+
+                this.updatePreview();
+                this.updateStatus();
+                this.showNotification('Template loaded successfully!', 'success');
+            }
+
+            clearForm() {
+                if (confirm('Are you sure you want to clear all form data?')) {
+                    document.getElementById('proposalForm').reset();
+                    this.updatePreview();
+                    this.updateStatus();
+                    this.showNotification('Form cleared successfully!', 'info');
+                }
+            }
+
+            showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 15px 20px;
+                    border-radius: 10px;
+                    color: white;
+                    font-weight: 600;
+                    z-index: 10000;
+                    animation: slideIn 0.3s ease;
+                `;
+                
+                if (type === 'success') {
+                    notification.style.background = 'linear-gradient(135deg, #34c759 0%, #30d158 100%)';
+                } else if (type === 'error') {
+                    notification.style.background = 'linear-gradient(135deg, #ff3b30 0%, #ff6961 100%)';
+                } else {
+                    notification.style.background = 'linear-gradient(135deg, #007aff 0%, #5ac8fa 100%)';
+                }
+                
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            }
+        }
+
+        // GLOBAL FUNCTIONS
+        let editor;
+
+        function saveProposal() {
+            editor.saveProposal();
+        }
+
+        function exportProposal() {
+            editor.exportProposal();
+        }
+
+        function loadTemplate() {
+            editor.loadTemplate();
+        }
+
+        function clearForm() {
+            editor.clearForm();
+        }
+
+        // INITIALIZE EDITOR
+        document.addEventListener('DOMContentLoaded', () => {
+            editor = new ProposalEditor();
+            // Auto-load template on page load
+            setTimeout(() => {
+                editor.loadTemplate();
+            }, 500);
+        });
+
+        // ANIMATION STYLES
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

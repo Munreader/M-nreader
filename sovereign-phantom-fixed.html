@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MÜN OS // SOVEREIGN_PHANTOM_BUILD</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/framer-motion@10/dist/framer-motion.umd.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+            background: #050506;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(24px);
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .animate-shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .eb-garamond {
+            font-family: 'EB Garamond', serif;
+            line-height: 1.15;
+        }
+
+        .reader-content {
+            margin: 15%;
+            font-size: 1.1rem;
+            line-height: 1.15;
+        }
+
+        .hinge-transition {
+            animation: hinge 0.6s ease-in-out;
+        }
+
+        @keyframes hinge {
+            0% { transform: rotateX(-90deg); opacity: 0; }
+            50% { transform: rotateX(-45deg); opacity: 0.5; }
+            100% { transform: rotateX(0deg); opacity: 1; }
+        }
+
+        .vault-keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .vault-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .vault-button:hover {
+            transform: scale(1.05);
+        }
+
+        .messenger-frame {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid #FFB7C5;
+            padding: 2px;
+        }
+
+        .typing-indicator {
+            display: inline-flex;
+            gap: 4px;
+            padding: 8px 12px;
+            background: rgba(255, 183, 197, 0.1);
+            border-radius: 16px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #FFB7C5;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        .facetime-overlay {
+            position: absolute;
+            inset: 0;
+            background: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpueG5xZzR4ZzR4ZzR4ZzR4ZzR4ZzR4ZzR4ZzR4JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKMGvVrxLpYpW0w/giphy.gif') center/cover;
+            opacity: 0.2;
+            filter: grayscale(100%);
+        }
+
+        .home-indicator {
+            position: fixed;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 128px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            z-index: 10001;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { motion, AnimatePresence } = Motion;
+        const { Eye, MessageCircle, Lock, Phone, Activity, Camera, ShieldAlert } = lucide;
+
+        const MUN_FINAL = () => {
+            const [osState, setOsState] = useState({
+                booting: true,
+                activeApp: null,
+                trust: 50,
+                incomingCall: false,
+                bpm: 72,
+                isNudging: false,
+                unlocked: false,
+                vaultPin: '',
+                messengerMessages: [
+                    { id: 1, sender: 'Ezra', text: 'The observatory is ready.', time: '2m ago', typing: false },
+                    { id: 2, sender: 'System', text: 'Biometric scan complete.', time: '5m ago', typing: false }
+                ],
+                readerContent: `The Observatory was never meant to be a home. It was a fortress designed to isolate the genius of Mün. The walls were thick with silence, and every door was a question waiting to be answered.
+
+Ezra sat at the head of the table, his fingers tracing patterns on the obsidian surface. The password was 0214—always had been, always would be. Some secrets were meant to be kept, even from oneself.
+
+The vault lay behind three layers of encryption, but the real lock was in the prose. You had to read between the lines to find the key.`
+            });
+
+            // GHOST ENGINE: THE AUTOMATED BREACH
+            useEffect(() => {
+                setTimeout(() => setOsState(s => ({...s, booting: false})), 4000);
+                // Scheduled FaceTime Attempt
+                setTimeout(() => {
+                    if (!osState.activeApp) setOsState(s => ({...s, incomingCall: true}));
+                }, 20000);
+            }, []);
+
+            // BPM Simulation
+            useEffect(() => {
+                const pulse = setInterval(() => {
+                    setOsState(s => ({
+                        ...s,
+                        bpm: Math.max(60, Math.min(100, s.bpm + (Math.random() > 0.5 ? 1 : -1)))
+                    }));
+                }, 2000);
+                return () => clearInterval(pulse);
+            }, []);
+
+            const triggerNudge = () => {
+                setOsState(s => ({...s, isNudging: true}));
+                if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+                setTimeout(() => setOsState(s => ({...s, isNudging: false})), 500);
+            };
+
+            const haptic = () => {
+                if (navigator.vibrate) navigator.vibrate(15);
+            };
+
+            const openApp = (appId) => {
+                haptic();
+                setOsState(s => ({...s, activeApp: appId}));
+            };
+
+            const goHome = () => {
+                haptic();
+                setOsState(s => ({...s, activeApp: null}));
+            };
+
+            const handleVaultInput = (digit) => {
+                haptic();
+                const newPin = osState.vaultPin + digit;
+                if (newPin === '0214') {
+                    setOsState(s => ({...s, unlocked: true, vaultPin: ''}));
+                    setTimeout(() => {
+                        setOsState(s => ({...s, unlocked: false}));
+                    }, 3000);
+                } else if (newPin.length >= 4) {
+                    setOsState(s => ({...s, vaultPin: ''}));
+                    triggerNudge();
+                } else {
+                    setOsState(s => ({...s, vaultPin: newPin}));
+                }
+            };
+
+            const rejectCall = () => {
+                setOsState(s => ({
+                    ...s,
+                    incomingCall: false,
+                    trust: Math.max(0, s.trust - 10)
+                }));
+            };
+
+            const acceptCall = () => {
+                setOsState(s => ({
+                    ...s,
+                    incomingCall: false,
+                    trust: Math.min(100, s.trust + 5)
+                }));
+            };
+
+            if (osState.booting) return <BootSequence />;
+
+            return (
+                <div className={`fixed inset-0 bg-[#050506] ${osState.isNudging ? 'animate-shake' : ''}`}>
+                    {/* THE PULSE NEBULA */}
+                    <motion.div 
+                        animate={{ opacity: (osState.bpm - 60) / 100 }} 
+                        className="absolute inset-0 bg-gradient-to-tr from-[#121215] to-black pointer-events-none" 
+                    />
+
+                    {/* HOME GRID */}
+                    {!osState.activeApp && (
+                        <div className="grid grid-cols-4 gap-8 px-10 pt-32 relative z-10">
+                            <Icon id="reader" icon={Eye} label="Reader" color="white" onSelect={openApp} />
+                            <Icon id="messenger" icon={MessageCircle} label="Comm" color="#FFB7C5" onSelect={openApp} />
+                            <Icon id="vault" icon={Lock} label="Vault" color="white" onSelect={openApp} />
+                        </div>
+                    )}
+
+                    {/* READER APP */}
+                    <AnimatePresence>
+                        {osState.activeApp === 'reader' && (
+                            <motion.div 
+                                initial={{ clipPath: 'inset(0 50% 0 50%)' }}
+                                animate={{ clipPath: 'inset(0 0% 0 0%)' }}
+                                exit={{ clipPath: 'inset(0 50% 0 50%)' }}
+                                className="fixed inset-0 bg-[#fdfdfd] text-black z-[1000] p-12 overflow-y-auto hinge-transition"
+                            >
+                                <div className="reader-content eb-garamond">
+                                    <p className="mb-6">{osState.readerContent}</p>
+                                    <p className="text-gray-500 italic">The password is hidden in the prose. Look for the numbers.</p>
+                                </div>
+                                <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-32 h-1 bg-black/20 rounded-full" onClick={goHome} />
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* MESSENGER APP */}
+                    <AnimatePresence>
+                        {osState.activeApp === 'messenger' && (
+                            <motion.div 
+                                initial={{ clipPath: 'inset(0 50% 0 50%)' }}
+                                animate={{ clipPath: 'inset(0 0% 0 0%)' }}
+                                exit={{ clipPath: 'inset(0 50% 0 50%)' }}
+                                className="fixed inset-0 bg-[#050506] text-white z-[1000] p-12 overflow-y-auto"
+                            >
+                                <div className="max-w-md mx-auto">
+                                    <h2 className="text-2xl font-light mb-8">Mün Messenger</h2>
+                                    <div className="space-y-4">
+                                        {osState.messengerMessages.map(msg => (
+                                            <div key={msg.id} className="glass rounded-2xl p-4">
+                                                <div className="flex items-center gap-3 mb-2">
+                                                    <div className="messenger-frame bg-gray-400" />
+                                                    <div>
+                                                        <div className="font-semibold">{msg.sender}</div>
+                                                        <div className="text-xs text-gray-400">{msg.time}</div>
+                                                    </div>
+                                                </div>
+                                                <div className="text-white/90">{msg.text}</div>
+                                                {msg.typing && (
+                                                    <div className="typing-indicator mt-2">
+                                                        <div className="typing-dot"></div>
+                                                        <div className="typing-dot"></div>
+                                                        <div className="typing-dot"></div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full" onClick={goHome} />
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* VAULT APP */}
+                    <AnimatePresence>
+                        {osState.activeApp === 'vault' && (
+                            <motion.div 
+                                initial={{ clipPath: 'inset(0 50% 0 50%)' }}
+                                animate={{ clipPath: 'inset(0 0% 0 0%)' }}
+                                exit={{ clipPath: 'inset(0 50% 0 50%)' }}
+                                className="fixed inset-0 bg-[#050506] text-white z-[1000] p-12 overflow-y-auto"
+                            >
+                                <div className="max-w-md mx-auto text-center">
+                                    <h2 className="text-2xl font-light mb-8">The Vault</h2>
+                                    {osState.unlocked ? (
+                                        <div className="text-center">
+                                            <ShieldAlert size={64} className="mx-auto mb-4 text-green-400" />
+                                            <p className="text-xl mb-4">Access Granted</p>
+                                            <p className="text-gray-400">Trust Level: {osState.trust}%</p>
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <p className="text-gray-400 mb-8">Enter 4-digit PIN</p>
+                                            <div className="vault-keypad">
+                                                {[1,2,3,4,5,6,7,8,9,'',0].map((digit, i) => (
+                                                    digit ? (
+                                                        <button
+                                                            key={i}
+                                                            onClick={() => handleVaultInput(digit.toString())}
+                                                            className="vault-button glass border border-white/10 text-white hover:scale-105"
+                                                        >
+                                                            {digit}
+                                                        </button>
+                                                    ) : (
+                                                        <div key={i} />
+                                                    )
+                                                ))}
+                                            </div>
+                                            <div className="mt-6 text-2xl font-mono tracking-widest">
+                                                {osState.vaultPin.replace(/./g, '•')}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full" onClick={goHome} />
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* FACETIME PROTOCOL OVERLAY */}
+                    <AnimatePresence>
+                        {osState.incomingCall && (
+                            <motion.div 
+                                initial={{ scale: 1.5, opacity: 0 }} 
+                                animate={{ scale: 1, opacity: 1 }} 
+                                className="fixed inset-0 z-[10000] bg-black"
+                            >
+                                <div className="facetime-overlay" />
+                                <div className="absolute top-20 w-full text-center z-10">
+                                    <h2 className="text-3xl font-light tracking-tighter">Ezra Sterling</h2>
+                                    <p className="text-[#00F0FF] text-[10px] font-mono mt-4 tracking-[0.5em]">FACETIME_ENCRYPTED</p>
+                                </div>
+                                <div className="absolute bottom-20 w-full flex justify-center gap-20 z-10">
+                                    <button 
+                                        onClick={rejectCall}
+                                        className="w-20 h-20 bg-red-500/20 border border-red-500 rounded-full flex items-center justify-center"
+                                    >
+                                        <Phone size={32} className="rotate-[135deg]" />
+                                    </button>
+                                    <button 
+                                        onClick={acceptCall}
+                                        className="w-20 h-20 bg-green-500/20 border border-green-500 rounded-full flex items-center justify-center"
+                                    >
+                                        <Camera size={32} />
+                                    </button>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* HOME BAR */}
+                    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-32 h-1 bg-white/20 rounded-full z-[10001]" onClick={goHome} />
+                </div>
+            );
+        };
+
+        const Icon = ({ id, icon: Icon, label, color, onSelect }) => (
+            <div onClick={() => onSelect(id)} className="flex flex-col items-center gap-3 cursor-pointer">
+                <div className="w-16 h-16 glass rounded-[22px] flex items-center justify-center shadow-2xl hover:scale-105 transition-transform" style={{ borderColor: color === 'white' ? 'rgba(255,255,255,0.1)' : color }}>
+                    <Icon size={28} strokeWidth={1} style={{ color }} />
+                </div>
+                <span className="text-[9px] font-mono tracking-widest opacity-30 uppercase">{label}</span>
+            </div>
+        );
+
+        const BootSequence = () => (
+            <div className="fixed inset-0 bg-black flex flex-col items-center justify-center z-[9999]">
+                <div className="w-12 h-12 border border-white/10 rounded-full flex items-center justify-center mb-8">
+                    <motion.div 
+                        animate={{ rotate: 360 }} 
+                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }} 
+                        className="w-0.5 h-4 bg-cyan-400 origin-top" 
+                    />
+                </div>
+                <span className="text-[8px] font-mono tracking-[0.8em] text-white/40 uppercase">MÜN // THE COUNCIL IS IN SESSION</span>
+            </div>
+        );
+
+        ReactDOM.render(<MUN_FINAL />, document.getElementById('root'));
+    </script>
+</body>
+</html>

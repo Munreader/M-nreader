@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MÜN // Celestial Initiation</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #050506 0%, #0a0a0f 50%, #000000 100%);
+            color: #ffffff;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Parallax Starfield */
+        .starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            background: #ffffff;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .parallax-layer {
+            position: absolute;
+            width: 110%;
+            height: 110%;
+            top: -5%;
+            left: -5%;
+        }
+
+        .layer-1 { transform: translateZ(-100px) scale(1.1); }
+        .layer-2 { transform: translateZ(-50px) scale(1.05); }
+        .layer-3 { transform: translateZ(0px) scale(1); }
+
+        /* Main Container */
+        .initiation-container {
+            width: 100%;
+            max-width: 520px;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Celestial Header */
+        .celestial-header {
+            text-align: center;
+            margin-bottom: 48px;
+            position: relative;
+        }
+
+        .mun-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 56px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #ffd700, #f8f8ff, #00f0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            animation: celestialGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes celestialGlow {
+            0%, 100% { filter: brightness(1) drop-shadow(0 0 20px rgba(255, 215, 0, 0.3)); }
+            50% { filter: brightness(1.2) drop-shadow(0 0 30px rgba(0, 240, 255, 0.4)); }
+        }
+
+        .initiation-tagline {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            color: rgba(248, 248, 255, 0.7);
+            font-weight: 300;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+
+        /* Suede Ritual Panel */
+        .ritual-panel {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            border: 2px solid transparent;
+            border-image: linear-gradient(135deg, #ffd700, #f8f8ff, #00f0ff) 1;
+            border-radius: 24px;
+            padding: 48px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 0 60px rgba(255, 215, 0, 0.2),
+                0 0 120px rgba(248, 248, 255, 0.1),
+                inset 0 0 20px rgba(255, 215, 0, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .ritual-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ffd700, #f8f8ff, #00f0ff, transparent);
+            animation: ritualScan 4s ease-in-out infinite;
+        }
+
+        @keyframes ritualScan {
+            0%, 100% { transform: translateX(-100%); opacity: 0.3; }
+            50% { transform: translateX(100%); opacity: 1; }
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        .form-label {
+            font-family: 'Cormorant Garamond', serif;
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(248, 248, 255, 0.8);
+            margin-bottom: 12px;
+            letter-spacing: 0.1em;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 16px;
+            color: #f8f8ff;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            transition: all 0.4s ease;
+            outline: none;
+            backdrop-filter: blur(5px);
+        }
+
+        .form-input:focus {
+            border-color: #ffd700;
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 
+                0 0 20px rgba(255, 215, 0, 0.3),
+                inset 0 0 10px rgba(255, 215, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-input::placeholder {
+            color: rgba(248, 248, 255, 0.3);
+            font-style: italic;
+        }
+
+        /* Rune Status Buttons */
+        .rune-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .rune-button {
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 16px;
+            color: rgba(248, 248, 255, 0.7);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+        }
+
+        .rune-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            transition: all 0.4s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .rune-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .rune-button.active {
+            border-color: #ffd700;
+            color: #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .rune-button.active::before {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.3), transparent);
+        }
+
+        .rune-button[data-status="online"]:hover::before {
+            background: radial-gradient(circle, rgba(0, 255, 0, 0.3), transparent);
+        }
+
+        .rune-button[data-status="away"]:hover::before {
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.3), transparent);
+        }
+
+        .rune-button[data-status="busy"]:hover::before {
+            background: radial-gradient(circle, rgba(255, 0, 0, 0.3), transparent);
+        }
+
+        .rune-button[data-status="offline"]:hover::before {
+            background: radial-gradient(circle, rgba(192, 192, 192, 0.3), transparent);
+        }
+
+        /* Constellation Avatar */
+        .constellation-frame {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .avatar-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            border: 3px solid transparent;
+            border-image: linear-gradient(135deg, #ffd700, #f8f8ff, #00f0ff) 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 600;
+            color: #f8f8ff;
+            overflow: hidden;
+            box-shadow: 
+                0 0 30px rgba(255, 215, 0, 0.2),
+                inset 0 0 15px rgba(255, 215, 0, 0.1);
+        }
+
+        .avatar-circle::before {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border: 1px solid rgba(248, 248, 255, 0.2);
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.1), transparent 40%);
+        }
+
+        .constellation-etching {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        .constellation-line {
+            position: absolute;
+            background: rgba(255, 215, 0, 0.4);
+            height: 1px;
+            transform-origin: center;
+        }
+
+        .constellation-star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #ffd700;
+            border-radius: 50%;
+            box-shadow: 0 0 4px rgba(255, 215, 0, 0.6);
+        }
+
+        .avatar-button {
+            flex: 1;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 16px;
+            color: rgba(248, 248, 255, 0.7);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .avatar-button:hover {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: rgba(255, 215, 0, 0.4);
+            transform: translateY(-1px);
+        }
+
+        /* Celestial Submit Button */
+        .celestial-submit {
+            width: 100%;
+            padding: 24px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 240, 255, 0.1));
+            border: 2px solid transparent;
+            border-image: linear-gradient(135deg, #ffd700, #f8f8ff, #00f0ff) 1;
+            border-radius: 20px;
+            color: #f8f8ff;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .celestial-submit::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.4), transparent);
+            transform: translate(-50%, -50%);
+            transition: all 0.6s ease;
+        }
+
+        .celestial-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 15px 40px rgba(255, 215, 0, 0.4),
+                0 0 60px rgba(248, 248, 255, 0.2);
+        }
+
+        .celestial-submit:hover::before {
+            width: 200%;
+            height: 200%;
+            animation: lunarRipple 0.6s ease-out;
+        }
+
+        @keyframes lunarRipple {
+            0% { width: 0; height: 0; opacity: 1; }
+            100% { width: 200%; height: 200%; opacity: 0; }
+        }
+
+        .celestial-submit:active {
+            transform: translateY(-1px);
+        }
+
+        .celestial-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Social Glyph Buttons */
+        .celestial-divider {
+            text-align: center;
+            margin: 40px 0;
+            position: relative;
+        }
+
+        .celestial-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+        }
+
+        .celestial-divider span {
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            padding: 0 20px;
+            color: rgba(248, 248, 255, 0.5);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .glyph-login {
+            display: flex;
+            gap: 16px;
+        }
+
+        .glyph-button {
+            flex: 1;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 16px;
+            color: rgba(248, 248, 255, 0.7);
+            font-family: 'Inter', sans-serif;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            position: relative;
+        }
+
+        .glyph-button:hover {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: rgba(255, 215, 0, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Messages */
+        .celestial-message {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(26, 26, 26, 0.9));
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            color: #f8f8ff;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 14px;
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            animation: celestialSlideIn 0.4s ease;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+        }
+
+        @keyframes celestialSlideIn {
+            from { transform: translateX(100%) translateY(-20px); opacity: 0; }
+            to { transform: translateX(0) translateY(0); opacity: 1; }
+        }
+
+        .celestial-progress {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+
+        .celestial-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #f8f8ff, #00f0ff);
+            width: 0%;
+            transition: width 0.4s ease;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Micro-parallax mouse effect */
+        .parallax-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Parallax Starfield -->
+    <div class="parallax-container" id="parallaxContainer"></div>
+    <div class="starfield" id="starfield"></div>
+    
+    <!-- Progress Bar -->
+    <div class="celestial-progress">
+        <div class="celestial-progress-fill" id="progressFill"></div>
+    </div>
+    
+    <div class="initiation-container">
+        <div class="celestial-header">
+            <div class="mun-logo">MÜN</div>
+            <div class="initiation-tagline">Celestial Initiation Protocol</div>
+        </div>
+
+        <div class="ritual-panel">
+            <div class="form-group">
+                <label class="form-label">Sovereign Identifier</label>
+                <input type="text" class="form-input" id="sovereignId" placeholder="Enter your celestial designation" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Network Anchor</label>
+                <input type="email" class="form-input" id="networkAnchor" placeholder="quantum@mun.celestial" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Resonance State</label>
+                <div class="rune-selector">
+                    <div class="rune-button active" data-status="online" onclick="selectRune(this)">
+                        <span>🌟 Luminous</span>
+                    </div>
+                    <div class="rune-button" data-status="away" onclick="selectRune(this)">
+                        <span>🌙 Ethereal</span>
+                    </div>
+                    <div class="rune-button" data-status="busy" onclick="selectRune(this)">
+                        <span>🔥 Focused</span>
+                    </div>
+                    <div class="rune-button" data-status="offline" onclick="selectRune(this)">
+                        <span>🌑 Veiled</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Constellation Sigil</label>
+                <div class="constellation-frame">
+                    <div class="avatar-circle" id="constellationAvatar">
+                        <div class="constellation-etching" id="constellationEtching"></div>
+                        <span id="avatarInitial">M</span>
+                    </div>
+                    <button class="avatar-button" onclick="uploadConstellation()">Etch Sigil</button>
+                </div>
+            </div>
+
+            <button class="celestial-submit" id="initiateButton" onclick="initiateConnection()">
+                Initiate Celestial Connection
+            </button>
+
+            <div class="celestial-divider">
+                <span>or align with</span>
+            </div>
+
+            <div class="glyph-login">
+                <button class="glyph-button" onclick="glyphLogin('stellar')" title="Stellar Alignment">
+                    ✦
+                </button>
+                <button class="glyph-button" onclick="glyphLogin('lunar')" title="Lunar Convergence">
+                    🌙
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State management
+        let celestialData = {
+            sovereignId: '',
+            networkAnchor: '',
+            resonanceState: 'online',
+            constellationSigil: null,
+            connectionProgress: 0
+        };
+
+        // Load saved data
+        function loadCelestialData() {
+            const saved = localStorage.getItem('MUN_CELESTIAL_DATA');
+            if (saved) {
+                try {
+                    celestialData = { ...celestialData, ...JSON.parse(saved) };
+                    updateFormFromData();
+                    console.log('Loaded celestial data:', celestialData);
+                } catch (e) {
+                    console.error('Failed to load celestial data:', e);
+                }
+            }
+        }
+
+        // Save data
+        function saveCelestialData() {
+            try {
+                localStorage.setItem('MUN_CELESTIAL_DATA', JSON.stringify(celestialData));
+                console.log('Celestial data saved:', celestialData);
+            } catch (e) {
+                console.error('Failed to save celestial data:', e);
+            }
+        }
+
+        // Update form from saved data
+        function updateFormFromData() {
+            document.getElementById('sovereignId').value = celestialData.sovereignId || '';
+            document.getElementById('networkAnchor').value = celestialData.networkAnchor || '';
+            
+            // Update resonance state
+            document.querySelectorAll('.rune-button').forEach(rune => {
+                rune.classList.remove('active');
+                if (rune.dataset.status === celestialData.resonanceState) {
+                    rune.classList.add('active');
+                }
+            });
+            
+            // Update constellation
+            if (celestialData.constellationSigil) {
+                const avatar = document.getElementById('constellationAvatar');
+                avatar.style.backgroundImage = `url(${celestialData.constellationSigil})`;
+                avatar.style.backgroundSize = 'cover';
+                avatar.style.backgroundPosition = 'center';
+                document.getElementById('avatarInitial').style.display = 'none';
+            }
+        }
+
+        // Create parallax starfield
+        function createStarfield() {
+            const container = document.getElementById('parallaxContainer');
+            const starfield = document.getElementById('starfield');
+            
+            // Create parallax layers
+            for (let layer = 1; layer <= 3; layer++) {
+                const layerDiv = document.createElement('div');
+                layerDiv.className = `parallax-layer layer-${layer}`;
+                container.appendChild(layerDiv);
+            }
+            
+            // Create stars
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (3 + Math.random() * 2) + 's';
+                starfield.appendChild(star);
+            }
+        }
+
+        // Create constellation etching
+        function createConstellationEtching() {
+            const etching = document.getElementById('constellationEtching');
+            etching.innerHTML = '';
+            
+            // Create constellation lines and stars
+            const lines = [
+                { x1: 20, y1: 20, x2: 40, y2: 30 },
+                { x1: 40, y1: 30, x2: 60, y2: 25 },
+                { x1: 60, y1: 25, x2: 80, y2: 40 },
+                { x1: 30, y1: 50, x2: 50, y2: 70 },
+                { x1: 50, y1: 70, x2: 70, y2: 60 }
+            ];
+            
+            lines.forEach(line => {
+                const line = document.createElement('div');
+                line.className = 'constellation-line';
+                line.style.left = line.x1 + 'px';
+                line.style.top = line.y1 + 'px';
+                line.style.width = Math.sqrt(Math.pow(line.x2 - line.x1, 2) + Math.pow(line.y2 - line.y1, 2)) + 'px';
+                line.style.transform = `rotate(${Math.atan2(line.y2 - line.y1, line.x2 - line.x1) * 180 / Math.PI}deg)`;
+                etching.appendChild(line);
+            });
+            
+            // Add constellation stars
+            for (let i = 0; i < 8; i++) {
+                const star = document.createElement('div');
+                star.className = 'constellation-star';
+                star.style.left = (10 + Math.random() * 80) + 'px';
+                star.style.top = (10 + Math.random() * 80) + 'px';
+                etching.appendChild(star);
+            }
+        }
+
+        // Micro-parallax effect
+        function initParallax() {
+            document.addEventListener('mousemove', (e) => {
+                const x = (e.clientX / window.innerWidth - 0.5) * 20;
+                const y = (e.clientY / window.innerHeight - 0.5) * 20;
+                
+                document.querySelectorAll('.parallax-layer').forEach((layer, index) => {
+                    const speed = (index + 1) * 0.5;
+                    layer.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+                });
+            });
+        }
+
+        // Rune selection
+        function selectRune(element) {
+            document.querySelectorAll('.rune-button').forEach(rune => rune.classList.remove('active'));
+            element.classList.add('active');
+            celestialData.resonanceState = element.dataset.status;
+            saveCelestialData();
+            showCelestialMessage('Resonance state aligned', 'success');
+        }
+
+        // Constellation upload
+        function uploadConstellation() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        celestialData.constellationSigil = e.target.result;
+                        const avatar = document.getElementById('constellationAvatar');
+                        avatar.style.backgroundImage = `url(${e.target.result})`;
+                        avatar.style.backgroundSize = 'cover';
+                        avatar.style.backgroundPosition = 'center';
+                        document.getElementById('avatarInitial').style.display = 'none';
+                        saveCelestialData();
+                        showCelestialMessage('Constellation sigil etched', 'success');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+
+        // Celestial connection
+        function initiateConnection() {
+            const sovereignId = document.getElementById('sovereignId').value.trim();
+            const networkAnchor = document.getElementById('networkAnchor').value.trim();
+            
+            // Validation
+            if (!sovereignId) {
+                showCelestialMessage('Sovereign identifier required', 'error');
+                return;
+            }
+            
+            if (!networkAnchor) {
+                showCelestialMessage('Network anchor required', 'error');
+                return;
+            }
+            
+            if (!networkAnchor.includes('@')) {
+                showCelestialMessage('Invalid network anchor format', 'error');
+                return;
+            }
+            
+            // Save celestial data
+            celestialData.sovereignId = sovereignId;
+            celestialData.networkAnchor = networkAnchor;
+            saveCelestialData();
+            
+            // Start celestial connection
+            const button = document.getElementById('initiateButton');
+            const progressFill = document.getElementById('progressFill');
+            
+            button.disabled = true;
+            button.textContent = 'Establishing Quantum Link...';
+            
+            // Simulate connection progress
+            let progress = 0;
+            const connectionInterval = setInterval(() => {
+                progress += 5;
+                progressFill.style.width = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(connectionInterval);
+                    button.textContent = 'Celestial Connection Established';
+                    showCelestialMessage('Welcome to the MÜN celestial network, Sovereign', 'success');
+                    
+                    // Save connection state
+                    celestialData.connectionProgress = 100;
+                    saveCelestialData();
+                    
+                    // Redirect after delay
+                    setTimeout(() => {
+                        showCelestialMessage('Redirecting to celestial OS...', 'success');
+                        console.log('Celestial connection complete. User data:', celestialData);
+                    }, 2000);
+                }
+            }, 100);
+        }
+
+        // Glyph login
+        function glyphLogin(alignment) {
+            showCelestialMessage(`Aligning with ${alignment} convergence...`, 'success');
+            celestialData.glyphLogin = alignment;
+            saveCelestialData();
+            
+            setTimeout(() => {
+                showCelestialMessage(`${alignment} alignment established!`, 'success');
+            }, 1500);
+        }
+
+        // Show celestial message
+        function showCelestialMessage(text, type) {
+            // Remove existing messages
+            document.querySelectorAll('.celestial-message').forEach(msg => msg.remove());
+            
+            const message = document.createElement('div');
+            message.className = 'celestial-message';
+            message.textContent = text;
+            document.body.appendChild(message);
+            
+            // Auto-remove after 4 seconds
+            setTimeout(() => {
+                message.remove();
+            }, 4000);
+        }
+
+        // Input event listeners
+        document.getElementById('sovereignId').addEventListener('input', function() {
+            celestialData.sovereignId = this.value;
+            saveCelestialData();
+        });
+
+        document.getElementById('networkAnchor').addEventListener('input', function() {
+            celestialData.networkAnchor = this.value;
+            saveCelestialData();
+        });
+
+        // Initialize
+        createStarfield();
+        createConstellationEtching();
+        loadCelestialData();
+        initParallax();
+    </script>
+</body>
+</html>

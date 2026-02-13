@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MÜN OS // SOVEREIGN_PHANTOM_BUILD</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+            background: #050506;
+            color: white;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(24px);
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .animate-shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .eb-garamond {
+            font-family: 'EB Garamond', serif;
+            line-height: 1.15;
+        }
+
+        .reader-content {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.4rem;
+            line-height: 1.15;
+        }
+
+        .hinge-transition {
+            animation: hinge 0.6s ease-in-out;
+        }
+
+        @keyframes hinge {
+            0% { transform: rotateX(-90deg); opacity: 0; }
+            50% { transform: rotateX(-45deg); opacity: 0.5; }
+            100% { transform: rotateX(0deg); opacity: 1; }
+        }
+
+        .home-indicator {
+            position: fixed;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 128px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            z-index: 5000;
+        }
+
+        .typing-indicator {
+            display: inline-flex;
+            gap: 4px;
+            padding: 8px 12px;
+            background: rgba(255, 183, 197, 0.1);
+            border-radius: 16px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #FFB7C5;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        .boot-spinner {
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .fade-in {
+            animation: fadeIn 4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .slide-up {
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .slide-in {
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .debug-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #00F0FF;
+            padding: 10px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 9999;
+            max-width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+    <div id="debug" class="debug-info"></div>
+
+    <script>
+        // State management
+        let os = {
+            booting: true,
+            activeApp: null,
+            trust: 50,
+            hasPremium: false,
+            incomingCall: false,
+            bpm: 72,
+            choice: null,
+            isNudging: false,
+            messages: [
+                { id: 1, sender: 'Ezra Sterling', text: 'The observatory is ready. Are you coming?', time: '2m ago', typing: true, avatar: '#FFB7C5' },
+                { id: 2, sender: 'System', text: 'Biometric scan complete. Welcome back.', time: '5m ago', typing: false, avatar: '#4b5563' }
+            ],
+            unlockedFiles: []
+        };
+
+        // Debug info
+        function updateDebug() {
+            const debugEl = document.getElementById('debug');
+            debugEl.innerHTML = `
+                <div>Booting: ${os.booting}</div>
+                <div>App: ${os.activeApp || 'home'}</div>
+                <div>Trust: ${os.trust}%</div>
+                <div>Premium: ${os.hasPremium}</div>
+                <div>Call: ${os.incomingCall}</div>
+                <div>BPM: ${os.bpm}</div>
+                <div>Choice: ${os.choice || 'none'}</div>
+            `;
+        }
+
+        // Load saved state
+        const savedState = localStorage.getItem('MUN_SOVEREIGN');
+        if (savedState) {
+            try {
+                const saved = JSON.parse(savedState);
+                os = { ...os, ...saved, booting: false };
+                console.log('Loaded saved state:', saved);
+            } catch (e) {
+                console.error('Failed to load saved state:', e);
+            }
+        }
+
+        // Save state to localStorage
+        function saveState() {
+            try {
+                localStorage.setItem('MUN_SOVEREIGN', JSON.stringify(os));
+                console.log('State saved');
+            } catch (e) {
+                console.error('Failed to save state:', e);
+            }
+        }
+
+        // Haptic feedback
+        function haptic(pattern = 15) {
+            if (navigator.vibrate) {
+                if (Array.isArray(pattern)) {
+                    navigator.vibrate(pattern);
+                } else {
+                    navigator.vibrate(pattern);
+                }
+                console.log('Haptic:', pattern);
+            }
+        }
+
+        // Trigger nudge
+        function triggerNudge() {
+            os.isNudging = true;
+            render();
+            haptic([200, 100, 200]);
+            setTimeout(() => {
+                os.isNudging = false;
+                render();
+            }, 500);
+        }
+
+        // Handle app selection
+        function openApp(appId) {
+            console.log('Opening app:', appId);
+            haptic();
+            os.activeApp = appId;
+            saveState();
+            render();
+        }
+
+        // Go home
+        function goHome() {
+            console.log('Going home');
+            haptic();
+            os.activeApp = null;
+            saveState();
+            render();
+        }
+
+        // Handle choice
+        function handleChoice(choice) {
+            console.log('Choice made:', choice);
+            haptic();
+            if (choice === 'AURELIAN' && !os.hasPremium) {
+                console.log('Redirecting to vault for premium upgrade');
+                openApp('vault');
+                return;
+            }
+            os.choice = choice;
+            saveState();
+            render();
+        }
+
+        // Handle FaceTime call
+        function rejectCall() {
+            console.log('Call rejected');
+            os.incomingCall = false;
+            os.trust = Math.max(0, os.trust - 15);
+            saveState();
+            render();
+        }
+
+        function acceptCall() {
+            console.log('Call accepted');
+            os.incomingCall = false;
+            os.trust = Math.min(100, os.trust + 5);
+            saveState();
+            render();
+        }
+
+        // Handle premium upgrade
+        function activatePremium() {
+            console.log('Activating premium');
+            haptic();
+            os.hasPremium = true;
+            os.trust = 100;
+            os.unlockedFiles = ['Panda Suit Incident', 'Mercury Protocol Debrief', 'Council Session Records'];
+            saveState();
+            render();
+        }
+
+        // BPM simulation
+        setInterval(() => {
+            os.bpm = Math.max(60, Math.min(100, os.bpm + (Math.random() > 0.5 ? 1 : -1)));
+            if (!os.booting) {
+                updateDebug();
+            }
+        }, 2000);
+
+        // FaceTime call timer
+        let callTimer;
+        function scheduleCall() {
+            if (callTimer) clearTimeout(callTimer);
+            callTimer = setTimeout(() => {
+                if (!os.booting && !os.incomingCall && os.activeApp !== 'vault') {
+                    console.log('Scheduling FaceTime call');
+                    os.incomingCall = true;
+                    saveState();
+                    render();
+                }
+            }, 10000);
+        }
+
+        // Render function
+        function render() {
+            const app = document.getElementById('app');
+            updateDebug();
+            
+            if (os.booting) {
+                app.innerHTML = `
+                    <div style="position: fixed; inset: 0; background: black; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999;">
+                        <div style="width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 32px;">
+                            <div class="boot-spinner" style="width: 2px; height: 16px; background: cyan; transform-origin: top;"></div>
+                        </div>
+                        <span style="font-size: 8px; font-family: monospace; letter-spacing: 0.8em; text-transform: uppercase; color: rgba(255, 255, 255, 0.4);" class="fade-in">Sovereign Identified</span>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = `
+                <div style="position: fixed; inset: 0; background: #050506; color: white; overflow: hidden;" class="${os.isNudging ? 'animate-shake' : ''}">
+                    <!-- THE PULSE NEBULA -->
+                    <div style="position: absolute; inset: 0; background: linear-gradient(to top right, #121215, black); opacity: ${(os.bpm - 60) / 100}; pointer-events: none;"></div>
+            `;
+
+            // Home Grid
+            if (!os.activeApp) {
+                html += `
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; padding: 40px; padding-top: 128px; position: relative; z-index: 10;">
+                        <div onclick="openApp('reader')" style="display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer;" class="slide-in">
+                            <div style="width: 64px; height: 64px; background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(24px); border: 0.5px solid rgba(255, 255, 255, 0.1); border-radius: 22px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </div>
+                            <span style="font-size: 9px; font-family: monospace; letter-spacing: 0.2em; opacity: 0.3; text-transform: uppercase;">Reader</span>
+                        </div>
+                        <div onclick="openApp('messenger')" style="display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer;" class="slide-in" style="animation-delay: 0.1s;">
+                            <div style="width: 64px; height: 64px; background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(24px); border: 0.5px solid rgba(255, 255, 255, 0.1); border-radius: 22px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); transition: transform 0.2s; border-color: #FFB7C5;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFB7C5" stroke-width="1">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                            </div>
+                            <span style="font-size: 9px; font-family: monospace; letter-spacing: 0.2em; opacity: 0.3; text-transform: uppercase;">Comm</span>
+                        </div>
+                        <div onclick="openApp('vault')" style="display: flex; flex-direction: column; align-items: center; gap: 12px; cursor: pointer;" class="slide-in" style="animation-delay: 0.2s;">
+                            <div style="width: 64px; height: 64px; background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(24px); border: 0.5px solid rgba(255, 255, 255, 0.1); border-radius: 22px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); transition: transform 0.2s; border-color: ${os.hasPremium ? '#00F0FF' : 'rgba(255,255,255,0.1)'};" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="${os.hasPremium ? '#00F0FF' : 'white'}" stroke-width="1">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
+                            </div>
+                            <span style="font-size: 9px; font-family: monospace; letter-spacing: 0.2em; opacity: 0.3; text-transform: uppercase;">Vault</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Reader App
+            if (os.activeApp === 'reader') {
+                html += `
+                    <div style="position: fixed; inset: 0; background: #fdfdfd; color: black; padding: 48px; overflow-y: auto; z-index: 2000;" class="hinge-transition">
+                        <div style="max-width: 800px; margin: 0 auto; font-family: 'EB Garamond', serif; font-size: 1.4rem; line-height: 1.15;">
+                            <p style="margin-bottom: 32px; opacity: 0.4; font-family: sans-serif; font-size: 10px; letter-spacing: 0.5em; text-align: center;">CHAPTER 1 // MERCURY PROTOCOL</p>
+                            <p style="margin-bottom: 32px; font-style: italic;">Luna stood at the edge of the glass floor. Beneath her veins, the 24-karat gold light of Fae Fever pulsed like a second heartbeat.</p>
+                            <p style="margin-bottom: 32px;">Ezra watched her from the shadows of the observatory dome. "Choose your vessel, Luna. Chaos without containment is just a slow suicide."</p>
+                            <p style="margin-bottom: 32px;">The password was 0214—always had been, always would be. Some secrets were meant to be kept, even from oneself.</p>
+                            
+                            ${os.choice === 'ONYX' ? `
+                                <div style="margin-top: 32px; padding: 24px; background: rgba(0, 0, 0, 0.05); border-radius: 12px; border-left: 4px solid #000;">
+                                    <h3 style="font-size: 18px; margin-bottom: 16px; font-weight: 600;">CHAPTER 2 // THE ONYX SHROUD</h3>
+                                    <p style="margin-bottom: 16px;">Luna chose the Onyx Shroud. Logic over power. Reason over instinct. The obsidian material wrapped around her like a second skin, cold and precise.</p>
+                                    <p style="margin-bottom: 16px;">"Wise choice," Ezra nodded, stepping from the shadows. "The mind is the greatest weapon. But even logic has its limits."</p>
+                                    <p style="margin-bottom: 16px;">The observatory doors began to seal. Outside, the storm was gathering. Inside, the real storm was just beginning.</p>
+                                    <div style="margin-top: 24px; padding: 16px; background: rgba(0, 0, 0, 0.08); border-radius: 8px;">
+                                        <p style="font-size: 14px; color: rgba(0, 0, 0, 0.7);"><strong>Trust Level:</strong> ${os.trust}%</p>
+                                        <p style="font-size: 14px; color: rgba(0, 0, 0, 0.7); margin-top: 8px;"><strong>Next:</strong> Continue to Chapter 3...</p>
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            ${os.choice === 'AURELIAN' ? `
+                                <div style="margin-top: 32px; padding: 24px; background: rgba(0, 240, 255, 0.05); border-radius: 12px; border-left: 4px solid #00F0FF;">
+                                    <h3 style="font-size: 18px; margin-bottom: 16px; font-weight: 600; color: #00F0FF;">CHAPTER 2 // THE AURELIAN ARMOR</h3>
+                                    <p style="margin-bottom: 16px;">Luna chose the Aurelian Armor. Power over logic. Instinct over reason. The golden material flowed around her like liquid sunlight, warm and alive.</p>
+                                    <p style="margin-bottom: 16px;">"Dangerous choice," Ezra whispered, his eyes narrowing. "Power demands sacrifice. Are you ready to pay the price?"</p>
+                                    <p style="margin-bottom: 16px;">The observatory hummed with ancient energy. The walls began to glow with runes that hadn't been seen in centuries. Luna had awakened something that should have remained sleeping.</p>
+                                    <div style="margin-top: 24px; padding: 16px; background: rgba(0, 240, 255, 0.08); border-radius: 8px;">
+                                        <p style="font-size: 14px; color: rgba(0, 0, 0, 0.7);"><strong>Trust Level:</strong> ${os.trust}%</p>
+                                        <p style="font-size: 14px; color: rgba(0, 0, 0, 0.7); margin-top: 8px;"><strong>Next:</strong> Continue to Chapter 3...</p>
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            <div style="margin-top: 48px; display: flex; flex-direction: column; gap: 16px;">
+                                <button onclick="handleChoice('ONYX')" style="width: 100%; padding: 16px; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 12px; text-align: left; font-size: 14px; background: transparent; color: black; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.backgroundColor='rgba(0,0,0,0.05)'" onmouseout="this.style.backgroundColor='transparent'">
+                                    1. The Onyx Shroud (Logic)
+                                </button>
+                                <button onclick="handleChoice('AURELIAN')" style="width: 100%; padding: 16px; border: 1px solid ${os.hasPremium ? '#00F0FF' : 'rgba(0, 0, 0, 0.1)'}; border-radius: 12px; text-align: left; font-size: 14px; background: ${os.hasPremium ? 'rgba(0, 240, 255, 0.1)' : 'rgba(0, 0, 0, 0.03)'}; color: ${os.hasPremium ? '#00F0FF' : 'black'}; cursor: pointer; transition: all 0.2s; display: flex; justify-content: space-between; align-items: center;" onmouseover="this.style.backgroundColor='${os.hasPremium ? 'rgba(0, 240, 255, 0.2)' : 'rgba(0, 0, 0, 0.05)'}'" onmouseout="this.style.backgroundColor='${os.hasPremium ? 'rgba(0, 240, 255, 0.1)' : 'rgba(0, 0, 0, 0.03)'}">
+                                    <span>2. The Aurelian Armor (Power)</span>
+                                    ${!os.hasPremium ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>' : ''}
+                                </button>
+                            </div>
+                            ${os.choice ? `
+                                <div style="margin-top: 32px; padding: 16px; background: rgba(0, 0, 0, 0.05); border-radius: 12px;">
+                                    <p style="font-size: 14px; color: rgba(0, 0, 0, 0.7);">You chose: <strong>${os.choice === 'ONYX' ? 'The Onyx Shroud' : 'The Aurelian Armor'}</strong></p>
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div onclick="goHome()" style="position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); width: 128px; height: 4px; background: rgba(0, 0, 0, 0.2); border-radius: 2px; cursor: pointer; z-index: 5000;"></div>
+                    </div>
+                `;
+            }
+
+            // Messenger App
+            if (os.activeApp === 'messenger') {
+                html += `
+                    <div style="position: fixed; inset: 0; background: #050506; color: white; padding: 48px; overflow-y: auto; z-index: 2000;" class="slide-up">
+                        <div style="max-width: 400px; margin: 0 auto;">
+                            <h2 style="font-size: 24px; font-weight: 300; margin-bottom: 32px;">Mün Messenger</h2>
+                            <div style="display: flex; flex-direction: column; gap: 16px;">
+                                ${os.messages.map(msg => `
+                                    <div style="background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(24px); border: 0.5px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 16px;">
+                                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                                            <div style="width: 48px; height: 48px; border-radius: 50%; border: 2px solid ${msg.avatar}; padding: 2px; background: ${msg.avatar};"></div>
+                                            <div>
+                                                <div style="font-weight: 600;">${msg.sender}</div>
+                                                <div style="font-size: 12px; color: rgba(255, 255, 255, 0.4);">${msg.time}</div>
+                                            </div>
+                                        </div>
+                                        <div style="color: rgba(255, 255, 255, 0.9);">${msg.text}</div>
+                                        ${msg.typing ? `
+                                            <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+                                                <div class="typing-indicator">
+                                                    <div class="typing-dot"></div>
+                                                    <div class="typing-dot"></div>
+                                                    <div class="typing-dot"></div>
+                                                </div>
+                                                <span style="font-size: 12px; color: rgba(255, 255, 255, 0.4);">Typing...</span>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div style="margin-top: 24px; text-align: center;">
+                                <button onclick="triggerNudge()" style="padding: 12px 24px; background: rgba(255, 183, 197, 0.1); border: 1px solid #FFB7C5; border-radius: 12px; color: #FFB7C5; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.backgroundColor='rgba(255, 183, 197, 0.2)'" onmouseout="this.style.backgroundColor='rgba(255, 183, 197, 0.1)'">
+                                    Nudge Ezra
+                                </button>
+                            </div>
+                        </div>
+                        <div onclick="goHome()" style="position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); width: 128px; height: 4px; background: rgba(255, 255, 255, 0.2); border-radius: 2px; cursor: pointer; z-index: 5000;"></div>
+                    </div>
+                `;
+            }
+
+            // Vault App
+            if (os.activeApp === 'vault') {
+                html += `
+                    <div style="position: fixed; inset: 0; background: #050506; color: white; padding: 48px; overflow-y: auto; z-index: 2000;" class="slide-up">
+                        <div style="max-width: 400px; margin: 0 auto; text-align: center;">
+                            <h2 style="font-size: 24px; font-weight: 300; margin-bottom: 32px;">The Vault</h2>
+                            ${os.hasPremium ? `
+                                <div>
+                                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#00F0FF" stroke-width="2" style="margin: 0 auto 16px; display: block;">
+                                        <path d="M9 12l2 2 4-4 6-6"></path>
+                                        <path d="M21 12c.552 0 1-.448 1-1s-.448-1-1-1h-1c-1.103 0-2 .897-2 2s.897 2 2 2h1c.552 0 1 .448 1 1s-.448 1-1 1h1c1.103 0 2-.897 2-2s-.897-2-2-2h-1z"></path>
+                                    </svg>
+                                    <p style="font-size: 20px; margin-bottom: 16px;">Sovereign Clearance Active</p>
+                                    <p style="color: rgba(255, 255, 255, 0.4);">Trust Level: ${os.trust}%</p>
+                                    <div style="margin-top: 32px; text-align: left;">
+                                        <div style="background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(24px); border: 0.5px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 16px;">
+                                            <h3 style="font-weight: 600; margin-bottom: 8px;">Unlocked Files:</h3>
+                                            <ul style="list-style: none; padding: 0; space-y: 4px; font-size: 14px;">
+                                                ${os.unlockedFiles.map(file => `<li style="margin-bottom: 4px;">• ${file}</li>`).join('')}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            ` : `
+                                <div>
+                                    <div style="margin-bottom: 32px;">
+                                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(255, 255, 255, 0.6)" stroke-width="2" style="margin: 0 auto 16px; display: block;">
+                                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                        </svg>
+                                        <p style="font-size: 20px; margin-bottom: 16px;">Sovereign Clearance Required</p>
+                                        <p style="color: rgba(255, 255, 255, 0.4); margin-bottom: 24px;">Unlock premium content to access classified files</p>
+                                    </div>
+                                    <div style="background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(24px); border: 0.5px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 24px;">
+                                        <h3 style="font-weight: 600; margin-bottom: 16px;">Upgrade to Sovereign Tier</h3>
+                                        <button onclick="activatePremium()" style="width: 100%; padding: 16px; background: rgba(0, 240, 255, 0.1); border: 1px solid #00F0FF; border-radius: 12px; color: #00F0FF; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;" onmouseover="this.style.backgroundColor='rgba(0, 240, 255, 0.2)'" onmouseout="this.style.backgroundColor='rgba(0, 240, 255, 0.1)'">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00F0FF" stroke-width="2">
+                                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                            </svg>
+                                            Activate Sovereign Clearance
+                                        </button>
+                                    </div>
+                                </div>
+                            `}
+                        </div>
+                        <div onclick="goHome()" style="position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); width: 128px; height: 4px; background: rgba(255, 255, 255, 0.2); border-radius: 2px; cursor: pointer; z-index: 5000;"></div>
+                    </div>
+                `;
+            }
+
+            // FaceTime Protocol
+            if (os.incomingCall) {
+                html += `
+                    <div style="position: fixed; inset: 0; background: black; z-index: 10000; display: flex; flex-direction: column; justify-content: space-between; padding: 80px 20px;">
+                        <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0, 240, 255, 0.1), transparent); opacity: 0.2;"></div>
+                        <div style="text-align: center; z-index: 10;">
+                            <h2 style="font-size: 32px; font-weight: 300; letter-spacing: -0.05em; margin-bottom: 8px;">Ezra Sterling</h2>
+                            <p style="color: #00F0FF; font-size: 10px; font-family: monospace; margin-top: 8px; letter-spacing: 0.5em; text-transform: uppercase;">FACETIME_ENCRYPTED</p>
+                        </div>
+                        <div style="display: flex; justify-content: center; gap: 80px; z-index: 10;">
+                            <button onclick="rejectCall()" style="width: 80px; height: 80px; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.backgroundColor='rgba(239, 68, 68, 0.3)'" onmouseout="this.style.backgroundColor='rgba(239, 68, 68, 0.2)'">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" transform="rotate(135 12 12)"></path>
+                                </svg>
+                            </button>
+                            <button onclick="acceptCall()" style="width: 80px; height: 80px; background: rgba(34, 197, 94, 0.2); border: 1px solid rgba(34, 197, 94, 0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.backgroundColor='rgba(34, 197, 94, 0.3)'" onmouseout="this.style.backgroundColor='rgba(34, 197, 94, 0.2)'">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2">
+                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v3a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                    <polyline points="22,3 2,3 2,17"></polyline>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+            app.innerHTML = html;
+        }
+
+        // Initialize
+        setTimeout(() => {
+            os.booting = false;
+            saveState();
+            render();
+            scheduleCall();
+            updateDebug();
+        }, 4000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MÜN // Initiation Protocol</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #000000;
+            color: #ffffff;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .signup-container {
+            width: 100%;
+            max-width: 480px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .msn-header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .msn-logo {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00F0FF, #FFB7C5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: -2px;
+        }
+
+        .msn-tagline {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 300;
+            letter-spacing: 0.5em;
+        }
+
+        .signup-form {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .signup-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #00F0FF, transparent);
+            animation: scan 3s ease-in-out infinite;
+        }
+
+        @keyframes scan {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: #00F0FF;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 1px rgba(0, 240, 255, 0.2);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .status-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .status-option {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .status-option:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .status-option.active {
+            background: rgba(0, 240, 255, 0.1);
+            border-color: #00F0FF;
+            color: #00F0FF;
+        }
+
+        .avatar-upload {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .avatar-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFB7C5, #00F0FF);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #000000;
+        }
+
+        .avatar-button {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .avatar-button:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #00F0FF, #FFB7C5);
+            border: none;
+            border-radius: 12px;
+            color: #000000;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .submit-button:hover::before {
+            left: 100%;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.3);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 32px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .divider span {
+            background: #000000;
+            padding: 0 16px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-button {
+            flex: 1;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .social-button:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .msn-nostalgia {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 11px;
+            font-style: italic;
+        }
+
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00F0FF;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 10s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-20px) translateX(10px); }
+            50% { transform: translateY(-10px) translateX(-10px); }
+            75% { transform: translateY(-30px) translateX(5px); }
+        }
+
+        .glitch-text {
+            position: relative;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+            text-align: center;
+            margin-top: 20px;
+            font-family: monospace;
+        }
+
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch-text::before {
+            animation: glitch-1 0.5s infinite;
+            color: #FFB7C5;
+            z-index: -1;
+        }
+
+        .glitch-text::after {
+            animation: glitch-2 0.5s infinite;
+            color: #00F0FF;
+            z-index: -2;
+        }
+
+        @keyframes glitch-1 {
+            0%, 100% { clip-path: inset(0 0 0 0); }
+            25% { clip-path: inset(0 0 100% 0); }
+            50% { clip-path: inset(0 0 0 100%); }
+            75% { clip-path: inset(100% 0 0 0); }
+        }
+
+        @keyframes glitch-2 {
+            0%, 100% { clip-path: inset(0 0 0 0); }
+            25% { clip-path: inset(0 100% 0 0); }
+            50% { clip-path: inset(0 0 0 100%); }
+            75% { clip-path: inset(100% 0 0 0); }
+        }
+
+        .success-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            color: #00ff00;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+
+        .error-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            color: #ff0000;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .progress-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00F0FF, #FFB7C5);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-particles" id="particles"></div>
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+    
+    <div class="signup-container">
+        <div class="msn-header">
+            <div class="msn-logo">MÜN</div>
+            <div class="msn-tagline">INITIATION PROTOCOL</div>
+        </div>
+
+        <div class="signup-form">
+            <div class="form-group">
+                <label class="form-label">Display Name</label>
+                <input type="text" class="form-input" id="displayName" placeholder="Enter your sovereign identifier" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-input" id="email" placeholder="secure@mun.network" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Status</label>
+                <div class="status-selector">
+                    <div class="status-option active" data-status="online" onclick="selectStatus(this)">Online</div>
+                    <div class="status-option" data-status="away" onclick="selectStatus(this)">Away</div>
+                    <div class="status-option" data-status="busy" onclick="selectStatus(this)">Busy</div>
+                    <div class="status-option" data-status="offline" onclick="selectStatus(this)">Appear Offline</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Profile Picture</label>
+                <div class="avatar-upload">
+                    <div class="avatar-preview" id="avatarPreview">M</div>
+                    <button class="avatar-button" onclick="uploadAvatar()">Choose Avatar</button>
+                </div>
+            </div>
+
+            <button class="submit-button" id="submitButton" onclick="submitForm()">
+                INITIATE CONNECTION
+            </button>
+
+            <div class="divider">
+                <span>or connect with</span>
+            </div>
+
+            <div class="social-login">
+                <button class="social-button" onclick="socialLogin('discord')">Discord</button>
+                <button class="social-button" onclick="socialLogin('telegram')">Telegram</button>
+            </div>
+
+            <div class="glitch-text" id="glitchText" data-text="SECURING QUANTUM CHANNEL...">
+                SECURING QUANTUM CHANNEL...
+            </div>
+        </div>
+
+        <div class="msn-nostalgia">
+            Remember the feeling of first connection?
+        </div>
+    </div>
+
+    <script>
+        // State management
+        let formData = {
+            displayName: '',
+            email: '',
+            status: 'online',
+            avatar: null,
+            connectionProgress: 0
+        };
+
+        // Load saved data
+        function loadSavedData() {
+            const saved = localStorage.getItem('MUN_SIGNUP_DATA');
+            if (saved) {
+                try {
+                    formData = { ...formData, ...JSON.parse(saved) };
+                    updateFormFromData();
+                    console.log('Loaded saved data:', formData);
+                } catch (e) {
+                    console.error('Failed to load saved data:', e);
+                }
+            }
+        }
+
+        // Save data
+        function saveData() {
+            try {
+                localStorage.setItem('MUN_SIGNUP_DATA', JSON.stringify(formData));
+                console.log('Data saved:', formData);
+            } catch (e) {
+                console.error('Failed to save data:', e);
+            }
+        }
+
+        // Update form from saved data
+        function updateFormFromData() {
+            document.getElementById('displayName').value = formData.displayName || '';
+            document.getElementById('email').value = formData.email || '';
+            
+            // Update status
+            document.querySelectorAll('.status-option').forEach(opt => {
+                opt.classList.remove('active');
+                if (opt.dataset.status === formData.status) {
+                    opt.classList.add('active');
+                }
+            });
+            
+            // Update avatar
+            if (formData.avatar) {
+                const preview = document.getElementById('avatarPreview');
+                preview.style.backgroundImage = `url(${formData.avatar})`;
+                preview.style.backgroundSize = 'cover';
+                preview.style.backgroundPosition = 'center';
+                preview.textContent = '';
+            }
+        }
+
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Status selection
+        function selectStatus(element) {
+            document.querySelectorAll('.status-option').forEach(opt => opt.classList.remove('active'));
+            element.classList.add('active');
+            formData.status = element.dataset.status;
+            saveData();
+            showMessage('Status updated', 'success');
+        }
+
+        // Avatar upload
+        function uploadAvatar() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        formData.avatar = e.target.result;
+                        const preview = document.getElementById('avatarPreview');
+                        preview.style.backgroundImage = `url(${e.target.result})`;
+                        preview.style.backgroundSize = 'cover';
+                        preview.style.backgroundPosition = 'center';
+                        preview.textContent = '';
+                        saveData();
+                        showMessage('Avatar uploaded', 'success');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            input.click();
+        }
+
+        // Form submission
+        function submitForm() {
+            const displayName = document.getElementById('displayName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            
+            // Validation
+            if (!displayName) {
+                showMessage('Please enter a display name', 'error');
+                return;
+            }
+            
+            if (!email) {
+                showMessage('Please enter an email address', 'error');
+                return;
+            }
+            
+            if (!email.includes('@')) {
+                showMessage('Please enter a valid email address', 'error');
+                return;
+            }
+            
+            // Save form data
+            formData.displayName = displayName;
+            formData.email = email;
+            saveData();
+            
+            // Start connection process
+            const button = document.getElementById('submitButton');
+            const glitchText = document.getElementById('glitchText');
+            const progressFill = document.getElementById('progressFill');
+            
+            button.disabled = true;
+            button.textContent = 'CONNECTING...';
+            button.style.background = 'linear-gradient(135deg, #FFB7C5, #00F0FF)';
+            
+            glitchText.setAttribute('data-text', 'ESTABLISHING QUANTUM LINK...');
+            
+            // Simulate connection progress
+            let progress = 0;
+            const connectionInterval = setInterval(() => {
+                progress += 10;
+                progressFill.style.width = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(connectionInterval);
+                    button.textContent = 'CONNECTION ESTABLISHED';
+                    button.style.background = 'linear-gradient(135deg, #00FF00, #00F0FF)';
+                    glitchText.setAttribute('data-text', 'QUANTUM CHANNEL ACTIVE');
+                    showMessage('Successfully connected to MÜN network!', 'success');
+                    
+                    // Save connection state
+                    formData.connectionProgress = 100;
+                    saveData();
+                    
+                    // Redirect after delay
+                    setTimeout(() => {
+                        showMessage('Redirecting to MÜN OS...', 'success');
+                        // In a real app, this would redirect to the main application
+                        console.log('Connection complete. User data:', formData);
+                    }, 2000);
+                }
+            }, 200);
+        }
+
+        // Social login
+        function socialLogin(platform) {
+            showMessage(`Connecting with ${platform}...`, 'success');
+            formData.socialLogin = platform;
+            saveData();
+            
+            // Simulate social login
+            setTimeout(() => {
+                showMessage(`${platform} connection established!`, 'success');
+            }, 1500);
+        }
+
+        // Show message
+        function showMessage(text, type) {
+            // Remove existing messages
+            document.querySelectorAll('.success-message, .error-message').forEach(msg => msg.remove());
+            
+            const message = document.createElement('div');
+            message.className = type === 'success' ? 'success-message' : 'error-message';
+            message.textContent = text;
+            document.body.appendChild(message);
+            
+            // Auto-remove after 3 seconds
+            setTimeout(() => {
+                message.remove();
+            }, 3000);
+        }
+
+        // Input event listeners
+        document.getElementById('displayName').addEventListener('input', function() {
+            formData.displayName = this.value;
+            saveData();
+        });
+
+        document.getElementById('email').addEventListener('input', function() {
+            formData.email = this.value;
+            saveData();
+        });
+
+        // Add focus effects
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+
+        // Initialize
+        createParticles();
+        loadSavedData();
+    </script>
+</body>
+</html>

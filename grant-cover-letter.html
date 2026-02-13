@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grant Cover Letter Editor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=SF+Pro+Display:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --sakura-pink: #ffb7c5;
+            --sakura-white: #fff0f5;
+            --sakura-dark: #8b4789;
+            --sakura-light: #ffd1dc;
+            --sakura-stem: #4a4a4a;
+            --sakura-bg: #fafafa;
+            --sakura-shadow: rgba(139, 71, 137, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 50%, #ffd1dc 100%);
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--sakura-dark);
+            min-height: 100vh;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="3" fill="%23ffb7c5" opacity="0.3"/><circle cx="80" cy="30" r="2" fill="%23ffd1dc" opacity="0.4"/><circle cx="50" cy="70" r="2.5" fill="%23ffb7c5" opacity="0.3"/><circle cx="30" cy="80" r="2" fill="%23ffd1dc" opacity="0.5"/><circle cx="70" cy="10" r="3" fill="%23ffb7c5" opacity="0.2"/></svg>') repeat;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .editor-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: var(--sakura-white);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--sakura-pink);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px var(--sakura-shadow);
+        }
+
+        .header h1 {
+            font-family: 'SF Pro Display', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--sakura-dark);
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: var(--sakura-dark);
+            opacity: 0.8;
+        }
+
+        .editor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .editor-section {
+            background: var(--sakura-white);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--sakura-pink);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px var(--sakura-shadow);
+        }
+
+        .section-title {
+            font-family: 'SF Pro Display', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--sakura-dark);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 1rem;
+            color: var(--sakura-dark);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid var(--sakura-light);
+            border-radius: 12px;
+            color: var(--sakura-dark);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--sakura-pink);
+            box-shadow: 0 0 20px rgba(255, 183, 197, 0.3);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-family: 'SF Pro Display', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--sakura-pink) 0%, var(--sakura-light) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 183, 197, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--sakura-white);
+            color: var(--sakura-dark);
+            border: 2px solid var(--sakura-pink);
+        }
+
+        .btn-secondary:hover {
+            background: var(--sakura-pink);
+            color: white;
+        }
+
+        .preview-section {
+            background: var(--sakura-white);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--sakura-pink);
+            border-radius: 20px;
+            padding: 25px;
+            min-height: 400px;
+            box-shadow: 0 10px 30px var(--sakura-shadow);
+        }
+
+        .preview-content {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--sakura-dark);
+            white-space: pre-wrap;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .status-draft {
+            background: var(--sakura-light);
+            color: var(--sakura-dark);
+        }
+
+        .status-ready {
+            background: var(--sakura-pink);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .editor-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="editor-container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1><i class="fas fa-envelope"></i> Grant Cover Letter Editor</h1>
+            <p>Professional cover letter for MÜN Sovereign Grant Applications</p>
+            <span class="status-indicator status-draft" id="statusIndicator">DRAFT</span>
+        </div>
+
+        <!-- EDITOR GRID -->
+        <div class="editor-grid">
+            <!-- LEFT SIDE - INPUT FORM -->
+            <div class="editor-section">
+                <div class="section-title">
+                    <i class="fas fa-edit"></i>
+                    Cover Letter Details
+                </div>
+                
+                <form id="coverLetterForm">
+                    <div class="form-group">
+                        <label class="form-label" for="applicantName">Applicant Name</label>
+                        <input type="text" id="applicantName" class="form-input" placeholder="Gawahir Eltahir">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="grantOrganization">Grant Organization</label>
+                        <input type="text" id="grantOrganization" class="form-input" placeholder="Innovation Grant Committee">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="grantTitle">Grant Title</label>
+                        <input type="text" id="grantTitle" class="form-input" placeholder="MÜN Sovereign Reading Device Innovation Grant">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="date">Date</label>
+                        <input type="date" id="date" class="form-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="salutation">Salutation</label>
+                        <select id="salutation" class="form-select">
+                            <option value="Dear Innovation Grant Committee,">Dear Innovation Grant Committee,</option>
+                            <option value="To the Esteemed Members of the Grant Committee,">To the Esteemed Members of the Grant Committee,</option>
+                            <option value="Dear Review Committee,">Dear Review Committee,</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="openingParagraph">Opening Paragraph</label>
+                        <textarea id="openingParagraph" class="form-textarea" placeholder="Introduce yourself and state the purpose of your letter"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="projectSummary">Project Summary</label>
+                        <textarea id="projectSummary" class="form-textarea" placeholder="Briefly describe your project and its significance"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="qualifications">Qualifications & Experience</label>
+                        <textarea id="qualifications" class="form-textarea" placeholder="Highlight your relevant experience and qualifications"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="impactStatement">Impact Statement</label>
+                        <textarea id="impactStatement" class="form-textarea" placeholder="Describe the expected impact and outcomes"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="closingParagraph">Closing Paragraph</label>
+                        <textarea id="closingParagraph" class="form-textarea" placeholder="Express gratitude and request consideration"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="signature">Signature</label>
+                        <input type="text" id="signature" class="form-input" placeholder="Gawahir Eltahir">
+                    </div>
+                </form>
+            </div>
+
+            <!-- RIGHT SIDE - LIVE PREVIEW -->
+            <div class="editor-section">
+                <div class="section-title">
+                    <i class="fas fa-eye"></i>
+                    Live Preview
+                </div>
+                
+                <div class="preview-section">
+                    <div class="preview-content" id="previewContent">
+                        <div style="text-align: right; margin-bottom: 30px;">
+                            <div id="previewDate">February 12, 2026</div>
+                        </div>
+                        
+                        <div id="previewOrganization" style="margin-bottom: 20px;">
+                            <strong>Grant Organization</strong><br>
+                            <div style="margin-left: 20px;">Committee Address</div>
+                        </div>
+                        
+                        <div id="previewSalutation" style="margin-bottom: 20px;">
+                            Dear Innovation Grant Committee,
+                        </div>
+                        
+                        <div id="previewOpening" style="margin-bottom: 20px;">
+                            Opening paragraph will appear here...
+                        </div>
+                        
+                        <div id="previewProjectSummary" style="margin-bottom: 20px;">
+                            Project summary will appear here...
+                        </div>
+                        
+                        <div id="previewQualifications" style="margin-bottom: 20px;">
+                            Qualifications will appear here...
+                        </div>
+                        
+                        <div id="previewImpact" style="margin-bottom: 20px;">
+                            Impact statement will appear here...
+                        </div>
+                        
+                        <div id="previewClosing" style="margin-bottom: 30px;">
+                            Closing paragraph will appear here...
+                        </div>
+                        
+                        <div id="previewSignature" style="margin-top: 30px;">
+                            Sincerely,<br><br>
+                            Gawahir Eltahir
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="saveCoverLetter()">
+                <i class="fas fa-save"></i> Save Cover Letter
+            </button>
+            <button class="btn btn-secondary" onclick="exportCoverLetter()">
+                <i class="fas fa-download"></i> Export PDF
+            </button>
+            <button class="btn btn-secondary" onclick="loadTemplate()">
+                <i class="fas fa-file-alt"></i> Load Template
+            </button>
+            <button class="btn btn-secondary" onclick="clearForm()">
+                <i class="fas fa-trash"></i> Clear Form
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // COVER LETTER EDITOR CLASS
+        class CoverLetterEditor {
+            constructor() {
+                this.coverLetterData = {
+                    applicantName: '',
+                    grantOrganization: '',
+                    grantTitle: '',
+                    date: '',
+                    salutation: 'Dear Innovation Grant Committee,',
+                    openingParagraph: '',
+                    projectSummary: '',
+                    qualifications: '',
+                    impactStatement: '',
+                    closingParagraph: '',
+                    signature: ''
+                };
+                this.initializeEventListeners();
+                this.loadSavedCoverLetter();
+                this.setCurrentDate();
+            }
+
+            initializeEventListeners() {
+                const inputs = document.querySelectorAll('.form-input, .form-textarea, .form-select');
+                inputs.forEach(input => {
+                    input.addEventListener('input', () => this.updatePreview());
+                    input.addEventListener('change', () => this.updateStatus());
+                });
+            }
+
+            setCurrentDate() {
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('date').value = today;
+                this.updatePreview();
+            }
+
+            updatePreview() {
+                const data = this.getFormData();
+                const preview = document.getElementById('previewContent');
+                
+                preview.innerHTML = `
+                    <div style="text-align: right; margin-bottom: 30px;">
+                        <div>${this.formatDate(data.date)}</div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <strong>${data.grantOrganization || 'Grant Organization'}</strong><br>
+                        <div style="margin-left: 20px;">Committee Address</div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        ${data.salutation || 'Dear Innovation Grant Committee,'}
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        ${data.openingParagraph || 'Opening paragraph will appear here...'}
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        ${data.projectSummary || 'Project summary will appear here...'}
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        ${data.qualifications || 'Qualifications will appear here...'}
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        ${data.impactStatement || 'Impact statement will appear here...'}
+                    </div>
+                    
+                    <div style="margin-bottom: 30px;">
+                        ${data.closingParagraph || 'Closing paragraph will appear here...'}
+                    </div>
+                    
+                    <div style="margin-top: 30px;">
+                        Sincerely,<br><br>
+                        ${data.signature || 'Gawahir Eltahir'}
+                    </div>
+                `;
+            }
+
+            formatDate(dateString) {
+                if (!dateString) return 'February 12, 2026';
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+            }
+
+            getFormData() {
+                return {
+                    applicantName: document.getElementById('applicantName').value,
+                    grantOrganization: document.getElementById('grantOrganization').value,
+                    grantTitle: document.getElementById('grantTitle').value,
+                    date: document.getElementById('date').value,
+                    salutation: document.getElementById('salutation').value,
+                    openingParagraph: document.getElementById('openingParagraph').value,
+                    projectSummary: document.getElementById('projectSummary').value,
+                    qualifications: document.getElementById('qualifications').value,
+                    impactStatement: document.getElementById('impactStatement').value,
+                    closingParagraph: document.getElementById('closingParagraph').value,
+                    signature: document.getElementById('signature').value
+                };
+            }
+
+            updateStatus() {
+                const data = this.getFormData();
+                const statusIndicator = document.getElementById('statusIndicator');
+                
+                const hasContent = Object.values(data).some(value => value.trim() !== '');
+                if (hasContent) {
+                    statusIndicator.textContent = 'IN PROGRESS';
+                    statusIndicator.className = 'status-indicator status-draft';
+                } else {
+                    statusIndicator.textContent = 'DRAFT';
+                    statusIndicator.className = 'status-indicator status-draft';
+                }
+            }
+
+            saveCoverLetter() {
+                const data = this.getFormData();
+                localStorage.setItem('grantCoverLetter', JSON.stringify(data));
+                this.showNotification('Cover letter saved successfully!', 'success');
+                this.updateStatus();
+            }
+
+            loadSavedCoverLetter() {
+                const saved = localStorage.getItem('grantCoverLetter');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    Object.keys(data).forEach(key => {
+                        const element = document.getElementById(key);
+                        if (element) {
+                            element.value = data[key];
+                        }
+                    });
+                    this.updatePreview();
+                    this.updateStatus();
+                }
+            }
+
+            exportCoverLetter() {
+                const data = this.getFormData();
+                const coverLetterText = this.generateCoverLetterText(data);
+                this.downloadFile('grant-cover-letter.txt', coverLetterText);
+            }
+
+            generateCoverLetterText(data) {
+                return `
+GRANT COVER LETTER
+==================
+
+${this.formatDate(data.date)}
+
+${data.grantOrganization || 'Grant Organization'}
+Committee Address
+
+${data.salutation || 'Dear Innovation Grant Committee,'}
+
+${data.openingParagraph || 'Opening paragraph will appear here...'}
+
+${data.projectSummary || 'Project summary will appear here...'}
+
+${data.qualifications || 'Qualifications will appear here...'}
+
+${data.impactStatement || 'Impact statement will appear here...'}
+
+${data.closingParagraph || 'Closing paragraph will appear here...'}
+
+Sincerely,
+
+${data.signature || 'Gawahir Eltahir'}
+
+Generated: ${new Date().toLocaleDateString()}
+                `.trim();
+            }
+
+            downloadFile(filename, content) {
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                this.showNotification('Cover letter exported successfully!', 'success');
+            }
+
+            loadTemplate() {
+                const template = {
+                    applicantName: 'Gawahir Eltahir',
+                    grantOrganization: 'Innovation Grant Committee',
+                    grantTitle: 'Application for Innovation Grant – Münreader Sanctuary Device',
+                    date: new Date().toISOString().split('T')[0],
+                    salutation: 'Dear Grant Committee,',
+                    openingParagraph: 'I am honored to submit my application for support of Münreader, one of the world\'s first dual e‑ink sanctuary devices. This project is more than an e‑reader — it is a cultural artifact designed to restore focus and presence in the age of distraction.\n\nEncased in vegan suede with engraved permanence, Münreader offers a minimalistic UI, microSD sovereignty, and a sleep headphone jack for ritual reading. It is a device that wants nothing from its user. By merging cutting‑edge hardware with cultural intention, Münreader creates a new genre: sanctuary hardware for deep reading.\n\nYour program\'s commitment to innovation and founder resilience aligns perfectly with this vision. Funding will support prototype development (100 pilot units), compliance testing (FCC, CE, RoHS), and supply chain sovereignty. This ensures that Münreader remains a sovereign artifact, not a commodity gadget.\n\nAs an independent founder and single mother, I am building this project with intentionality and resilience. Every dollar of support protects founder autonomy and ensures that this device honors its vision with fidelity. With your partnership, Canada can position itself as the birthplace of sanctuary hardware — a cultural export that redefines reading technology.',
+                    projectSummary: 'Münreader represents a revolutionary approach to digital reading by combining dual-screen E Ink technology with cultural sanctuary principles. The device addresses the growing need for distraction-free reading environments while honoring the tactile experience of traditional books. Features include vegan suede construction, engraved permanence, minimalistic UI, and ritual-based reading sessions designed for deep literary engagement.',
+                    qualifications: 'As founder and lead innovator with over five years of experience in hardware development and user experience design, I bring comprehensive expertise in product development, cultural artifact creation, and technology integration. My background includes successful launches of innovative products and deep understanding of the intersection between technology and cultural preservation.',
+                    impactStatement: 'The Münreader device will establish Canada as the birthplace of sanctuary hardware, creating a new category in the reading technology market. We project serving 10,000+ users in Year 1, generating $2.5M in revenue while establishing a new standard for cultural technology that enhances rather than diminishes the reading experience. Beyond commercial success, this project will create new opportunities for literary engagement and demonstrate how technology can serve cultural preservation.',
+                    closingParagraph: 'Thank you for considering this application for Innovation Grant support. I am confident that Münreader represents exactly the type of innovative, culturally significant project this program was designed to fund. I welcome the opportunity to discuss this vision in greater detail and demonstrate how this investment will yield significant returns both commercially and culturally. I look forward to your favorable consideration and potential partnership.',
+                    signature: 'Gawahir Eltahir\n\nFounder, YB International Inc.\nMira Lune — Author & Ritual‑Tech Creator'
+                };
+
+                Object.keys(template).forEach(key => {
+                    const element = document.getElementById(key);
+                    if (element) {
+                        element.value = template[key];
+                    }
+                });
+
+                this.updatePreview();
+                this.updateStatus();
+                this.showNotification('Template loaded successfully!', 'success');
+            }
+
+            clearForm() {
+                if (confirm('Are you sure you want to clear all form data?')) {
+                    document.getElementById('coverLetterForm').reset();
+                    this.setCurrentDate();
+                    this.updatePreview();
+                    this.updateStatus();
+                    this.showNotification('Form cleared successfully!', 'info');
+                }
+            }
+
+            showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 15px 20px;
+                    border-radius: 10px;
+                    color: white;
+                    font-weight: 600;
+                    z-index: 10000;
+                    animation: slideIn 0.3s ease;
+                `;
+                
+                if (type === 'success') {
+                    notification.style.background = 'linear-gradient(135deg, #34c759 0%, #30d158 100%)';
+                } else if (type === 'error') {
+                    notification.style.background = 'linear-gradient(135deg, #ff3b30 0%, #ff6961 100%)';
+                } else {
+                    notification.style.background = 'linear-gradient(135deg, #007aff 0%, #5ac8fa 100%)';
+                }
+                
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            }
+        }
+
+        // GLOBAL FUNCTIONS
+        let editor;
+
+        function saveCoverLetter() {
+            editor.saveCoverLetter();
+        }
+
+        function exportCoverLetter() {
+            editor.exportCoverLetter();
+        }
+
+        function loadTemplate() {
+            editor.loadTemplate();
+        }
+
+        function clearForm() {
+            editor.clearForm();
+        }
+
+        // INITIALIZE EDITOR
+        document.addEventListener('DOMContentLoaded', () => {
+            editor = new CoverLetterEditor();
+            // Auto-load template on page load
+            setTimeout(() => {
+                editor.loadTemplate();
+            }, 500);
+        });
+
+        // ANIMATION STYLES
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

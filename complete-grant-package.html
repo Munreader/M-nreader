@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Grant Application Package - Münreader Sanctuary Device</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=SF+Pro+Display:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --sakura-pink: #ffb7c5;
+            --sakura-white: #fff0f5;
+            --sakura-dark: #8b4789;
+            --sakura-light: #ffd1dc;
+            --sakura-stem: #4a4a4a;
+            --sakura-bg: #fafafa;
+            --sakura-shadow: rgba(139, 71, 137, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 50%, #ffd1dc 100%);
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--sakura-dark);
+            line-height: 1.6;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="3" fill="%23ffb7c5" opacity="0.3"/><circle cx="80" cy="30" r="2" fill="%23ffd1dc" opacity="0.4"/><circle cx="50" cy="70" r="2.5" fill="%23ffb7c5" opacity="0.3"/><circle cx="30" cy="80" r="2" fill="%23ffd1dc" opacity="0.5"/><circle cx="70" cy="10" r="3" fill="%23ffb7c5" opacity="0.2"/></svg>') repeat;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .grant-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .grant-header {
+            background: var(--sakura-white);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--sakura-pink);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px var(--sakura-shadow);
+            text-align: center;
+        }
+
+        .grant-title {
+            font-family: 'SF Pro Display', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--sakura-dark);
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .grant-subtitle {
+            font-size: 1.2rem;
+            color: var(--sakura-dark);
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+
+        .grant-meta {
+            font-size: 1rem;
+            color: var(--sakura-dark);
+            opacity: 0.7;
+        }
+
+        .section {
+            background: var(--sakura-white);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--sakura-pink);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px var(--sakura-shadow);
+        }
+
+        .section-title {
+            font-family: 'SF Pro Display', sans-serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--sakura-dark);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--sakura-light);
+            padding-bottom: 10px;
+        }
+
+        .section-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--sakura-dark);
+        }
+
+        .section-content p {
+            margin-bottom: 15px;
+        }
+
+        .section-content strong {
+            font-weight: 600;
+            color: var(--sakura-dark);
+        }
+
+        .signature {
+            margin-top: 40px;
+            text-align: right;
+        }
+
+        .signature-name {
+            font-family: 'SF Pro Display', sans-serif;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--sakura-dark);
+        }
+
+        .signature-title {
+            font-size: 1rem;
+            color: var(--sakura-dark);
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        .budget-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .budget-table th,
+        .budget-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--sakura-light);
+        }
+
+        .budget-table th {
+            font-family: 'SF Pro Display', sans-serif;
+            font-weight: 600;
+            color: var(--sakura-dark);
+            background: var(--sakura-light);
+        }
+
+        .budget-table td {
+            color: var(--sakura-dark);
+        }
+
+        .budget-table .amount {
+            text-align: right;
+            font-family: 'SF Pro Display', sans-serif;
+            font-weight: 600;
+        }
+
+        .total-row {
+            font-weight: 700;
+            background: var(--sakura-light);
+        }
+
+        .timeline-phase {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: var(--sakura-white);
+            border: 1px solid var(--sakura-light);
+            border-radius: 15px;
+        }
+
+        .timeline-phase h4 {
+            font-family: 'SF Pro Display', sans-serif;
+            font-weight: 600;
+            color: var(--sakura-dark);
+            margin-bottom: 10px;
+        }
+
+        .timeline-phase p {
+            color: var(--sakura-dark);
+            opacity: 0.8;
+        }
+
+        .innovation-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature-card {
+            background: var(--sakura-white);
+            border: 1px solid var(--sakura-light);
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px var(--sakura-shadow);
+            border-color: var(--sakura-pink);
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--sakura-dark);
+        }
+
+        .feature-title {
+            font-family: 'SF Pro Display', sans-serif;
+            font-weight: 600;
+            color: var(--sakura-dark);
+            margin-bottom: 5px;
+        }
+
+        .feature-desc {
+            font-size: 0.9rem;
+            color: var(--sakura-dark);
+            opacity: 0.8;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 15px;
+            font-family: 'SF Pro Display', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--sakura-pink) 0%, var(--sakura-light) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 183, 197, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--sakura-white);
+            color: var(--sakura-dark);
+            border: 2px solid var(--sakura-pink);
+        }
+
+        .btn-secondary:hover {
+            background: var(--sakura-pink);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .grant-container {
+                padding: 20px 10px;
+            }
+            
+            .grant-title {
+                font-size: 2rem;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grant-container">
+        <!-- HEADER -->
+        <div class="grant-header">
+            <h1 class="grant-title">Application for Innovation Grant</h1>
+            <p class="grant-subtitle">Münreader Sanctuary Device</p>
+            <div class="grant-meta">
+                Submitted by: Gawahir Eltahir<br>
+                YB International Inc.<br>
+                February 12, 2026
+            </div>
+        </div>
+
+        <!-- HERO SHOT -->
+        <div class="section">
+            <h2 class="section-title">Device Visualization</h2>
+            <div class="section-content">
+                <div style="text-align: center; margin: 30px 0;">
+                    <img src="hero-shot.jpg" alt="Münreader Sanctuary Device" style="max-width: 100%; height: auto; border-radius: 15px; box-shadow: 0 10px 30px rgba(139, 71, 137, 0.2);">
+                    <p style="margin-top: 15px; font-style: italic; color: var(--sakura-dark); opacity: 0.8;">
+                        Founder's Vision Render - Münreader Sanctuary Device
+                    </p>
+                </div>
+                <p>The Münreader device represents the culmination of extensive research into reading ergonomics, cultural artifact design, and sovereign technology principles. The visualization above demonstrates our commitment to creating a reading device that honors both form and function.</p>
+            </div>
+        </div>
+
+        <!-- COVER LETTER -->
+        <div class="section">
+            <h2 class="section-title">Cover Letter</h2>
+            <div class="section-content">
+                <p><strong>Subject:</strong> Application for Innovation Grant – Münreader Sanctuary Device</p>
+                
+                <p><strong>Dear Grant Committee,</strong></p>
+                
+                <p>I am honored to submit my application for support of Münreader, one of the world's first dual e‑ink sanctuary devices. This project is more than an e‑reader — it is a cultural artifact designed to restore focus and presence in the age of distraction.</p>
+                
+                <p>Encased in vegan suede with engraved permanence, Münreader offers a minimalistic UI, microSD sovereignty, and a sleep headphone jack for ritual reading. It is a device that wants nothing from its user. By merging cutting‑edge hardware with cultural intention, Münreader creates a new genre: sanctuary hardware for deep reading.</p>
+                
+                <p>Your program's commitment to innovation and founder resilience aligns perfectly with this vision. Funding will support prototype development (100 pilot units), compliance testing (FCC, CE, RoHS), and supply chain sovereignty. This ensures that Münreader remains a sovereign artifact, not a commodity gadget.</p>
+                
+                <p>As an independent founder and single mother, I am building this project with intentionality and resilience. Every dollar of support protects founder autonomy and ensures that this device honors its vision with fidelity. With your partnership, Canada can position itself as the birthplace of sanctuary hardware — a cultural export that redefines reading technology.</p>
+                
+                <p>Thank you for considering this application. I would be honored to collaborate with your program to bring Münreader from Vision Render to Artifact.</p>
+                
+                <div class="signature">
+                    <div class="signature-name">Gawahir Eltahir</div>
+                    <div class="signature-title">Founder, YB International Inc.</div>
+                    <div class="signature-title">Mira Lune — Author & Ritual‑Tech Creator</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXECUTIVE SUMMARY -->
+        <div class="section">
+            <h2 class="section-title">Executive Summary</h2>
+            <div class="section-content">
+                <p>Münreader is one of the world's first dual e‑ink sanctuary devices — a distraction‑free artifact designed to restore focus and presence in the age of noise. Encased in vegan suede with engraved permanence, Münreader merges cutting‑edge hardware with cultural intention: a device that wants nothing from its user.</p>
+                
+                <p>Its dual‑screen architecture separates ambient display ("Explore") from active reading, creating a new genre of reading technology. With microSD sovereignty, a sleep headphone jack, and a minimalistic UI free from notifications, Münreader is not a productivity tool — it is sanctuary hardware born in Canada.</p>
+                
+                <p>This grant will support prototype development, compliance testing (FCC, CE, RoHS), and supply chain sovereignty for the first 100 pilot units. With your partnership, Canada can position itself as the birthplace of sanctuary hardware — a cultural export that redefines reading technology.</p>
+            </div>
+        </div>
+
+        <!-- INNOVATION -->
+        <div class="section">
+            <h2 class="section-title">Innovation</h2>
+            <div class="section-content">
+                <p>Münreader introduces a dual e‑ink configuration that enables simultaneous ambient presence and deep reading. This architecture is paired with sovereign design principles:</p>
+                
+                <div class="innovation-features">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-tablet-alt"></i></div>
+                        <div class="feature-title">Dual e‑ink screens</div>
+                        <div class="feature-desc">Ambient + active reading</div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-ban"></i></div>
+                        <div class="feature-title">Minimalistic UI</div>
+                        <div class="feature-desc">No notifications</div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-sd-card"></i></div>
+                        <div class="feature-title">MicroSD expansion</div>
+                        <div class="feature-desc">Data sovereignty</div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-headphones"></i></div>
+                        <div class="feature-title">Sleep headphone jack</div>
+                        <div class="feature-desc">Ritual reading</div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-moon"></i></div>
+                        <div class="feature-title">Ambient spine glow</div>
+                        <div class="feature-desc">Low‑light sanctuary</div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-leaf"></i></div>
+                        <div class="feature-title">Vegan suede cover</div>
+                        <div class="feature-desc">Engraved permanence</div>
+                    </div>
+                </div>
+                
+                <p style="margin-top: 20px;">Every feature is intentional, merging technology with cultural craft. This is not a commodity gadget — it is a Canadian innovation that elevates reading into ritual.</p>
+            </div>
+        </div>
+
+        <!-- MARKET IMPACT -->
+        <div class="section">
+            <h2 class="section-title">Market Impact</h2>
+            <div class="section-content">
+                <p>In the attention economy, sanctuary is the new luxury.</p>
+                
+                <p>Münreader positions itself alongside Hermès notebooks and Leica cameras — tools of identity and craft — rather than mass‑market electronics. It serves serious readers, academics, authors, and literary professionals who demand both functionality and aesthetic excellence.</p>
+                
+                <p>By anchoring the device in sovereignty (microSD, modular components, non‑dilutive capital), Münreader protects margins and avoids the pitfalls of investor‑driven hardware dilution.</p>
+                
+                <p>As a Canadian innovation, Münreader has global resonance as both technology and cultural artifact.</p>
+            </div>
+        </div>
+
+        <!-- TECHNICAL SOLUTION -->
+        <div class="section">
+            <h2 class="section-title">Technical Solution</h2>
+            <div class="section-content">
+                <p>Münreader combines premium materials with advanced engineering:</p>
+                
+                <div class="innovation-features">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-desktop"></i></div>
+                        <div class="feature-title">Dual high‑resolution e‑ink displays</div>
+                        <div class="feature-desc">Premium reading experience</div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-microchip"></i></div>
+                        <div class="feature-title">Coreer M12 processor + custom PCB</div>
+                        <div class="feature-desc">Optimized performance</div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-cube"></i></div>
+                        <div class="feature-title">Aluminum alloy internal frame</div>
+                        <div class="feature-desc">Durable construction</div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-code"></i></div>
+                        <div class="feature-title">Proprietary sovereign‑reading software</div>
+                        <div class="feature-desc">Distraction-free environment</div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-adjust"></i></div>
+                        <div class="feature-title">Moon‑phase lighting</div>
+                        <div class="feature-desc">Night reading comfort</div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-book"></i></div>
+                        <div class="feature-title">Ritual‑based reading sessions</div>
+                        <div class="feature-desc">Enhanced focus</div>
+                    </div>
+                </div>
+                
+                <p style="margin-top: 20px;">This creates a reading experience that honors the physical book tradition while embracing digital innovation.</p>
+            </div>
+        </div>
+
+        <!-- PROJECT TIMELINE -->
+        <div class="section">
+            <h2 class="section-title">Project Timeline (12 Months)</h2>
+            <div class="section-content">
+                <div class="timeline-phase">
+                    <h4>Phase 1 — Prototype Development (Months 1–3)</h4>
+                    <p>Hardware engineering, software development, initial prototypes, supply chain setup.</p>
+                </div>
+                
+                <div class="timeline-phase">
+                    <h4>Phase 2 — User Testing & Refinement (Months 4–6)</h4>
+                    <p>Beta testing with academics, authors, and deep readers. Software refinement.</p>
+                </div>
+                
+                <div class="timeline-phase">
+                    <h4>Phase 3 — Manufacturing Setup (Months 7–9)</h4>
+                    <p>Tooling, production line establishment, quality control.</p>
+                </div>
+                
+                <div class="timeline-phase">
+                    <h4>Phase 4 — Market Launch (Months 10–12)</h4>
+                    <p>Founder's 50 tier launch, artifact photography, distribution channels.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- BUDGET REQUEST -->
+        <div class="section">
+            <h2 class="section-title">Budget Request (CAD)</h2>
+            <div class="section-content">
+                <table class="budget-table">
+                    <thead>
+                        <tr>
+                            <th>Line Item</th>
+                            <th>Description</th>
+                            <th>Estimated Cost (CAD)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Prototype Build</td>
+                            <td>100 pilot units — dual e‑ink screens, Coreer M12 processor, custom PCB, vegan suede covers, reinforced hinge</td>
+                            <td class="amount">$120,000</td>
+                        </tr>
+                        <tr>
+                            <td>Compliance Testing</td>
+                            <td>FCC, CE, RoHS certification, lab fees, documentation</td>
+                            <td class="amount">$25,000</td>
+                        </tr>
+                        <tr>
+                            <td>Supply Chain Stabilization</td>
+                            <td>Materials sourcing, assembly logistics, vendor deposits</td>
+                            <td class="amount">$40,000</td>
+                        </tr>
+                        <tr>
+                            <td>Marketing Validation</td>
+                            <td>Founder's 50 launch site, Airo build, artifact photography, social ads (post‑validation)</td>
+                            <td class="amount">$15,000</td>
+                        </tr>
+                        <tr>
+                            <td>Founder Operations</td>
+                            <td>Silent remote work support, admin/data entry bridge income, council sync tools</td>
+                            <td class="amount">$10,000</td>
+                        </tr>
+                        <tr>
+                            <td>Contingency Reserve</td>
+                            <td>Buffer for unexpected costs (materials, shipping, compliance delays)</td>
+                            <td class="amount">$20,000</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td colspan="2"><strong>Total Request:</strong></td>
+                            <td class="amount"><strong>$230,000 CAD</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- FOUNDER STATEMENT -->
+        <div class="section">
+            <h2 class="section-title">Founder Statement</h2>
+            <div class="section-content">
+                <p>As an independent founder and single mother, I am building Münreader with intentionality and resilience. This grant will fund the supply chain sovereignty required to move from Vision Render to Artifact. Every dollar protects founder autonomy and ensures that this device honors its vision with fidelity.</p>
+                
+                <p>Münreader is sanctuary hardware — a device that wants nothing from its user. With your support, Canada can lead the world in a new category of cultural technology.</p>
+            </div>
+        </div>
+
+        <!-- EXPECTED IMPACT -->
+        <div class="section">
+            <h2 class="section-title">Expected Impact</h2>
+            <div class="section-content">
+                <p>Münreader will:</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Establish a new category of premium literary technology</li>
+                    <li>Serve 10,000+ users in Year 1</li>
+                    <li>Generate $2.5M in revenue</li>
+                    <li>Enhance academic productivity and deep reading</li>
+                    <li>Position Canada as the birthplace of sanctuary hardware</li>
+                </ul>
+                
+                <p style="margin-top: 20px;">This project bridges cultural craft and technological innovation, demonstrating how hardware can restore presence rather than fragment it.</p>
+            </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="exportGrant()">
+                <i class="fas fa-download"></i> Export Complete Package
+            </button>
+            <button class="btn btn-secondary" onclick="printGrant()">
+                <i class="fas fa-print"></i> Print for Review
+            </button>
+            <button class="btn btn-secondary" onclick="shareGrant()">
+                <i class="fas fa-share"></i> Share Package
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function exportGrant() {
+            const grantContent = document.documentElement.outerHTML;
+            const blob = new Blob([grantContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'complete-grant-application-munreader.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            // Show notification
+            showNotification('Complete grant package exported successfully!', 'success');
+        }
+
+        function printGrant() {
+            window.print();
+            showNotification('Print dialog opened', 'info');
+        }
+
+        function shareGrant() {
+            const shareUrl = window.location.href;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Münreader Grant Application',
+                    text: 'Complete grant application package for Münreader Sanctuary Device',
+                    url: shareUrl
+                });
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(shareUrl);
+                showNotification('Link copied to clipboard!', 'success');
+            }
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 10px;
+                color: white;
+                font-weight: 600;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            if (type === 'success') {
+                notification.style.background = 'linear-gradient(135deg, #34c759 0%, #30d158 100%)';
+            } else if (type === 'error') {
+                notification.style.background = 'linear-gradient(135deg, #ff3b30 0%, #ff6961 100%)';
+            } else {
+                notification.style.background = 'linear-gradient(135deg, #007aff 0%, #5ac8fa 100%)';
+            }
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Add animation styles
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            
+            @media print {
+                body {
+                    background: white !important;
+                }
+                .action-buttons {
+                    display: none !important;
+                }
+                .section {
+                    break-inside: avoid;
+                    border: 1px solid #ddd !important;
+                    box-shadow: none !important;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

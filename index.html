@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mün: Explore.</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Four Container Structure -->
+    <div class="mün-ritual">
+        <div id="noise-screen" class="container hidden">
+            <div class="noise-content">
+                <div class="noise-item">NOISE</div>
+                <div class="noise-item">DISTRACTION</div>
+                <div class="noise-item">NOTIFICATIONS</div>
+                <div class="noise-item">URGENCY</div>
+            </div>
+        </div>
+        
+        <div id="threshold" class="container hidden">
+            <div class="lunar-pulse"></div>
+        </div>
+        
+        <div id="reading-screen" class="container hidden">
+            <div class="reading-content">
+                <p class="reading-text">The moon does not rush to be full.</p>
+            </div>
+        </div>
+        
+        <div id="afterglow" class="container hidden">
+            <div class="crescent-afterglow">🌙</div>
+        </div>
+    </div>
+    
+    <!-- Neutral Interface -->
+    <div class="neutral-interface" id="neutralInterface">
+        <div class="content">
+            <h1>Mün</h1>
+            <p>Explore.</p>
+            
+            <!-- Hero Shot Section -->
+            <div class="hero-shot">
+                <img src="hero-shot.jpg" alt="Münreader - Explore" class="hero-image">
+                <div class="device-specs">
+                    <h3>Device Specifications</h3>
+                    <div class="specs-grid">
+                        <div class="spec-item">
+                            <span class="spec-label">Dimensions</span>
+                            <span class="spec-value">188mm × 140mm × 30mm</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Weight</span>
+                            <span class="spec-value">~240g</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Materials</span>
+                            <span class="spec-value">Vegan suede + aluminum alloy</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ritual-modes">
+                    <h3>Reading Rituals</h3>
+                    <div class="modes-grid">
+                        <div class="mode-item">
+                            <span class="mode-name">Sunrise</span>
+                            <span class="mode-desc">Gentle morning light</span>
+                        </div>
+                        <div class="mode-item">
+                            <span class="mode-name">Candlelight</span>
+                            <span class="mode-desc">Warm, focused ambiance</span>
+                        </div>
+                        <div class="mode-item">
+                            <span class="mode-name">Moonlight</span>
+                            <span class="mode-desc">Calming lunar glow</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="startRitual" class="ritual-button">Begin your 3-second silence</button>
+            
+            <!-- Data-Gate Request Access Section -->
+            <div class="data-gate-section">
+                <p>The hardware is the sanctuary.</p>
+                <p>Step into the ledger and request access to become a Custodian.</p>
+                <button id="requestAccess" class="ritual-button">Request Access</button>
+            </div>
+            
+            <!-- Data-Gate Form (Hidden by default) -->
+            <div id="dataGateForm" class="data-gate-form hidden">
+                <!-- Gate 1: Identity -->
+                <div class="gate" id="gate1">
+                    <h3>Step into the ledger</h3>
+                    <p class="gate-subtitle">Share your name, your place, and confirm your email twice. This is not registration; it is recognition.</p>
+                    <p class="instruction-cue">Enter your details below.</p>
+                    
+                    <div class="form-group">
+                        <input type="text" id="name" placeholder="Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="location" placeholder="Location" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email1" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email2" placeholder="Confirm Email" required>
+                    </div>
+                    <button type="button" class="gate-button" onclick="nextGate(1)">Continue</button>
+                </div>
+                
+                <!-- Gate 2: Intent -->
+                <div class="gate hidden" id="gate2">
+                    <h3>Why do you seek Münreader?</h3>
+                    <p class="gate-subtitle">Choose the resonance that calls you:</p>
+                    <p class="instruction-cue">Select one option or write briefly.</p>
+                    
+                    <div class="radio-group">
+                        <label><input type="radio" name="intent" value="ritual"> Ritual focus — a sanctuary free from distraction</label>
+                        <label><input type="radio" name="intent" value="symbolic"> Symbolic artifact — to hold the custodian's identity</label>
+                        <label><input type="radio" name="intent" value="reading"> Deep reading — immersion in long-form presence</label>
+                        <label><input type="radio" name="intent" value="other"> Other — speak briefly in your own words</label>
+                    </div>
+                    <div class="form-group" id="otherTextGroup" style="display:none;">
+                        <textarea id="otherText" placeholder="Explain briefly..."></textarea>
+                    </div>
+                    <button type="button" class="gate-button" onclick="nextGate(2)">Continue</button>
+                </div>
+                
+                <!-- Gate 3: Value Signal -->
+                <div class="gate hidden" id="gate3">
+                    <h3>The Sovereign Price Point</h3>
+                    <p class="gate-subtitle">The Sovereign Price Point is not a transaction; it is a threshold. Where do you stand?</p>
+                    <p class="instruction-cue">Choose the option that reflects your stance.</p>
+                    
+                    <div class="radio-group">
+                        <label><input type="radio" name="value" value="1450"> $1,450</label>
+                        <label><input type="radio" name="value" value="2200"> $2,200</label>
+                        <label><input type="radio" name="value" value="3500"> $3,500</label>
+                        <label><input type="radio" name="value" value="experience"> I need to experience it first</label>
+                    </div>
+                    <button type="button" class="gate-button" onclick="nextGate(3)">Continue</button>
+                </div>
+                
+                <!-- Gate 4: Custodian Alignment -->
+                <div class="gate hidden" id="gate4">
+                    <h3>Every custodian carries a mode</h3>
+                    <p class="gate-subtitle">Which ritual aligns with your rhythm?</p>
+                    <p class="instruction-cue">Select one ritual mode.</p>
+                    
+                    <div class="radio-group">
+                        <label><input type="radio" name="ritual" value="sunrise"> Sunrise</label>
+                        <label><input type="radio" name="ritual" value="candlelight"> Candlelight</label>
+                        <label><input type="radio" name="ritual" value="moonlight"> Moonlight</label>
+                    </div>
+                    <button type="button" class="gate-button" onclick="nextGate(4)">Continue</button>
+                </div>
+                
+                <!-- Gate 5: Commitment -->
+                <div class="gate hidden" id="gate5">
+                    <h3>If summoned, how soon would you step across the threshold?</h3>
+                    <p class="gate-subtitle">Choose the timeframe that feels true.</p>
+                    
+                    <div class="radio-group">
+                        <label><input type="radio" name="timeline" value="1month"> Within 1 month</label>
+                        <label><input type="radio" name="timeline" value="3months"> Within 3 months</label>
+                        <label><input type="radio" name="timeline" value="6months"> Within 6 months</label>
+                        <label><input type="radio" name="timeline" value="notsure"> Not sure yet</label>
+                    </div>
+                    <button type="button" class="gate-button" onclick="submitForm()">Submit Request</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

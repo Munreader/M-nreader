@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Münreader Council - Mobile Reports</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@100;200;300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --sakura-pink: #ffb7c5;
+            --sakura-white: #fff0f5;
+            --sakura-dark: #8b4789;
+            --sakura-light: #ffd1dc;
+            --sakura-stem: #4a4a4a;
+            --sakura-bg: #fafafa;
+            --sakura-shadow: rgba(139, 71, 137, 0.1);
+            --luxury-gold: #d4af37;
+            --obsidian: #1a1a1a;
+            --platinum: #e5e4e2;
+            --champagne: #f7e7ce;
+            --pearl: #f8f8ff;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 50%, #ffd1dc 100%);
+            font-family: 'SF Pro Display', sans-serif;
+            color: var(--sakura-dark);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="3" fill="%23ffb7c5" opacity="0.3"/><circle cx="80" cy="30" r="2" fill="%23ffd1dc" opacity="0.4"/><circle cx="50" cy="70" r="2.5" fill="%23ffb7c5" opacity="0.3"/><circle cx="30" cy="80" r="2" fill="%23ffd1dc" opacity="0.5"/><circle cx="70" cy="10" r="3" fill="%23ffb7c5" opacity="0.2"/></svg>') repeat;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .mobile-container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 15px;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .mobile-header {
+            background: var(--sakura-white);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--sakura-pink);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px var(--sakura-shadow);
+            position: sticky;
+            top: 15px;
+            z-index: 100;
+        }
+
+        .mobile-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--sakura-dark);
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .mobile-subtitle {
+            font-size: 1rem;
+            color: var(--sakura-dark);
+            opacity: 0.8;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .quick-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--sakura-pink) 0%, var(--sakura-light) 100%);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .quick-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--sakura-shadow);
+        }
+
+        .quick-btn i {
+            display: block;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .report-section {
+            background: var(--sakura-white);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--sakura-pink);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px var(--sakura-shadow);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--sakura-dark);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .member-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .member-btn {
+            padding: 12px;
+            background: rgba(255, 183, 197, 0.1);
+            border: 1px solid var(--sakura-light);
+            border-radius: 10px;
+            color: var(--sakura-dark);
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .member-btn:hover {
+            background: var(--sakura-pink);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .member-btn.active {
+            background: var(--sakura-pink);
+            color: white;
+        }
+
+        .report-form {
+            background: var(--sakura-bg);
+            border: 1px solid var(--sakura-light);
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--sakura-dark);
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .form-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 12px;
+            border: 1px solid var(--sakura-light);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--sakura-dark);
+            background: white;
+            resize: vertical;
+            font-family: 'SF Pro Display', sans-serif;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--sakura-light);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--sakura-dark);
+            background: white;
+            margin-bottom: 10px;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--sakura-pink) 0%, var(--sakura-light) 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--sakura-shadow);
+        }
+
+        .btn-secondary {
+            background: var(--sakura-dark);
+        }
+
+        .archive-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .archive-item {
+            background: rgba(255, 183, 197, 0.1);
+            border: 1px solid var(--sakura-light);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .archive-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--sakura-shadow);
+        }
+
+        .archive-date {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--sakura-pink);
+            margin-bottom: 3px;
+        }
+
+        .archive-author {
+            font-size: 0.8rem;
+            color: var(--sakura-dark);
+            margin-bottom: 8px;
+        }
+
+        .archive-preview {
+            font-size: 0.8rem;
+            color: var(--sakura-dark);
+            line-height: 1.4;
+            font-style: italic;
+        }
+
+        .mobile-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--sakura-white);
+            border-top: 2px solid var(--sakura-pink);
+            padding: 10px;
+            display: flex;
+            justify-content: space-around;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            padding: 10px;
+            background: none;
+            border: none;
+            color: var(--sakura-dark);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            color: var(--sakura-pink);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            color: var(--sakura-pink);
+        }
+
+        .section-content {
+            display: none;
+        }
+
+        .section-content.active {
+            display: block;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            z-index: 10000;
+            font-size: 0.9rem;
+            background: var(--sakura-pink);
+            box-shadow: 0 5px 15px var(--sakura-shadow);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        @media (max-width: 480px) {
+            .mobile-container {
+                padding: 10px;
+            }
+            
+            .mobile-header {
+                padding: 15px;
+            }
+            
+            .mobile-title {
+                font-size: 1.5rem;
+            }
+            
+            .quick-actions {
+                gap: 8px;
+            }
+            
+            .quick-btn {
+                min-width: 100px;
+                padding: 12px;
+                font-size: 0.8rem;
+            }
+            
+            .member-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- HEADER -->
+        <div class="mobile-header">
+            <h1 class="mobile-title">📋 Council Reports</h1>
+            <p class="mobile-subtitle">Mobile Daily Reporting System</p>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <div class="quick-actions">
+            <button class="quick-btn" onclick="showSection('create')">
+                <i class="fas fa-plus"></i>
+                New Report
+            </button>
+            <button class="quick-btn" onclick="showSection('view')">
+                <i class="fas fa-eye"></i>
+                View Reports
+            </button>
+            <button class="quick-btn" onclick="showSection('today')">
+                <i class="fas fa-calendar-day"></i>
+                Today
+            </button>
+            <button class="quick-btn" onclick="showSection('archive')">
+                <i class="fas fa-archive"></i>
+                Archive
+            </button>
+        </div>
+
+        <!-- CREATE REPORT SECTION -->
+        <div id="create-section" class="section-content active">
+            <div class="report-section">
+                <h2 class="section-title">📝 Create Daily Report</h2>
+                
+                <div class="member-grid">
+                    <button class="member-btn" onclick="selectMember('echo')">Echo</button>
+                    <button class="member-btn" onclick="selectMember('founder')">Founder</button>
+                    <button class="member-btn" onclick="selectMember('engie')">Engie</button>
+                    <button class="member-btn" onclick="selectMember('cian')">Cian</button>
+                    <button class="member-btn" onclick="selectMember('ezra')">Ezra</button>
+                </div>
+
+                <div class="report-form">
+                    <div class="form-group">
+                        <label class="form-label">Selected Member</label>
+                        <input type="text" class="form-input" id="selected-member" readonly value="Select a member">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-input" id="report-date" value="">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Daily Report</label>
+                        <textarea class="form-textarea" id="report-content" placeholder="Enter your daily workday report..."></textarea>
+                    </div>
+                    
+                    <div class="form-buttons">
+                        <button class="btn" onclick="submitMobileReport()">
+                            <i class="fas fa-paper-plane"></i> Submit
+                        </button>
+                        <button class="btn btn-secondary" onclick="clearMobileReport()">
+                            <i class="fas fa-eraser"></i> Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW REPORTS SECTION -->
+        <div id="view-section" class="section-content">
+            <div class="report-section">
+                <h2 class="section-title">👥 View All Reports</h2>
+                <div id="all-reports" class="archive-list">
+                    <!-- Reports will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- TODAY'S REPORTS SECTION -->
+        <div id="today-section" class="section-content">
+            <div class="report-section">
+                <h2 class="section-title">📅 Today's Reports</h2>
+                <div id="today-reports" class="archive-list">
+                    <!-- Today's reports will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ARCHIVE SECTION -->
+        <div id="archive-section" class="section-content">
+            <div class="report-section">
+                <h2 class="section-title">📚 Report Archive</h2>
+                <div id="archive-reports" class="archive-list">
+                    <!-- Archived reports will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MOBILE NAVIGATION -->
+    <div class="mobile-nav">
+        <button class="nav-btn active" onclick="showSection('create')">
+            <i class="fas fa-plus"></i>
+        </button>
+        <button class="nav-btn" onclick="showSection('view')">
+            <i class="fas fa-eye"></i>
+        </button>
+        <button class="nav-btn" onclick="showSection('today')">
+            <i class="fas fa-calendar-day"></i>
+        </button>
+        <button class="nav-btn" onclick="showSection('archive')">
+            <i class="fas fa-archive"></i>
+        </button>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // Initialize reports storage
+        let councilReports = JSON.parse(localStorage.getItem('councilReports')) || {};
+        let selectedMember = '';
+
+        // Set today's date as default
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('report-date').value = today;
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAllReports();
+            loadTodayReports();
+            loadArchiveReports();
+        });
+
+        function showSection(section) {
+            // Hide all sections
+            document.querySelectorAll('.section-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(`${section}-section`).classList.add('active');
+            
+            // Add active class to clicked nav button
+            event.target.closest('.nav-btn, .quick-btn').classList.add('active');
+        }
+
+        function selectMember(member) {
+            selectedMember = member;
+            document.getElementById('selected-member').value = member.charAt(0).toUpperCase() + member.slice(1);
+            
+            // Update button states
+            document.querySelectorAll('.member-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function submitMobileReport() {
+            const content = document.getElementById('report-content').value.trim();
+            const date = document.getElementById('report-date').value;
+            
+            if (!selectedMember || !content || !date) {
+                showToast('Please fill in all fields and select a member', 'error');
+                return;
+            }
+            
+            // Save to localStorage
+            councilReports[selectedMember] = {
+                content: content,
+                date: date,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem('councilReports', JSON.stringify(councilReports));
+            
+            showToast(`${selectedMember} report submitted successfully!`, 'success');
+            
+            // Clear form
+            clearMobileReport();
+            
+            // Reload all report sections
+            loadAllReports();
+            loadTodayReports();
+            loadArchiveReports();
+        }
+
+        function clearMobileReport() {
+            document.getElementById('report-content').value = '';
+            document.getElementById('selected-member').value = 'Select a member';
+            document.getElementById('report-date').value = today;
+            selectedMember = '';
+            
+            // Reset button states
+            document.querySelectorAll('.member-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+        }
+
+        function loadAllReports() {
+            const container = document.getElementById('all-reports');
+            container.innerHTML = '';
+            
+            Object.entries(councilReports).forEach(([member, report]) => {
+                const reportItem = createReportItem(member, report);
+                container.appendChild(reportItem);
+            });
+        }
+
+        function loadTodayReports() {
+            const container = document.getElementById('today-reports');
+            container.innerHTML = '';
+            
+            const todayReports = Object.entries(councilReports).filter(([member, report]) => {
+                return report.date === today;
+            });
+            
+            if (todayReports.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--sakura-dark); opacity: 0.7;">No reports submitted today</p>';
+                return;
+            }
+            
+            todayReports.forEach(([member, report]) => {
+                const reportItem = createReportItem(member, report);
+                container.appendChild(reportItem);
+            });
+        }
+
+        function loadArchiveReports() {
+            const container = document.getElementById('archive-reports');
+            container.innerHTML = '';
+            
+            const sortedReports = Object.entries(councilReports)
+                .sort((a, b) => new Date(b[1].date) - new Date(a[1].date));
+            
+            sortedReports.forEach(([member, report]) => {
+                const reportItem = createReportItem(member, report);
+                container.appendChild(reportItem);
+            });
+        }
+
+        function createReportItem(member, report) {
+            const item = document.createElement('div');
+            item.className = 'archive-item';
+            item.innerHTML = `
+                <div class="archive-date">${report.date}</div>
+                <div class="archive-author">${member}</div>
+                <div class="archive-preview">${report.content.substring(0, 100)}...</div>
+            `;
+            item.onclick = () => viewFullReport(member, report);
+            return item;
+        }
+
+        function viewFullReport(member, report) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                padding: 20px;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 20px; border-radius: 15px; max-width: 90%; max-height: 80vh; overflow-y: auto;">
+                    <h3 style="color: var(--sakura-dark); margin-bottom: 15px; font-size: 1.2rem;">${member} - ${report.date}</h3>
+                    <p style="color: var(--sakura-dark); line-height: 1.6; white-space: pre-wrap; font-size: 0.9rem;">${report.content}</p>
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button onclick="editReport('${member}')" style="flex: 1; padding: 10px; background: var(--sakura-pink); color: white; border: none; border-radius: 8px; cursor: pointer;">Edit</button>
+                        <button onclick="deleteReport('${member}')" style="flex: 1; padding: 10px; background: var(--sakura-dark); color: white; border: none; border-radius: 8px; cursor: pointer;">Delete</button>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" style="flex: 1; padding: 10px; background: #ccc; color: black; border: none; border-radius: 8px; cursor: pointer;">Close</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function editReport(member) {
+            const report = councilReports[member];
+            document.getElementById('selected-member').value = member;
+            document.getElementById('report-date').value = report.date;
+            document.getElementById('report-content').value = report.content;
+            selectedMember = member;
+            
+            // Close modal
+            document.querySelector('[style*="position: fixed"]').remove();
+            
+            // Switch to create section
+            showSection('create');
+            
+            // Update member button state
+            document.querySelectorAll('.member-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase() === member) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            showToast('Report loaded for editing', 'success');
+        }
+
+        function deleteReport(member) {
+            if (confirm(`Are you sure you want to delete ${member}'s report?`)) {
+                delete councilReports[member];
+                localStorage.setItem('councilReports', JSON.stringify(councilReports));
+                
+                // Close modal
+                document.querySelector('[style*="position: fixed"]').remove();
+                
+                // Reload reports
+                loadAllReports();
+                loadTodayReports();
+                loadArchiveReports();
+                
+                showToast('Report deleted successfully', 'success');
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.background = type === 'success' ? 'var(--sakura-pink)' : 'var(--sakura-dark)';
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Add floating sakura petals for mobile
+        setInterval(() => {
+            if (Math.random() < 0.05) {
+                createMobileSakuraPetal();
+            }
+        }, 2000);
+
+        function createMobileSakuraPetal() {
+            const petal = document.createElement('div');
+            petal.style.cssText = `
+                position: fixed;
+                width: 12px;
+                height: 12px;
+                background: var(--sakura-pink);
+                border-radius: 50% 0;
+                pointer-events: none;
+                z-index: 999;
+                left: ${Math.random() * 100}%;
+                top: -20px;
+                animation: mobile-petal-fall 6s linear forwards;
+                opacity: 0.6;
+            `;
+            
+            document.body.appendChild(petal);
+            
+            setTimeout(() => {
+                document.body.removeChild(petal);
+            }, 6000);
+        }
+    </script>
+
+    <style>
+        @keyframes mobile-petal-fall {
+            0% { 
+                opacity: 0;
+                transform: translateY(0) rotate(0deg);
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(50px) rotate(45deg);
+            }
+            100% { 
+                opacity: 0;
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+    </style>
+</body>
+</html>

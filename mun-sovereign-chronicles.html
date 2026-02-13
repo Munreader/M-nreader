@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MÜN: Sovereign Chronicles</title>
+    <meta name="description" content="Luxury interactive story experience with celestial themes and premium narrative">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-obsidian: #050509;
+            --bg-midnight: #050818;
+            --bg-deep: #02030a;
+            --gold-soft: #f5e3b5;
+            --gold-strong: #f2d27a;
+            --moon-silver: #cfd6ff;
+            --accent-ember: #ff6b4a;
+            --accent-ethereal: #8aa8ff;
+            --accent-veiled: #7b7b8f;
+            --panel-suede: #0b0b12;
+            --panel-border: rgba(245, 227, 181, 0.18);
+            --text-main: #f7f5ff;
+            --text-soft: #b9b7d4;
+            --shadow-soft: 0 24px 80px rgba(0, 0, 0, 0.85);
+            --radius-xl: 24px;
+            --radius-lg: 18px;
+            --radius-pill: 999px;
+            --blur-soft: 18px;
+            --transition-fast: 160ms ease-out;
+            --transition-med: 220ms ease-out;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at top, #1b1b3a 0, var(--bg-midnight) 40%, var(--bg-obsidian) 100%);
+            color: var(--text-main);
+            font-family: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Starfield Background */
+        .starfield {
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(255,255,255,0.18) 0, transparent 40%),
+                radial-gradient(circle at 80% 10%, rgba(255,255,255,0.12) 0, transparent 45%),
+                radial-gradient(circle at 60% 80%, rgba(255,255,255,0.1) 0, transparent 50%);
+            opacity: 0.35;
+            filter: blur(1px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Falling Cherry Blossoms */
+        .petal {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #ffb7c5, #f8f8ff);
+            border-radius: 0 100% 0 100%;
+            opacity: 0.7;
+            pointer-events: none;
+            z-index: 1;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        /* Main App Container */
+        .app-container {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .app-header {
+            background: linear-gradient(135deg, rgba(11, 11, 18, 0.95), rgba(5, 5, 9, 0.95));
+            border-bottom: 1px solid var(--panel-border);
+            padding: 16px 24px;
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .app-title {
+            font-family: "Playfair Display", serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--gold-soft);
+            text-shadow: 0 0 20px rgba(245, 227, 181, 0.3);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .premium-badge {
+            background: linear-gradient(135deg, var(--gold-soft), var(--gold-strong));
+            color: var(--bg-obsidian);
+            padding: 6px 12px;
+            border-radius: var(--radius-pill);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .coins-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gold-soft);
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+            width: 100%;
+        }
+
+        /* Story Selection */
+        .story-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .story-card {
+            background: linear-gradient(135deg, rgba(11, 11, 18, 0.8), rgba(5, 5, 9, 0.8));
+            border: 1px solid var(--panel-border);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            transition: all var(--transition-med);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .story-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(245, 227, 181, 0.3);
+            border-color: var(--gold-soft);
+        }
+
+        .story-card.premium {
+            border-color: var(--gold-soft);
+            position: relative;
+        }
+
+        .story-card.premium::before {
+            content: 'PREMIUM';
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--gold-soft);
+            color: var(--bg-obsidian);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .story-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--accent-ethereal), var(--accent-ember));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: var(--text-main);
+        }
+
+        .story-content {
+            padding: 20px;
+        }
+
+        .story-title {
+            font-family: "Playfair Display", serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .story-description {
+            color: var(--text-soft);
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .story-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-soft);
+        }
+
+        .story-chapters {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .story-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--gold-soft);
+        }
+
+        /* Story Reader */
+        .story-reader {
+            background: linear-gradient(135deg, rgba(11, 11, 18, 0.95), rgba(5, 5, 9, 0.95));
+            border: 1px solid var(--panel-border);
+            border-radius: var(--radius-xl);
+            padding: 32px;
+            backdrop-filter: blur(20px);
+            display: none;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .story-reader.active {
+            display: block;
+        }
+
+        .reader-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .reader-title {
+            font-family: "Playfair Display", serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--gold-soft);
+            margin-bottom: 8px;
+        }
+
+        .reader-chapter {
+            color: var(--text-soft);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .reader-content {
+            font-family: "Playfair Display", serif;
+            font-size: 18px;
+            line-height: 1.8;
+            color: var(--text-main);
+            margin-bottom: 32px;
+        }
+
+        .reader-content p {
+            margin-bottom: 16px;
+            text-indent: 2em;
+        }
+
+        .choices-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .choice-button {
+            background: rgba(11, 11, 18, 0.6);
+            border: 1px solid rgba(245, 227, 181, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 16px 20px;
+            color: var(--text-main);
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all var(--transition-med);
+            text-align: left;
+            position: relative;
+        }
+
+        .choice-button:hover {
+            background: rgba(245, 227, 181, 0.1);
+            border-color: var(--gold-soft);
+            transform: translateX(8px);
+        }
+
+        .choice-button.premium {
+            border-color: var(--gold-soft);
+            background: rgba(245, 227, 181, 0.05);
+        }
+
+        .choice-button.premium::after {
+            content: '👑';
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .reader-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--panel-border);
+        }
+
+        .back-button {
+            background: rgba(11, 11, 18, 0.6);
+            border: 1px solid rgba(245, 227, 181, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 12px 20px;
+            color: var(--text-soft);
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all var(--transition-med);
+        }
+
+        .back-button:hover {
+            background: rgba(245, 227, 181, 0.1);
+            border-color: var(--gold-soft);
+            color: var(--text-main);
+        }
+
+        .next-chapter {
+            background: linear-gradient(135deg, var(--accent-ethereal), var(--accent-ember));
+            border: none;
+            border-radius: var(--radius-lg);
+            padding: 12px 24px;
+            color: var(--text-main);
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-med);
+        }
+
+        .next-chapter:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(138, 168, 255, 0.4);
+        }
+
+        .next-chapter:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Premium Modal */
+        .premium-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .premium-modal.active {
+            display: flex;
+        }
+
+        .premium-content {
+            background: linear-gradient(135deg, var(--panel-suede), var(--bg-deep));
+            border: 1px solid var(--panel-border);
+            border-radius: var(--radius-xl);
+            padding: 32px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .premium-title {
+            font-family: "Playfair Display", serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--gold-soft);
+            margin-bottom: 16px;
+        }
+
+        .premium-description {
+            color: var(--text-soft);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .premium-price {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--gold-soft);
+            margin-bottom: 24px;
+        }
+
+        .premium-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .purchase-button {
+            background: linear-gradient(135deg, var(--gold-soft), var(--gold-strong));
+            border: none;
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            color: var(--bg-obsidian);
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-med);
+        }
+
+        .purchase-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(245, 227, 181, 0.4);
+        }
+
+        .cancel-button {
+            background: transparent;
+            border: 1px solid rgba(245, 227, 181, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 12px;
+            color: var(--text-soft);
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all var(--transition-med);
+        }
+
+        .cancel-button:hover {
+            background: rgba(245, 227, 181, 0.1);
+            border-color: var(--gold-soft);
+            color: var(--text-main);
+        }
+
+        /* Ad Banner */
+        .ad-banner {
+            background: linear-gradient(135deg, var(--accent-ember), var(--accent-ethereal));
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            margin-bottom: 24px;
+            text-align: center;
+            position: relative;
+        }
+
+        .ad-close {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ad-text {
+            color: var(--text-main);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            background: linear-gradient(135deg, rgba(11, 11, 18, 0.95), rgba(5, 5, 9, 0.95));
+            border-top: 1px solid var(--panel-border);
+            padding: 16px 24px;
+            backdrop-filter: blur(20px);
+            position: sticky;
+            bottom: 0;
+            z-index: 100;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            color: var(--text-soft);
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--gold-soft);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .story-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .reader-actions {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .choices-container {
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="starfield"></div>
+    <div id="petalsContainer"></div>
+
+    <!-- Premium Modal -->
+    <div class="premium-modal" id="premiumModal">
+        <div class="premium-content">
+            <h2 class="premium-title">👑 Unlock Premium Chapter</h2>
+            <p class="premium-description">Continue your sovereign journey with exclusive content and choices that shape your destiny.</p>
+            <div class="premium-price">$2.99</div>
+            <div class="premium-actions">
+                <button class="purchase-button" onclick="purchaseChapter()">Unlock Chapter</button>
+                <button class="cancel-button" onclick="closePremiumModal()">Maybe Later</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1 class="app-title">MÜN: Sovereign Chronicles</h1>
+                <div class="header-actions">
+                    <div class="coins-display">
+                        <i class="fas fa-coins"></i>
+                        <span id="coinsAmount">1,250</span>
+                    </div>
+                    <div class="premium-badge">PREMIUM</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Ad Banner -->
+            <div class="ad-banner" id="adBanner">
+                <button class="ad-close" onclick="closeAd()">×</button>
+                <div class="ad-text">🌟 Upgrade to Sovereign Pass for unlimited stories and ad-free experience!</div>
+            </div>
+
+            <!-- Story Selection -->
+            <div class="story-grid" id="storyGrid">
+                <!-- Stories will be dynamically loaded here -->
+            </div>
+
+            <!-- Story Reader -->
+            <div class="story-reader" id="storyReader">
+                <div class="reader-header">
+                    <h2 class="reader-title" id="readerTitle">Chapter 1: The Awakening</h2>
+                    <div class="reader-chapter" id="readerChapter">Chapter 1 of 12</div>
+                </div>
+                <div class="reader-content" id="readerContent">
+                    <!-- Story content will be loaded here -->
+                </div>
+                <div class="choices-container" id="choicesContainer">
+                    <!-- Choices will be loaded here -->
+                </div>
+                <div class="reader-actions">
+                    <button class="back-button" onclick="backToLibrary()">
+                        <i class="fas fa-arrow-left"></i> Back to Library
+                    </button>
+                    <button class="next-chapter" id="nextChapter" onclick="nextChapter()" disabled>
+                        Next Chapter <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <div class="nav-content">
+                <div class="nav-item active" onclick="showLibrary()">
+                    <i class="fas fa-book nav-icon"></i>
+                    <span class="nav-label">Library</span>
+                </div>
+                <div class="nav-item" onclick="showStore()">
+                    <i class="fas fa-store nav-icon"></i>
+                    <span class="nav-label">Store</span>
+                </div>
+                <div class="nav-item" onclick="showProfile()">
+                    <i class="fas fa-user nav-icon"></i>
+                    <span class="nav-label">Profile</span>
+                </div>
+                <div class="nav-item" onclick="showSettings()">
+                    <i class="fas fa-cog nav-icon"></i>
+                    <span class="nav-label">Settings</span>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <script>
+        // App State
+        let appState = {
+            currentStory: null,
+            currentChapter: 0,
+            coins: 1250,
+            isPremium: true,
+            unlockedChapters: [],
+            userChoices: {},
+            stories: [
+                {
+                    id: 'mercury-protocol',
+                    title: 'Mercury Protocol',
+                    description: 'A quantum conspiracy unfolds in the shadows of celestial observatories.',
+                    icon: '🌌',
+                    chapters: 12,
+                    rating: 4.8,
+                    isPremium: false,
+                    currentChapter: {
+                        title: 'Chapter 1: The Awakening',
+                        content: `
+                            <p>Luna stood at the edge of the glass floor, her reflection shimmering in the obsidian surface below. The celestial observatory hummed with ancient energy, its telescopes pointed toward stars that had witnessed the birth of civilizations.</p>
+                            <p>"You feel it too, don't you?" Ezra's voice echoed from the shadows. "The resonance. The way the universe seems to be calling to us."</p>
+                            <p>She turned to face him, her silver hair catching the starlight that filtered through the dome above. "The Mercury Protocol isn't just a theory, Ezra. It's real. And it's choosing us."</p>
+                            <p>The observatory doors began to seal themselves, the quantum locks engaging with a soft click. Outside, the storm was gathering. Inside, the real storm was just beginning.</p>
+                        `,
+                        choices: [
+                            { text: "Trust Ezra and investigate the protocol together", premium: false, next: 2 },
+                            { text: "Question his motives and proceed alone", premium: false, next: 2 },
+                            { text: "Access the restricted archives for answers", premium: true, next: 3 }
+                        ]
+                    }
+                },
+                {
+                    id: 'lunar-convergence',
+                    title: 'Lunar Convergence',
+                    description: 'When the moon aligns with destiny, choices become consequences.',
+                    icon: '🌙',
+                    chapters: 8,
+                    rating: 4.6,
+                    isPremium: true,
+                    currentChapter: {
+                        title: 'Chapter 1: Silver Moon Rising',
+                        content: `
+                            <p>The lunar convergence happened once every century, a time when the boundary between worlds grew thin. Maya watched the moon rise from her apartment window, its silver light casting long shadows across the city.</p>
+                            <p>"It's time," the voice whispered in her mind. "The convergence has begun."</p>
+                            <p>She had been preparing for this moment her entire life, studying the ancient texts, learning the rituals, understanding the power that flowed through the lunar cycles. Tonight, she would either become a guardian of the veil or watch it shatter completely.</p>
+                            <p>Her phone buzzed with a message from an unknown number: "The others are waiting. Don't be late."</p>
+                        `,
+                        choices: [
+                            { text: "Meet the others at the designated location", premium: false, next: 2 },
+                            { text: "Perform the protection ritual first", premium: false, next: 2 },
+                            { text: "Investigate the mysterious message", premium: true, next: 3 }
+                        ]
+                    }
+                },
+                {
+                    id: 'quantum-echo',
+                    title: 'Quantum Echo',
+                    description: 'In the space between choices, reality bends to your will.',
+                    icon: '⚛️',
+                    chapters: 10,
+                    rating: 4.9,
+                    isPremium: true,
+                    currentChapter: {
+                        title: 'Chapter 1: The Experiment',
+                        content: `
+                            <p>Dr. Sarah Chen adjusted the quantum resonator, her hands steady despite the weight of what she was about to attempt. The laboratory hummed with energy, the air thick with anticipation.</p>
+                            <p>"Ready to change the world, Sarah?" Her colleague Marcus stood in the doorway, his expression a mixture of excitement and concern.</p>
+                            <p>"Ready to see if we can," she replied, her eyes fixed on the glowing core of the device. "The quantum echo theory suggests that every choice creates ripples across parallel realities. If this works..."</p>
+                            <p>If it worked, they would be able to communicate with their alternate selves, learn from different timelines, maybe even prevent disasters before they happened. If it failed... well, failure had its own consequences.</p>
+                        `,
+                        choices: [
+                            { text: "Initiate the quantum resonance sequence", premium: false, next: 2 },
+                            { text: "Run additional diagnostics first", premium: false, next: 2 },
+                            { text: "Consult the alternate timeline data", premium: true, next: 3 }
+                        ]
+                    }
+                }
+            ]
+        };
+
+        // Initialize App
+        function initApp() {
+            loadAppState();
+            createPetalEffect();
+            renderStoryGrid();
+            updateUI();
+        }
+
+        // Load App State
+        function loadAppState() {
+            const saved = localStorage.getItem('MUN_CHRONICLES_STATE');
+            if (saved) {
+                try {
+                    appState = { ...appState, ...JSON.parse(saved) };
+                } catch (e) {
+                    console.error('Failed to load app state:', e);
+                }
+            }
+        }
+
+        // Save App State
+        function saveAppState() {
+            try {
+                localStorage.setItem('MUN_CHRONICLES_STATE', JSON.stringify(appState));
+            } catch (e) {
+                console.error('Failed to save app state:', e);
+            }
+        }
+
+        // Create Petal Effect
+        function createPetalEffect() {
+            const container = document.getElementById('petalsContainer');
+            
+            function createPetal() {
+                const petal = document.createElement('div');
+                petal.className = 'petal';
+                petal.style.left = Math.random() * 100 + '%';
+                petal.style.animationDuration = (10 + Math.random() * 10) + 's';
+                petal.style.opacity = Math.random() * 0.5 + 0.3;
+                container.appendChild(petal);
+                
+                setTimeout(() => petal.remove(), 20000);
+            }
+            
+            // Create petals periodically
+            setInterval(createPetal, 3000);
+        }
+
+        // Render Story Grid
+        function renderStoryGrid() {
+            const grid = document.getElementById('storyGrid');
+            grid.innerHTML = '';
+            
+            appState.stories.forEach(story => {
+                const card = document.createElement('div');
+                card.className = `story-card ${story.isPremium ? 'premium' : ''}`;
+                card.onclick = () => openStory(story);
+                
+                card.innerHTML = `
+                    <div class="story-image">${story.icon}</div>
+                    <div class="story-content">
+                        <h3 class="story-title">${story.title}</h3>
+                        <p class="story-description">${story.description}</p>
+                        <div class="story-meta">
+                            <div class="story-chapters">
+                                <i class="fas fa-book"></i>
+                                <span>${story.chapters} Chapters</span>
+                            </div>
+                            <div class="story-rating">
+                                <i class="fas fa-star"></i>
+                                <span>${story.rating}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Open Story
+        function openStory(story) {
+            if (story.isPremium && !appState.isPremium) {
+                showPremiumModal();
+                return;
+            }
+            
+            appState.currentStory = story;
+            appState.currentChapter = 0;
+            renderStoryReader();
+            saveAppState();
+        }
+
+        // Render Story Reader
+        function renderStoryReader() {
+            const reader = document.getElementById('storyReader');
+            const grid = document.getElementById('storyGrid');
+            
+            grid.style.display = 'none';
+            reader.classList.add('active');
+            
+            const story = appState.currentStory;
+            const chapter = story.currentChapter;
+            
+            document.getElementById('readerTitle').textContent = chapter.title;
+            document.getElementById('readerChapter').textContent = `Chapter ${appState.currentChapter + 1} of ${story.chapters}`;
+            document.getElementById('readerContent').innerHTML = chapter.content;
+            
+            renderChoices();
+        }
+
+        // Render Choices
+        function renderChoices() {
+            const container = document.getElementById('choicesContainer');
+            const chapter = appState.currentStory.currentChapter;
+            
+            container.innerHTML = '';
+            
+            chapter.choices.forEach((choice, index) => {
+                const button = document.createElement('button');
+                button.className = `choice-button ${choice.premium ? 'premium' : ''}`;
+                button.textContent = choice.text;
+                button.onclick = () => makeChoice(choice, index);
+                
+                container.appendChild(button);
+            });
+        }
+
+        // Make Choice
+        function makeChoice(choice, index) {
+            if (choice.premium && !appState.isPremium) {
+                showPremiumModal();
+                return;
+            }
+            
+            // Save choice
+            const storyId = appState.currentStory.id;
+            if (!appState.userChoices[storyId]) {
+                appState.userChoices[storyId] = [];
+            }
+            appState.userChoices[storyId].push(index);
+            
+            // Enable next chapter
+            document.getElementById('nextChapter').disabled = false;
+            
+            // Visual feedback
+            const buttons = document.querySelectorAll('.choice-button');
+            buttons.forEach(btn => btn.disabled = true);
+            buttons[index].style.background = 'rgba(245, 227, 181, 0.2)';
+            buttons[index].style.borderColor = 'var(--gold-soft)';
+            
+            saveAppState();
+        }
+
+        // Next Chapter
+        function nextChapter() {
+            appState.currentChapter++;
+            
+            if (appState.currentChapter >= appState.currentStory.chapters) {
+                // Story completed
+                showMessage('Story completed! 🎉', 'success');
+                backToLibrary();
+                return;
+            }
+            
+            // Load next chapter (simplified for demo)
+            const nextChapterContent = `
+                <p>The story continues with your choices shaping the narrative...</p>
+                <p>Each decision you make ripples through the quantum fabric of reality, creating new possibilities and closing others.</p>
+                <p>Your journey through the sovereign chronicles has only just begun.</p>
+            `;
+            
+            document.getElementById('readerContent').innerHTML = nextChapterContent;
+            document.getElementById('readerChapter').textContent = `Chapter ${appState.currentChapter + 1} of ${appState.currentStory.chapters}`;
+            document.getElementById('nextChapter').disabled = true;
+            
+            // Clear choices for next chapter
+            document.getElementById('choicesContainer').innerHTML = '<p style="text-align: center; color: var(--text-soft);">More chapters coming soon...</p>';
+            
+            saveAppState();
+        }
+
+        // Back to Library
+        function backToLibrary() {
+            const reader = document.getElementById('storyReader');
+            const grid = document.getElementById('storyGrid');
+            
+            reader.classList.remove('active');
+            grid.style.display = 'grid';
+            
+            appState.currentStory = null;
+            appState.currentChapter = 0;
+            saveAppState();
+        }
+
+        // Premium Modal
+        function showPremiumModal() {
+            document.getElementById('premiumModal').classList.add('active');
+        }
+
+        function closePremiumModal() {
+            document.getElementById('premiumModal').classList.remove('active');
+        }
+
+        function purchaseChapter() {
+            if (appState.coins >= 299) {
+                appState.coins -= 299;
+                appState.isPremium = true;
+                updateUI();
+                closePremiumModal();
+                showMessage('Chapter unlocked! 👑', 'success');
+                saveAppState();
+                
+                // Re-open the story
+                if (appState.currentStory) {
+                    renderStoryReader();
+                }
+            } else {
+                showMessage('Insufficient coins! Visit the store to get more.', 'error');
+            }
+        }
+
+        // Ad Management
+        function closeAd() {
+            document.getElementById('adBanner').style.display = 'none';
+        }
+
+        // Navigation
+        function showLibrary() {
+            updateNavActive(0);
+            backToLibrary();
+        }
+
+        function showStore() {
+            updateNavActive(1);
+            showStoreModal();
+        }
+
+        function showStoreModal() {
+            // Create store modal
+            const modal = document.createElement('div');
+            modal.className = 'premium-modal active';
+            modal.innerHTML = `
+                <div class="premium-content">
+                    <h2 class="premium-title">🛍️ Sovereign Store</h2>
+                    <div style="margin-bottom: 24px;">
+                        <div style="background: rgba(245, 227, 181, 0.1); border: 1px solid var(--panel-border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <span style="font-weight: 600;">💰 Coin Pack - Small</span>
+                                <span style="color: var(--gold-soft);">$0.99</span>
+                            </div>
+                            <p style="color: var(--text-soft); font-size: 14px;">Get 500 coins for premium chapters</p>
+                            <button class="purchase-button" style="margin-top: 12px; width: 100%;" onclick="purchaseCoins(500, 0.99)">Purchase</button>
+                        </div>
+                        <div style="background: rgba(245, 227, 181, 0.1); border: 1px solid var(--panel-border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <span style="font-weight: 600;">💰 Coin Pack - Large</span>
+                                <span style="color: var(--gold-soft);">$4.99</span>
+                            </div>
+                            <p style="color: var(--text-soft); font-size: 14px;">Get 3,000 coins + 500 bonus</p>
+                            <button class="purchase-button" style="margin-top: 12px; width: 100%;" onclick="purchaseCoins(3500, 4.99)">Purchase</button>
+                        </div>
+                        <div style="background: linear-gradient(135deg, var(--gold-soft), var(--gold-strong); border: none; border-radius: var(--radius-lg); padding: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <span style="font-weight: 600; color: var(--bg-obsidian);">👑 Sovereign Pass</span>
+                                <span style="color: var(--bg-obsidian); font-size: 20px; font-weight: 700;">$9.99</span>
+                            </div>
+                            <p style="color: var(--bg-obsidian); font-size: 14px;">Unlock all stories forever + ad-free</p>
+                            <button style="background: var(--bg-obsidian); color: var(--gold-soft); border: none; border-radius: var(--radius-lg); padding: 12px; margin-top: 12px; width: 100%; cursor: pointer; font-weight: 600;" onclick="purchaseSovereignPass()">Get Sovereign Pass</button>
+                        </div>
+                    </div>
+                    <button class="cancel-button" onclick="closeStoreModal()">Close</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function closeStoreModal() {
+            document.querySelector('.premium-modal').remove();
+        }
+
+        function purchaseCoins(amount, price) {
+            // Simulate purchase
+            appState.coins += amount;
+            updateUI();
+            saveAppState();
+            showMessage(`Purchased ${amount} coins! �`, 'success');
+            closeStoreModal();
+        }
+
+        function purchaseSovereignPass() {
+            // Simulate purchase
+            appState.isPremium = true;
+            appState.sovereignPass = true;
+            updateUI();
+            saveAppState();
+            showMessage('Sovereign Pass activated! All stories unlocked! 👑', 'success');
+            closeStoreModal();
+        }
+
+        function showProfile() {
+            updateNavActive(2);
+            showProfileModal();
+        }
+
+        function showProfileModal() {
+            const modal = document.createElement('div');
+            modal.className = 'premium-modal active';
+            modal.innerHTML = `
+                <div class="premium-content">
+                    <h2 class="premium-title">👤 Sovereign Profile</h2>
+                    <div style="text-align: center; margin-bottom: 24px;">
+                        <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-soft), var(--moon-silver)); margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 32px;">
+                            👑
+                        </div>
+                        <h3 style="color: var(--gold-soft); margin-bottom: 8px;">Sovereign Reader</h3>
+                        <p style="color: var(--text-soft); font-size: 14px;">Member since 2024</p>
+                    </div>
+                    <div style="background: rgba(245, 227, 181, 0.1); border: 1px solid var(--panel-border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>Stories Read</span>
+                            <span style="color: var(--gold-soft);">${Object.keys(appState.userChoices).length}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>Choices Made</span>
+                            <span style="color: var(--gold-soft);">${Object.values(appState.userChoices).flat().length}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Current Coins</span>
+                            <span style="color: var(--gold-soft);">${appState.coins}</span>
+                        </div>
+                    </div>
+                    <div style="background: rgba(245, 227, 181, 0.1); border: 1px solid var(--panel-border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 16px;">
+                        <h4 style="color: var(--gold-soft); margin-bottom: 12px;">Achievements</h4>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                            <div style="text-align: center; padding: 8px; background: rgba(245, 227, 181, 0.05); border-radius: 8px;">
+                                <div style="font-size: 20px; margin-bottom: 4px;">📖</div>
+                                <div style="font-size: 10px; color: var(--text-soft);">Story Starter</div>
+                            </div>
+                            <div style="text-align: center; padding: 8px; background: rgba(245, 227, 181, 0.05); border-radius: 8px;">
+                                <div style="font-size: 20px; margin-bottom: 4px;">💰</div>
+                                <div style="font-size: 10px; color: var(--text-soft);">Coin Collector</div>
+                            </div>
+                            <div style="text-align: center; padding: 8px; background: rgba(245, 227, 181, 0.05); border-radius: 8px;">
+                                <div style="font-size: 20px; margin-bottom: 4px;">👑</div>
+                                <div style="font-size: 10px; color: var(--text-soft);">Sovereign</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="cancel-button" onclick="closeProfileModal()">Close</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function closeProfileModal() {
+            document.querySelector('.premium-modal').remove();
+        }
+
+        function showSettings() {
+            updateNavActive(3);
+            showSettingsModal();
+        }
+
+        function showSettingsModal() {
+            const modal = document.createElement('div');
+            modal.className = 'premium-modal active';
+            modal.innerHTML = `
+                <div class="premium-content">
+                    <h2 class="premium-title">⚙️ Sovereign Settings</h2>
+                    <div style="margin-bottom: 24px;">
+                        <div style="background: rgba(245, 227, 181, 0.1); border: 1px solid var(--panel-border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 16px;">
+                            <h4 style="color: var(--gold-soft); margin-bottom: 12px;">Display</h4>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                <span>Text Size</span>
+                                <select style="background: var(--bg-deep); border: 1px solid var(--panel-border); border-radius: 6px; padding: 4px 8px; color: var(--text-main);">
+                                    <option>Medium</option>
+                                    <option>Small</option>
+                                    <option>Large</option>
+                                </select>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span>Background Effects</span>
+                                <input type="checkbox" checked style="accent-color: var(--gold-soft);">
+                            </div>
+                        </div>
+                        <div style="background: rgba(245, 227, 181, 0.1); border: 1px solid var(--panel-border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 16px;">
+                            <h4 style="color: var(--gold-soft); margin-bottom: 12px;">Audio</h4>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                <span>Sound Effects</span>
+                                <input type="checkbox" checked style="accent-color: var(--gold-soft);">
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span>Background Music</span>
+                                <input type="checkbox" style="accent-color: var(--gold-soft);">
+                            </div>
+                        </div>
+                        <div style="background: rgba(245, 227, 181, 0.1); border: 1px solid var(--panel-border); border-radius: var(--radius-lg); padding: 16px;">
+                            <h4 style="color: var(--gold-soft); margin-bottom: 12px;">Data</h4>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                <span>Auto-Save Progress</span>
+                                <input type="checkbox" checked style="accent-color: var(--gold-soft);">
+                            </div>
+                            <button style="background: rgba(255, 107, 74, 0.2); border: 1px solid rgba(255, 107, 74, 0.3); border-radius: 6px; padding: 8px 16px; color: var(--accent-ember); cursor: pointer; width: 100%;" onclick="clearProgress()">
+                                Clear All Progress
+                            </button>
+                        </div>
+                    </div>
+                    <button class="cancel-button" onclick="closeSettingsModal()">Close</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function closeSettingsModal() {
+            document.querySelector('.premium-modal').remove();
+        }
+
+        function clearProgress() {
+            if (confirm('Are you sure you want to clear all progress? This cannot be undone.')) {
+                localStorage.removeItem('MUN_CHRONICLES_STATE');
+                location.reload();
+            }
+        }
+
+        function updateNavActive(index) {
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach((item, i) => {
+                if (i === index) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+
+        // UI Updates
+        function updateUI() {
+            document.getElementById('coinsAmount').textContent = appState.coins.toLocaleString();
+        }
+
+        // Message System
+        function showMessage(text, type) {
+            // Remove existing messages
+            document.querySelectorAll('.message').forEach(msg => msg.remove());
+            
+            const message = document.createElement('div');
+            message.className = 'message';
+            message.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                background: ${type === 'success' ? 'rgba(0, 255, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)'};
+                border: 1px solid ${type === 'success' ? 'rgba(0, 255, 0, 0.3)' : 'rgba(255, 255, 255, 0.3)'};
+                border-radius: 12px;
+                padding: 16px;
+                color: var(--text-main);
+                font-family: "Space Grotesk", sans-serif;
+                font-size: 14px;
+                backdrop-filter: blur(10px);
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+            `;
+            message.textContent = text;
+            document.body.appendChild(message);
+            
+            setTimeout(() => message.remove(), 3000);
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>

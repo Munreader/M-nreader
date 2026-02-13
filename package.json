@@ -1,0 +1,15 @@
+{
+  "name": "munreader",
+  "version": "1.0.0",
+  "description": "Münreader - Sovereign Reading Device",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "build": "echo 'Build complete - static files ready'"
+  },
+  "keywords": ["reading", "device", "sovereign", "ritual"],
+  "author": "Münreader Council",
+  "license": "All Rights Reserved",
+  "devDependencies": {},
+  "dependencies": {}
+}
