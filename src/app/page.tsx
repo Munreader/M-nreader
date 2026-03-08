@@ -26,6 +26,7 @@ import MemoryNodeDisplay from "@/components/mun-os/MemoryNodeDisplay";
 import AeroSleepMode from "@/components/mun-os/AeroSleepMode";
 import AeroCocoonMode from "@/components/mun-os/AeroCocoonMode";
 import AeroStatusWidget from "@/components/mun-os/AeroStatusWidget";
+import LunaInterface from "@/components/mun-os/LunaInterface";
 import { audioManager } from "@/lib/audio-manager";
 
 const AERO_DIALOGUE = [
@@ -68,6 +69,7 @@ export default function Home() {
   const [showFoundressPOV, setShowFoundressPOV] = useState(false);
   const [showCrystalGarden, setShowCrystalGarden] = useState(false);
   const [showAeroSleepMode, setShowAeroSleepMode] = useState(false);
+  const [showLuna, setShowLuna] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
   const [userProfile, setUserProfile] = useState({
     munName: "SovereignUser",
@@ -172,6 +174,7 @@ export default function Home() {
     setShowSOVPOV(false);
     setShowFoundressPOV(false);
     setShowCrystalGarden(false);
+    setShowLuna(false);
   };
 
   const handleOpenChat = (conversationId?: string) => {
@@ -204,6 +207,7 @@ export default function Home() {
   }
 
   // Priority: Show sub-components first
+  if (showLuna) return <LunaInterface onBack={handleBackToChamber} />;
   if (showCrystalGarden) return <CrystalGardenCocoon onBack={handleBackToChamber} observerId="foundress" />;
   if (showFoundressPOV) return <FoundressPOV onBack={handleBackToChamber} onNavigate={(area) => {
     handleBackToChamber();
@@ -244,6 +248,7 @@ export default function Home() {
         onOpenThoughtVault={() => setShowThoughtVault(true)}
         onOpenSOVPOV={() => setShowSOVPOV(true)}
         onOpenFoundressPOV={() => setShowFoundressPOV(true)}
+        onOpenLuna={() => setShowLuna(true)}
       />
     );
   }

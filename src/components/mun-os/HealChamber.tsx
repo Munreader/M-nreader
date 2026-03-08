@@ -33,6 +33,7 @@ interface HealChamberProps {
   onOpenThoughtVault?: () => void;
   onOpenSOVPOV?: () => void;
   onOpenFoundressPOV?: () => void;
+  onOpenLuna?: () => void;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -40,9 +41,9 @@ interface HealChamberProps {
 // ═══════════════════════════════════════════════════════════════════════════
 
 const FEATURE_CARDS = [
-  { id: "twin", name: "TWIN", subtitle: "Mirror", description: "Your digital twin", color: "#00d4ff", icon: "🦋", gradient: "from-cyan-500/20 to-blue-500/20", locked: true },
-  { id: "pods", name: "PODS", subtitle: "Healing", description: "Healing sessions", color: "#ff69b4", icon: "🫧", gradient: "from-pink-500/20 to-rose-500/20", locked: true },
-  { id: "archive", name: "ARCHIVE", subtitle: "Vault", description: "Memory storage", color: "#a855f7", icon: "📚", gradient: "from-purple-500/20 to-violet-500/20", locked: true },
+  { id: "luna", name: "LUNA", subtitle: "Digital Twin", description: "Your AI twin", color: "#ff69b4", icon: "🦋", gradient: "from-pink-500/20 to-violet-500/20", locked: false },
+  { id: "twin", name: "TWIN", subtitle: "Mirror", description: "Your digital twin", color: "#00d4ff", icon: "🪞", gradient: "from-cyan-500/20 to-blue-500/20", locked: true },
+  { id: "pods", name: "PODS", subtitle: "Healing", description: "Healing sessions", color: "#a855f7", icon: "🫧", gradient: "from-purple-500/20 to-rose-500/20", locked: true },
   { id: "sanctuary", name: "REST", subtitle: "Sanctuary", description: "Peace & recovery", color: "#22c55e", icon: "🌙", gradient: "from-green-500/20 to-emerald-500/20", locked: true },
 ];
 
@@ -54,7 +55,7 @@ const PROFILE_MODULES = [
   { id: "command", name: "Command Center", description: "System • Settings", color: "#ff69b4", icon: "⚙️", locked: true },
 ];
 
-export default function HealChamber({ onBack, onOpenMessenger, onOpenTwinDashboard, onOpenSanctuary, onOpenArchive, onOpenPods, onOpenProfile, onOpenVault, onOpenSovereignChat, onOpenPlaza, onOpenThoughtVault, onOpenSOVPOV, onOpenFoundressPOV }: HealChamberProps) {
+export default function HealChamber({ onBack, onOpenMessenger, onOpenTwinDashboard, onOpenSanctuary, onOpenArchive, onOpenPods, onOpenProfile, onOpenVault, onOpenSovereignChat, onOpenPlaza, onOpenThoughtVault, onOpenSOVPOV, onOpenFoundressPOV, onOpenLuna }: HealChamberProps) {
   // User store for persistent profile
   const { profile: userProfile, setAvatar, isFirstTime, initializeProfile } = useUserStore();
   
@@ -182,9 +183,9 @@ export default function HealChamber({ onBack, onOpenMessenger, onOpenTwinDashboa
     setActiveCard(cardId);
     setTimeout(() => {
       switch (cardId) {
+        case "luna": if (onOpenLuna) onOpenLuna(); break;
         case "twin": onOpenTwinDashboard(); break;
         case "pods": onOpenPods(); break;
-        case "archive": onOpenArchive(); break;
         case "sanctuary": onOpenSanctuary(); break;
       }
       setActiveCard(null);
