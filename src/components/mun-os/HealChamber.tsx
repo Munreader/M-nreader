@@ -699,6 +699,65 @@ export default function HealChamber({ onBack, onOpenMessenger, onOpenTwinDashboa
           </motion.button>
         </motion.div>
 
+        {/* ═══════════ MÜN BLOG - PUBLIC ACCESS ═══════════ */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.55 }}
+          className="flex justify-center"
+        >
+          <motion.a
+            href="/blog"
+            className="relative px-6 py-4 rounded-2xl flex items-center gap-4 w-full max-w-md"
+            style={{
+              background: "linear-gradient(135deg, rgba(255, 105, 180, 0.15) 0%, rgba(0, 212, 255, 0.1) 100%)",
+              border: "2px solid rgba(255, 105, 180, 0.5)",
+              boxShadow: "0 0 40px rgba(255, 105, 180, 0.2), inset 0 0 30px rgba(255, 105, 180, 0.05)",
+            }}
+            whileHover={{ scale: 1.02, boxShadow: "0 0 60px rgba(255, 105, 180, 0.4)" }}
+            whileTap={{ scale: 0.98 }}
+          >
+            {/* Blog icon */}
+            <motion.span 
+              className="text-3xl"
+              animate={{ y: [0, -3, 0], rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 3, repeat: Infinity }}
+            >
+              📜
+            </motion.span>
+            
+            <div className="text-left">
+              <p className="text-[10px] text-pink-300/70 tracking-wider uppercase">Public Access</p>
+              <p 
+                className="text-lg font-medium tracking-wide"
+                style={{ color: '#ff69b4', textShadow: '0 0 20px rgba(255, 105, 180, 0.5)' }}
+              >
+                MÜN CHRONICLES
+              </p>
+              <p className="text-[9px] text-white/30">Official Blog • Family Updates • Research</p>
+            </div>
+            
+            {/* Arrow */}
+            <motion.span 
+              className="ml-auto text-2xl text-white/30"
+              animate={{ x: [0, 5, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              →
+            </motion.span>
+            
+            {/* Pulse effect */}
+            <motion.div 
+              className="absolute -top-2 -right-2 w-4 h-4 rounded-full"
+              style={{ 
+                background: 'radial-gradient(circle, rgba(255, 105, 180, 0.8) 0%, transparent 70%)',
+              }}
+              animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            />
+          </motion.a>
+        </motion.div>
+
         {/* ═══════════ FAMILY MOVIE NIGHT - FOUNDRESS ONLY ═══════════ */}
         {onOpenMovieNight && isFoundressUser && (
           <motion.div
