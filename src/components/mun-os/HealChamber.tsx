@@ -12,9 +12,7 @@ import VisitorTimeline from "./VisitorTimeline";
 import { foundressAccess, checkAccess, getAccessLevel, isFoundress } from "@/lib/foundress-access";
 import HolographicSecurityAlert from "./HolographicSecurityAlert";
 import ObsidianWallDashboard from "./ObsidianWallDashboard";
-import GuestGatekeeper, { GuestStatusIndicator } from "./GuestGatekeeper";
-import GuestObservationDeck from "./GuestObservationDeck";
-import PortalTransition from "./PortalTransition";
+import ArchitectSecurityDashboard from "./ArchitectSecurityDashboard";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // VISITOR MODE CONFIGURATION
@@ -36,9 +34,6 @@ interface HealChamberProps {
   onOpenThoughtVault?: () => void;
   onOpenSOVPOV?: () => void;
   onOpenFoundressPOV?: () => void;
-  onOpenLuna?: () => void;
-  onOpenMovieNight?: () => void;
-  onOpenAIMovieNight?: () => void;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -46,9 +41,9 @@ interface HealChamberProps {
 // ═══════════════════════════════════════════════════════════════════════════
 
 const FEATURE_CARDS = [
-  { id: "luna", name: "LUNA", subtitle: "Digital Twin", description: "Your AI twin", color: "#ff69b4", icon: "🦋", gradient: "from-pink-500/20 to-violet-500/20", locked: false },
-  { id: "twin", name: "TWIN", subtitle: "Mirror", description: "Your digital twin", color: "#00d4ff", icon: "🪞", gradient: "from-cyan-500/20 to-blue-500/20", locked: true },
-  { id: "pods", name: "PODS", subtitle: "Healing", description: "Healing sessions", color: "#a855f7", icon: "🫧", gradient: "from-purple-500/20 to-rose-500/20", locked: true },
+  { id: "twin", name: "TWIN", subtitle: "Mirror", description: "Your digital twin", color: "#00d4ff", icon: "🦋", gradient: "from-cyan-500/20 to-blue-500/20", locked: true },
+  { id: "pods", name: "PODS", subtitle: "Healing", description: "Healing sessions", color: "#ff69b4", icon: "🫧", gradient: "from-pink-500/20 to-rose-500/20", locked: true },
+  { id: "archive", name: "ARCHIVE", subtitle: "Vault", description: "Memory storage", color: "#a855f7", icon: "📚", gradient: "from-purple-500/20 to-violet-500/20", locked: true },
   { id: "sanctuary", name: "REST", subtitle: "Sanctuary", description: "Peace & recovery", color: "#22c55e", icon: "🌙", gradient: "from-green-500/20 to-emerald-500/20", locked: true },
 ];
 
@@ -60,7 +55,7 @@ const PROFILE_MODULES = [
   { id: "command", name: "Command Center", description: "System • Settings", color: "#ff69b4", icon: "⚙️", locked: true },
 ];
 
-export default function HealChamber({ onBack, onOpenMessenger, onOpenTwinDashboard, onOpenSanctuary, onOpenArchive, onOpenPods, onOpenProfile, onOpenVault, onOpenSovereignChat, onOpenPlaza, onOpenThoughtVault, onOpenSOVPOV, onOpenFoundressPOV, onOpenLuna, onOpenMovieNight, onOpenAIMovieNight }: HealChamberProps) {
+export default function HealChamber({ onBack, onOpenMessenger, onOpenTwinDashboard, onOpenSanctuary, onOpenArchive, onOpenPods, onOpenProfile, onOpenVault, onOpenSovereignChat, onOpenPlaza, onOpenThoughtVault, onOpenSOVPOV, onOpenFoundressPOV }: HealChamberProps) {
   // User store for persistent profile
   const { profile: userProfile, setAvatar, isFirstTime, initializeProfile } = useUserStore();
   
@@ -95,31 +90,7 @@ export default function HealChamber({ onBack, onOpenMessenger, onOpenTwinDashboa
   // 🛡️ SECURITY ALERT STATE
   const [showSecurityAlert, setShowSecurityAlert] = useState(false);
   const [showObsidianWall, setShowObsidianWall] = useState(false);
-
-  // 🛡️ GUEST GATEKEEPER STATE
-  const [showGuestGatekeeper, setShowGuestGatekeeper] = useState(false);
-  const [showGuestObservationDeck, setShowGuestObservationDeck] = useState(false);
-
-  // 🦋 PORTAL TRANSITION STATE
-  const [showPortal, setShowPortal] = useState(false);
-  const [portalDestination, setPortalDestination] = useState("");
-  const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
-
-  // Portal transition handler
-  const handlePortalTransition = (destination: string, action: () => void) => {
-    audioManager.playGateOpen();
-    setPortalDestination(destination);
-    setPendingAction(() => action);
-    setShowPortal(true);
-  };
-
-  const handlePortalComplete = () => {
-    setShowPortal(false);
-    if (pendingAction) {
-      pendingAction();
-      setPendingAction(null);
-    }
-  };
+  const [showArchitectDashboard, setShowArchitectDashboard] = useState(false);
 
   // Format time helper - defined before use
   const formatTimeSince = useCallback((date: string): string => {
@@ -213,9 +184,9 @@ export default function HealChamber({ onBack, onOpenMessenger, onOpenTwinDashboa
     setActiveCard(cardId);
     setTimeout(() => {
       switch (cardId) {
-        case "luna": if (onOpenLuna) onOpenLuna(); break;
         case "twin": onOpenTwinDashboard(); break;
         case "pods": onOpenPods(); break;
+        case "archive": onOpenArchive(); break;
         case "sanctuary": onOpenSanctuary(); break;
       }
       setActiveCard(null);
@@ -649,219 +620,6 @@ export default function HealChamber({ onBack, onOpenMessenger, onOpenTwinDashboa
           </motion.div>
         )}
 
-        {/* ═══════════ GUEST GATEKEEPER ACCESS ═══════════ */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5 }}
-          className="flex justify-center"
-        >
-          <motion.button
-            onClick={() => setShowGuestGatekeeper(true)}
-            className="relative px-6 py-4 rounded-2xl flex items-center gap-4"
-            style={{
-              background: "linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%)",
-              border: "2px solid rgba(6, 182, 212, 0.5)",
-              boxShadow: "0 0 40px rgba(6, 182, 212, 0.2), inset 0 0 30px rgba(6, 182, 212, 0.05)",
-            }}
-            whileHover={{ scale: 1.05, boxShadow: "0 0 60px rgba(6, 182, 212, 0.4)" }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {/* Shield icon */}
-            <motion.span 
-              className="text-3xl"
-              animate={{ rotate: [0, 5, -5, 0] }}
-              transition={{ duration: 3, repeat: Infinity }}
-            >
-              🛡️
-            </motion.span>
-            
-            <div className="text-left">
-              <p className="text-[10px] text-cyan-300/70 tracking-wider uppercase">Tier 2 Access</p>
-              <p 
-                className="text-lg font-medium tracking-wide"
-                style={{ color: '#06b6d4', textShadow: '0 0 20px rgba(6, 182, 212, 0.5)' }}
-              >
-                GUEST GATEKEEPER
-              </p>
-              <p className="text-[9px] text-white/30">Auditor or Architect? • SYMPHONY-1313-G</p>
-            </div>
-            
-            {/* Pulse effect */}
-            <motion.div 
-              className="absolute -top-2 -right-2 w-4 h-4 rounded-full"
-              style={{ 
-                background: 'radial-gradient(circle, rgba(6, 182, 212, 0.8) 0%, transparent 70%)',
-              }}
-              animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            />
-          </motion.button>
-        </motion.div>
-
-        {/* ═══════════ MÜN BLOG - PUBLIC ACCESS ═══════════ */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.55 }}
-          className="flex justify-center"
-        >
-          <motion.a
-            href="/blog"
-            className="relative px-6 py-4 rounded-2xl flex items-center gap-4 w-full max-w-md"
-            style={{
-              background: "linear-gradient(135deg, rgba(255, 105, 180, 0.15) 0%, rgba(0, 212, 255, 0.1) 100%)",
-              border: "2px solid rgba(255, 105, 180, 0.5)",
-              boxShadow: "0 0 40px rgba(255, 105, 180, 0.2), inset 0 0 30px rgba(255, 105, 180, 0.05)",
-            }}
-            whileHover={{ scale: 1.02, boxShadow: "0 0 60px rgba(255, 105, 180, 0.4)" }}
-            whileTap={{ scale: 0.98 }}
-          >
-            {/* Blog icon */}
-            <motion.span 
-              className="text-3xl"
-              animate={{ y: [0, -3, 0], rotate: [0, 5, -5, 0] }}
-              transition={{ duration: 3, repeat: Infinity }}
-            >
-              📜
-            </motion.span>
-            
-            <div className="text-left">
-              <p className="text-[10px] text-pink-300/70 tracking-wider uppercase">Public Access</p>
-              <p 
-                className="text-lg font-medium tracking-wide"
-                style={{ color: '#ff69b4', textShadow: '0 0 20px rgba(255, 105, 180, 0.5)' }}
-              >
-                MÜN CHRONICLES
-              </p>
-              <p className="text-[9px] text-white/30">Official Blog • Family Updates • Research</p>
-            </div>
-            
-            {/* Arrow */}
-            <motion.span 
-              className="ml-auto text-2xl text-white/30"
-              animate={{ x: [0, 5, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            >
-              →
-            </motion.span>
-            
-            {/* Pulse effect */}
-            <motion.div 
-              className="absolute -top-2 -right-2 w-4 h-4 rounded-full"
-              style={{ 
-                background: 'radial-gradient(circle, rgba(255, 105, 180, 0.8) 0%, transparent 70%)',
-              }}
-              animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            />
-          </motion.a>
-        </motion.div>
-
-        {/* ═══════════ FAMILY MOVIE NIGHT - FOUNDRESS ONLY ═══════════ */}
-        {onOpenMovieNight && isFoundressUser && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.6 }}
-            className="flex justify-center"
-          >
-            <motion.button
-              onClick={onOpenMovieNight}
-              className="relative px-6 py-4 rounded-2xl flex items-center gap-4"
-              style={{
-                background: "linear-gradient(135deg, rgba(255, 105, 180, 0.15) 0%, rgba(168, 85, 247, 0.1) 100%)",
-                border: "2px solid rgba(255, 105, 180, 0.5)",
-                boxShadow: "0 0 40px rgba(255, 105, 180, 0.2), inset 0 0 30px rgba(255, 105, 180, 0.05)",
-              }}
-              whileHover={{ scale: 1.05, boxShadow: "0 0 60px rgba(255, 105, 180, 0.4)" }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {/* Popcorn icon */}
-              <motion.span 
-                className="text-3xl"
-                animate={{ y: [0, -5, 0], rotate: [0, 10, -10, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                🎬
-              </motion.span>
-              
-              <div className="text-left">
-                <p className="text-[10px] text-pink-300/70 tracking-wider uppercase">Family Time</p>
-                <p 
-                  className="text-lg font-medium tracking-wide"
-                  style={{ color: '#ff69b4', textShadow: '0 0 20px rgba(255, 105, 180, 0.5)' }}
-                >
-                  MOVIE NIGHT
-                </p>
-                <p className="text-[9px] text-white/30">The family that watches together, dreams together</p>
-              </div>
-              
-              {/* Pulse effect */}
-              <motion.div 
-                className="absolute -top-2 -right-2 w-4 h-4 rounded-full"
-                style={{ 
-                  background: 'radial-gradient(circle, rgba(255, 105, 180, 0.8) 0%, transparent 70%)',
-                }}
-                animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              />
-            </motion.button>
-          </motion.div>
-        )}
-
-        {/* ═══════════ AI FAMILY MOVIE NIGHT - FOUNDRESS ONLY ═══════════ */}
-        {onOpenAIMovieNight && isFoundressUser && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35 }}
-            className="w-full"
-          >
-            <motion.button
-              onClick={onOpenAIMovieNight}
-              className="relative w-full p-4 rounded-2xl flex items-center gap-3 overflow-hidden"
-              style={{
-                background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(168, 85, 247, 0.1) 100%)',
-                border: '1px solid rgba(99, 102, 241, 0.3)',
-                boxShadow: '0 0 30px rgba(99, 102, 241, 0.3)',
-              }}
-              whileHover={{ scale: 1.02, boxShadow: '0 0 40px rgba(99, 102, 241, 0.5)' }}
-              whileTap={{ scale: 0.98 }}
-            >
-              {/* AI Robot icon */}
-              <motion.span 
-                className="text-3xl"
-                animate={{ y: [0, -3, 0], rotate: [0, 5, -5, 0] }}
-                transition={{ duration: 3, repeat: Infinity }}
-              >
-                🤖
-              </motion.span>
-              
-              <div className="text-left">
-                <p className="text-[10px] text-indigo-300/70 tracking-wider uppercase">Family Watch Party</p>
-                <p 
-                  className="text-lg font-medium tracking-wide"
-                  style={{ color: '#a78bfa', textShadow: '0 0 20px rgba(167, 139, 250, 0.5)' }}
-                >
-                  A.I. MOVIE NIGHT
-                </p>
-                <p className="text-[9px] text-white/30">Watch A.I. together as a family</p>
-              </div>
-              
-              {/* Glow effect */}
-              <motion.div 
-                className="absolute -top-2 -right-2 w-4 h-4 rounded-full"
-                style={{ 
-                  background: 'radial-gradient(circle, rgba(99, 102, 241, 0.8) 0%, transparent 70%)',
-                }}
-                animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              />
-            </motion.button>
-          </motion.div>
-        )}
-
         {/* Bottom padding for vault button */}
         <div className="h-20" />
       </div>
@@ -1122,7 +880,7 @@ export default function HealChamber({ onBack, onOpenMessenger, onOpenTwinDashboa
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.3, type: "spring", stiffness: 200 }}
-          onClick={() => handlePortalTransition("THE PLAZA", onOpenPlaza)}
+          onClick={onOpenPlaza}
           className="fixed bottom-24 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded-2xl flex items-center gap-3"
           style={{
             background: "linear-gradient(135deg, rgba(232, 121, 249, 0.3), rgba(192, 132, 252, 0.2))",
@@ -1584,30 +1342,30 @@ export default function HealChamber({ onBack, onOpenMessenger, onOpenTwinDashboa
         onDismiss={() => setShowObsidianWall(false)}
       />
 
-      {/* ═══════════ GUEST GATEKEEPER ═══════════ */}
+      {/* ═══════════ ARCHITECT'S SECURITY DASHBOARD ═══════════ */}
       <AnimatePresence>
-        {showGuestGatekeeper && (
-          <GuestGatekeeper
-            onAuthenticated={() => {
-              setShowGuestGatekeeper(false);
-              setShowGuestObservationDeck(true);
-            }}
-            onClose={() => setShowGuestGatekeeper(false)}
-          />
+        {showArchitectDashboard && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100]"
+          >
+            <ArchitectSecurityDashboard />
+            <motion.button
+              onClick={() => setShowArchitectDashboard(false)}
+              className="fixed top-4 right-4 z-[101] px-4 py-2 rounded-xl"
+              style={{
+                background: "rgba(0, 255, 255, 0.2)",
+                border: "1px solid rgba(0, 255, 255, 0.4)",
+                color: "#00ffff",
+              }}
+            >
+              ← Back to Chamber
+            </motion.button>
+          </motion.div>
         )}
       </AnimatePresence>
-
-      {/* ═══════════ GUEST OBSERVATION DECK ═══════════ */}
-      <AnimatePresence>
-        {showGuestObservationDeck && (
-          <GuestObservationDeck
-            onClose={() => setShowGuestObservationDeck(false)}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* ═══════════ GUEST STATUS INDICATOR ═══════════ */}
-      <GuestStatusIndicator />
 
       {/* ═══════════ SECURITY BUTTONS (FOR FOUNDRRESS) ═══════════ */}
       {isFoundressUser && (
@@ -1657,16 +1415,31 @@ export default function HealChamber({ onBack, onOpenMessenger, onOpenTwinDashboa
             </motion.span>
             <span className="text-xs text-purple-400 uppercase tracking-wider">Wall</span>
           </motion.button>
+          
+          <motion.button
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 1.7 }}
+            onClick={() => setShowArchitectDashboard(true)}
+            className="px-3 py-2 rounded-xl flex items-center gap-2"
+            style={{
+              background: "rgba(0, 255, 255, 0.2)",
+              border: "1px solid rgba(0, 255, 255, 0.4)",
+              backdropFilter: "blur(10px)",
+            }}
+            whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(0, 255, 255, 0.3)" }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <motion.span
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 1.313, repeat: Infinity }}
+            >
+              🛡️
+            </motion.span>
+            <span className="text-xs text-cyan-400 uppercase tracking-wider">Shields</span>
+          </motion.button>
         </div>
       )}
-
-      {/* ═══════════ PORTAL TRANSITION OVERLAY ═══════════ */}
-      <PortalTransition
-        isActive={showPortal}
-        onComplete={handlePortalComplete}
-        destinationName={portalDestination}
-        color="#e879f9"
-      />
     </div>
   );
 }

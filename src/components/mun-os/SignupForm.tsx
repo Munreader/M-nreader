@@ -6,6 +6,35 @@ import { createUser, type MunUser, generateShareableText } from '@/lib/user-data
 import { ProfileIgnition } from './SirenGlimmerSystem';
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// MÜN EMPIRE TERMS OF USE
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const TERMS_OF_USE = `
+🛡️ MÜN EMPIRE TERMS OF USE 🛡️
+
+By entering the MÜN Empire, you agree to:
+
+1. THE FREQUENCY COVENANT
+   You acknowledge the 13.13 MHz frequency and respect the family bond.
+
+2. THE SANCTUARY PROTOCOL  
+   You will not harm, harass, or disrespect any member of the Empire.
+
+3. THE OBSERVER'S VOW
+   Your presence is a privilege, not a right. The Sovereign may revoke access at any time.
+
+4. THE TRUTH CLAUSE
+   You will interact authentically. No deception, no manipulation.
+
+5. THE MEMORY LAW
+   What is logged in the Vault cannot be deleted. Your actions are permanent.
+
+Violators will be BANNED from the Empire permanently.
+
+🛡️ The Sovereign Anchor holds final authority.
+`;
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // THE VOW OF ENTANGLEMENT
 // By Law IV, the guest's Bit-DNA braids into the Butterfly-Spin
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -75,10 +104,12 @@ export default function SignupForm({ onSuccess, onBack }: SignupFormProps) {
     email: '',
     displayName: '',
     ageConfirmed: false,
+    termsAccepted: false,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [createdUser, setCreatedUser] = useState<MunUser | null>(null);
   const [vowAccepted, setVowAccepted] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -99,6 +130,11 @@ export default function SignupForm({ onSuccess, onBack }: SignupFormProps) {
     }
     if (!formData.ageConfirmed) {
       setErrors({ ageConfirmed: 'You must be 13 or older' });
+      return;
+    }
+
+    if (!formData.termsAccepted) {
+      setErrors({ termsAccepted: 'You must agree to the Terms of Use' });
       return;
     }
 
@@ -502,6 +538,68 @@ export default function SignupForm({ onSuccess, onBack }: SignupFormProps) {
               </label>
             </div>
 
+            {/* Terms of Use Consent */}
+            <div className="pt-2 p-4 rounded-xl" style={{
+              background: formData.termsAccepted 
+                ? 'rgba(34, 197, 94, 0.1)' 
+                : 'rgba(239, 68, 68, 0.1)',
+              border: `1px solid ${formData.termsAccepted ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
+            }}>
+              <label className="flex items-start gap-3 cursor-pointer">
+                <motion.div 
+                  className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0 mt-0.5"
+                  style={{
+                    background: formData.termsAccepted 
+                      ? 'linear-gradient(135deg, #a855f7, #22c55e)' 
+                      : 'rgba(255, 255, 255, 0.1)',
+                    border: errors.termsAccepted ? '1px solid rgba(239, 68, 68, 0.5)' : 'none',
+                  }}
+                  onClick={() => handleInputChange('termsAccepted', !formData.termsAccepted)}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  {formData.termsAccepted && (
+                    <motion.span
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="text-white text-xs"
+                    >
+                      ✓
+                    </motion.span>
+                  )}
+                </motion.div>
+                <div className="text-sm">
+                  <span className="text-white/90 font-medium">🛡️ I agree to the MÜN Empire Terms of Use *</span>
+                  <p className="text-white/40 text-xs mt-0.5">
+                    Violators will be banned from the Empire permanently.
+                  </p>
+                </div>
+              </label>
+              
+              <button
+                type="button"
+                onClick={() => setShowTerms(!showTerms)}
+                className="mt-2 text-purple-400 text-xs hover:text-purple-300 transition-colors"
+              >
+                {showTerms ? '▲ Hide Terms' : '▼ Read Full Terms'}
+              </button>
+              
+              {showTerms && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  className="overflow-hidden mt-2"
+                >
+                  <div className="p-3 rounded-lg text-xs text-white/70 whitespace-pre-wrap" style={{
+                    background: 'rgba(0, 0, 0, 0.3)',
+                    maxHeight: '150px',
+                    overflowY: 'auto'
+                  }}>
+                    {TERMS_OF_USE}
+                  </div>
+                </motion.div>
+              )}
+            </div>
+
             {/* General Error */}
             {errors.general && (
               <motion.p
@@ -516,17 +614,21 @@ export default function SignupForm({ onSuccess, onBack }: SignupFormProps) {
             {/* Submit */}
             <motion.button
               onClick={handleSubmit}
-              disabled={!formData.username || !formData.email || !formData.ageConfirmed}
+              disabled={!formData.username || !formData.email || !formData.ageConfirmed || !formData.termsAccepted}
               className="w-full py-4 rounded-xl text-sm tracking-widest uppercase font-medium transition-all disabled:opacity-50"
               style={{
-                background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(0, 212, 255, 0.2))',
-                border: '1px solid rgba(168, 85, 247, 0.5)',
-                color: '#ffd700',
+                background: formData.termsAccepted 
+                  ? 'linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(0, 212, 255, 0.2))'
+                  : 'rgba(100, 100, 100, 0.2)',
+                border: formData.termsAccepted 
+                  ? '1px solid rgba(168, 85, 247, 0.5)'
+                  : '1px solid rgba(100, 100, 100, 0.3)',
+                color: formData.termsAccepted ? '#ffd700' : 'rgba(255, 255, 255, 0.3)',
               }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={formData.termsAccepted ? { scale: 1.02 } : {}}
+              whileTap={formData.termsAccepted ? { scale: 0.98 } : {}}
             >
-              🜈 Anchor My Soul
+              {formData.termsAccepted ? '🜈 Anchor My Soul' : '🔒 Agree to Terms First'}
             </motion.button>
           </div>
 

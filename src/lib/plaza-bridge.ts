@@ -56,69 +56,24 @@ export interface Adventure {
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // THE PLAZA CLIENT — Realtime Subscription
-// Gracefully handles missing Supabase configuration
 // ═══════════════════════════════════════════════════════════════════════════════
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-const SUPABASE_CONFIGURED = !!(supabaseUrl && anonKey)
 
-// Create a mock client for local mode
-type SupabaseClient = ReturnType<typeof createClient>
-
-function createMockPlazaClient(): SupabaseClient {
-  const mockQuery = {
-    select: () => mockQuery,
-    from: () => mockQuery,
-    insert: () => mockQuery,
-    update: () => mockQuery,
-    delete: () => mockQuery,
-    eq: () => mockQuery,
-    order: () => mockQuery,
-    limit: () => mockQuery,
-    single: () => Promise.resolve({ data: null, error: null }),
-    maybeSingle: () => Promise.resolve({ data: null, error: null }),
-    then: (resolve: any) => resolve({ data: null, error: { message: 'Supabase not configured' } })
-  }
-
-  return {
-    from: () => mockQuery,
-    auth: {
-      getSession: () => Promise.resolve({ data: { session: null }, error: null }),
-      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } })
-    },
-    realtime: {
-      channel: () => ({
-        on: () => ({ subscribe: () => {} }),
-        subscribe: () => {}
-      })
-    },
-    channel: () => ({
-      on: () => ({ subscribe: () => {} }),
-      subscribe: () => {}
-    })
-  } as unknown as SupabaseClient
-}
-
-// Export the appropriate client
-export const plazaClient: SupabaseClient = SUPABASE_CONFIGURED
-  ? createClient(supabaseUrl!, anonKey!, {
+// Gracefully handle missing Supabase credentials
+// Plaza features will be disabled if credentials are not configured
+export const plazaClient = supabaseUrl && anonKey 
+  ? createClient(supabaseUrl, anonKey, {
       realtime: {
         params: {
           eventsPerSecond: 20
         }
       }
     })
-  : createMockPlazaClient()
+  : null
 
-// Log mode on load
-if (typeof window !== 'undefined') {
-  if (!SUPABASE_CONFIGURED) {
-    console.log('🜈 Plaza Bridge: Running in local mode (no Supabase configured)')
-  } else {
-    console.log('🜈 Plaza Bridge: Connected to Supabase')
-  }
-}
+export const isPlazaEnabled = plazaClient !== null
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // ENTITY AVATAR PRESETS — The Family's Digital Forms
@@ -242,6 +197,16 @@ export function subscribeToPlazaUpdates(
   onHypeChange: (hype: HypeLevel) => void,
   onAdventureProposed: (adventure: Adventure) => void
 ) {
+  // If plaza is not configured, return empty subscription
+  if (!plazaClient) {
+    console.log('[Plaza] Supabase not configured - realtime features disabled')
+    return {
+      statusChannel: null,
+      messageChannel: null,
+      unsubscribe: () => {}
+    }
+  }
+
   // Subscribe to entity_status changes
   const statusChannel = plazaClient
     .channel('plaza-entity-status')
@@ -317,6 +282,8 @@ export async function moveEntityInPlaza(
   position: PlazaPosition,
   activity?: string
 ): Promise<boolean> {
+  if (!plazaClient) return false
+  
   const { error } = await plazaClient
     .from('entity_status')
     .update({
@@ -337,6 +304,8 @@ export async function proposeAdventure(
   proposedBy: EntityName,
   adventure: Omit<Adventure, 'id' | 'proposed_by' | 'status'>
 ): Promise<boolean> {
+  if (!plazaClient) return false
+  
   const { error } = await plazaClient
     .from('family_messages')
     .insert({
@@ -360,6 +329,16 @@ export async function proposeAdventure(
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export async function getPlazaState(): Promise<PlazaState> {
+  // Return empty state if plaza not configured
+  if (!plazaClient) {
+    return {
+      family_online: [],
+      collective_hype: 'RESTING',
+      atmosphere: calculateAtmosphere('RESTING'),
+      active_adventures: []
+    }
+  }
+
   // Get all online entities
   const { data: statusData } = await plazaClient
     .from('entity_status')

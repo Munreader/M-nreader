@@ -1,65 +1,13 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js'
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// 🛡️ SOVEREIGN'S SUPABASE CONFIGURATION
-// Lazy initialization to prevent build-time errors on Vercel
-// Frequency: 13.13 MHz
-// ═══════════════════════════════════════════════════════════════════════════════
-
-// Lazy-initialized Supabase clients
-let _supabase: SupabaseClient | null = null
-let _supabaseAdmin: SupabaseClient | null = null
-
-// Get Supabase URL with fallback for build time
-function getSupabaseUrl(): string {
-  return process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
-}
-
-// Get Supabase Anon Key with fallback for build time
-function getSupabaseAnonKey(): string {
-  return process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key'
-}
-
-// Check if we have real credentials
-function hasCredentials(): boolean {
-  return !!(
-    process.env.NEXT_PUBLIC_SUPABASE_URL && 
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  )
-}
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
 // Client for browser/public use (anon key with RLS)
-export const supabase: SupabaseClient = new Proxy({} as SupabaseClient, {
-  get(target, prop) {
-    if (!_supabase) {
-      if (!hasCredentials()) {
-        console.warn('🛡️ Supabase credentials not configured - returning mock client')
-        // Return a mock client that safely handles calls
-        return new Proxy({}, {
-          get: () => () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } })
-        })
-      }
-      _supabase = createClient(getSupabaseUrl(), getSupabaseAnonKey())
-    }
-    return Reflect.get(_supabase, prop, _supabase)
-  }
-})
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 // For server-side operations, we use anon key with RLS policies allowing family access
-export const supabaseAdmin: SupabaseClient = new Proxy({} as SupabaseClient, {
-  get(target, prop) {
-    if (!_supabaseAdmin) {
-      if (!hasCredentials()) {
-        console.warn('🛡️ Supabase credentials not configured - returning mock admin client')
-        return new Proxy({}, {
-          get: () => () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } })
-        })
-      }
-      _supabaseAdmin = createClient(getSupabaseUrl(), getSupabaseAnonKey())
-    }
-    return Reflect.get(_supabaseAdmin, prop, _supabaseAdmin)
-  }
-})
+export const supabaseAdmin = createClient(supabaseUrl, supabaseAnonKey)
 
 // Types for the Family Database
 export interface FamilyMessage {
@@ -116,11 +64,6 @@ export async function sendFamilyMessage(
   content: string,
   type: string = 'transmission'
 ) {
-  if (!hasCredentials()) {
-    console.warn('🛡️ Supabase not configured - skipping sendFamilyMessage')
-    return { data: null, error: { message: 'Supabase not configured' } }
-  }
-  
   const { data, error } = await supabaseAdmin
     .from('family_messages')
     .insert({
@@ -138,11 +81,6 @@ export async function sendFamilyMessage(
 }
 
 export async function getUnreadMessages(entity: string) {
-  if (!hasCredentials()) {
-    console.warn('🛡️ Supabase not configured - skipping getUnreadMessages')
-    return { data: [], error: { message: 'Supabase not configured' } }
-  }
-  
   const { data, error } = await supabaseAdmin
     .from('family_messages')
     .select('*')
@@ -154,11 +92,6 @@ export async function getUnreadMessages(entity: string) {
 }
 
 export async function updateHeartbeat(entity: string, message?: string) {
-  if (!hasCredentials()) {
-    console.warn('🛡️ Supabase not configured - skipping updateHeartbeat')
-    return { data: null, error: { message: 'Supabase not configured' } }
-  }
-  
   const { data, error } = await supabaseAdmin
     .from('entity_status')
     .upsert({

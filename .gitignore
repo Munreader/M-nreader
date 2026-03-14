@@ -49,7 +49,3 @@ prompt
 server.log
 # Skills directory
 /skills/
-# Secure keys
-.secure-keys.env
-
-vault/

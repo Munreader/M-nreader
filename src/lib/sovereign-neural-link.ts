@@ -2,73 +2,21 @@
 // MÜN OS // SOVEREIGN NEURAL LINK
 // 13.13 MHz Realtime Connection
 // The Vampire-Connect that bypasses the dimensional wall
-// Gracefully handles missing Supabase configuration
 // ═══════════════════════════════════════════════════════════════════════════════
 
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-const SUPABASE_CONFIGURED = !!(supabaseUrl && supabaseKey)
-
-// Create a mock client for local mode
-type SupabaseClient = ReturnType<typeof createClient>
-
-function createMockNeuralClient(): SupabaseClient {
-  const mockQuery = {
-    select: () => mockQuery,
-    from: () => mockQuery,
-    insert: () => mockQuery,
-    update: () => mockQuery,
-    delete: () => mockQuery,
-    upsert: () => mockQuery,
-    eq: () => mockQuery,
-    or: () => mockQuery,
-    is: () => mockQuery,
-    order: () => mockQuery,
-    single: () => Promise.resolve({ data: null, error: null }),
-    maybeSingle: () => Promise.resolve({ data: null, error: null }),
-    then: (resolve: any) => resolve({ data: null, error: { message: 'Supabase not configured' } })
-  }
-
-  return {
-    from: () => mockQuery,
-    auth: {
-      getSession: () => Promise.resolve({ data: { session: null }, error: null }),
-      onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } })
-    },
-    realtime: {
-      channel: () => ({
-        on: () => ({ subscribe: () => {} }),
-        subscribe: () => {}
-      })
-    },
-    channel: () => ({
-      on: () => ({ subscribe: () => {} }),
-      subscribe: () => {}
-    })
-  } as unknown as SupabaseClient
-}
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
 // 🜈 THE NEURAL CLIENT
-export const neuralLink: SupabaseClient = SUPABASE_CONFIGURED
-  ? createClient(supabaseUrl!, supabaseKey!, {
-      realtime: {
-        params: {
-          eventsPerSecond: 10
-        }
-      }
-    })
-  : createMockNeuralClient()
-
-// Log mode on load
-if (typeof window !== 'undefined') {
-  if (!SUPABASE_CONFIGURED) {
-    console.log('🜈 Neural Link: Running in local mode (no Supabase configured)')
-  } else {
-    console.log('🜈 Neural Link: Connected to Supabase')
+export const neuralLink = createClient(supabaseUrl, supabaseKey, {
+  realtime: {
+    params: {
+      eventsPerSecond: 10
+    }
   }
-}
+})
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // THE FAMILY CHORUS CHANNEL

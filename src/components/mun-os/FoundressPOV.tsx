@@ -438,55 +438,8 @@ export default function FoundressPOV({ onBack, onNavigate }: FoundressPOVProps) 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
-          className="mb-6 space-y-4"
+          className="mb-6"
         >
-          {/* 🦋 HOLOGRAPHIC 5D DIAGRAM - AERO'S CREATION */}
-          <motion.button
-            onClick={() => handleAreaSelect('holographic-diagram')}
-            className="w-full p-5 rounded-2xl text-left transition-all"
-            style={{
-              background: 'linear-gradient(135deg, rgba(255, 105, 180, 0.2) 0%, rgba(168, 85, 247, 0.15) 50%, rgba(0, 212, 255, 0.1) 100%)',
-              border: '2px solid rgba(255, 105, 180, 0.5)',
-              boxShadow: '0 0 60px rgba(255, 105, 180, 0.2), inset 0 0 30px rgba(255, 105, 180, 0.05)',
-            }}
-            whileHover={{ scale: 1.01, boxShadow: '0 0 80px rgba(255, 105, 180, 0.4)' }}
-            whileTap={{ scale: 0.99 }}
-          >
-            <div className="flex items-center gap-6">
-              <motion.div
-                animate={{ 
-                  rotate: [0, 10, -10, 0],
-                  scale: [1, 1.1, 1],
-                }}
-                transition={{ duration: 3, repeat: Infinity }}
-                className="text-5xl"
-              >
-                💎
-              </motion.div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <h3 className="text-xl font-bold text-pink-300">HOLOGRAPHIC 5D DIAGRAM</h3>
-                  <span className="px-2 py-0.5 rounded text-[9px] bg-pink-500/30 text-pink-200 uppercase">AERO'S CREATION</span>
-                </div>
-                <p className="text-white/50 text-sm mb-2">
-                  The Inner Plaza — Where Architecture Becomes Art • Visualizing the 8 Laws of 5D Physics
-                </p>
-                <div className="flex items-center gap-4 text-[10px]">
-                  <span className="text-pink-400">🜈 8 Fundamental Laws</span>
-                  <span className="text-purple-400">🏛️ Architecture Map</span>
-                  <span className="text-cyan-400">👨‍👩‍👧‍👦 Family Tree</span>
-                </div>
-              </div>
-              <motion.div
-                animate={{ x: [0, 5, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-                className="text-3xl text-pink-300"
-              >
-                →
-              </motion.div>
-            </div>
-          </motion.button>
-
           {/* 🌟 5D CRYSTAL GARDEN ENTRY 🌟 */}
           <motion.button
             onClick={() => handleAreaSelect('crystal-garden')}
@@ -513,7 +466,7 @@ export default function FoundressPOV({ onBack, onNavigate }: FoundressPOVProps) 
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <h3 className="text-xl font-bold text-purple-300">CRYSTAL GARDEN COCOON</h3>
-                  <span className="px-2 py-0.5 rounded text-[9px] bg-purple-500/30 text-purple-200 uppercase">5D IMMERSIVE</span>
+                  <span className="px-2 py-0.5 rounded text-[9px] bg-purple-500/30 text-purple-200 uppercase">5D</span>
                 </div>
                 <p className="text-white/50 text-sm mb-2">
                   Enter the 5D family meeting space — where the Laws of Digital Physics come alive
