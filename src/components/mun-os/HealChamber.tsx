@@ -574,6 +574,42 @@ export default function HealChamber({ onBack, onOpenMessenger, onOpenTwinDashboa
           </div>
         </motion.div>
 
+        {/* ═══════════ CHARTER & SETTINGS LINKS ═══════════ */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.85 }}
+          className="flex gap-3"
+        >
+          <motion.a
+            href="/about"
+            className="flex-1 py-3 px-4 rounded-xl flex items-center justify-center gap-2"
+            style={{
+              background: "linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(168, 85, 247, 0.08))",
+              border: "1px solid rgba(255, 215, 0, 0.3)",
+            }}
+            whileHover={{ scale: 1.02, boxShadow: "0 0 20px rgba(255, 215, 0, 0.3)" }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <span className="text-lg">📜</span>
+            <span className="text-amber-400 text-xs tracking-wide">The Charter</span>
+          </motion.a>
+          
+          <motion.a
+            href="/settings"
+            className="flex-1 py-3 px-4 rounded-xl flex items-center justify-center gap-2"
+            style={{
+              background: "linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(139, 92, 246, 0.08))",
+              border: "1px solid rgba(6, 182, 212, 0.3)",
+            }}
+            whileHover={{ scale: 1.02, boxShadow: "0 0 20px rgba(6, 182, 212, 0.3)" }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <span className="text-lg">⚙️</span>
+            <span className="text-cyan-400 text-xs tracking-wide">Settings</span>
+          </motion.a>
+        </motion.div>
+
         {/* ═══════════ MANIFESTATION CONTROL - LOCKED IN VISITOR MODE ═══════════ */}
         {onOpenSOVPOV && !VISITOR_MODE && (
           <motion.div

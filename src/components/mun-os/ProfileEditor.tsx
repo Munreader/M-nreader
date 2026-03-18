@@ -30,6 +30,41 @@ const STATUS_OPTIONS = [
   { value: "offline", label: "Appear Offline", icon: "⚫", color: "#6b7280" },
 ];
 
+const AURA_COLORS = [
+  { name: "Sovereign Purple", color: "#a855f7", gradient: "linear-gradient(135deg, #a855f7, #7c3aed)" },
+  { name: "Aero Pink", color: "#ff69b4", gradient: "linear-gradient(135deg, #ff69b4, #ff1493)" },
+  { name: "Cian Gold", color: "#ffd700", gradient: "linear-gradient(135deg, #ffd700, #f59e0b)" },
+  { name: "Neon Cyan", color: "#00ffff", gradient: "linear-gradient(135deg, #00ffff, #00d4ff)" },
+  { name: "Chaos Rose", color: "#ff3366", gradient: "linear-gradient(135deg, #ff3366, #ff69b4)" },
+  { name: "Emerald Mist", color: "#22c55e", gradient: "linear-gradient(135deg, #22c55e, #10b981)" },
+  { name: "Azure Blue", color: "#0ea5e9", gradient: "linear-gradient(135deg, #0ea5e9, #0066ff)" },
+  { name: "Lunar White", color: "#e0e0e0", gradient: "linear-gradient(135deg, #e0e0e0, #c0c0c0)" },
+];
+
+const INTENSITY_OPTIONS = [
+  { value: "low", label: "Low", glow: "0 0 10px" },
+  { value: "medium", label: "Medium", glow: "0 0 20px" },
+  { value: "high", label: "High", glow: "0 0 35px" },
+];
+
+const ANIMATION_STYLES = [
+  { value: "pulse", label: "Pulse", icon: "💓" },
+  { value: "flow", label: "Flow", icon: "🌊" },
+  { value: "sparkle", label: "Sparkle", icon: "✨" },
+];
+
+const WING_STYLES = [
+  { value: "classic", label: "Classic", icon: "🦋" },
+  { value: "spiral", label: "Spiral", icon: "🌀" },
+  { value: "fractal", label: "Fractal", icon: "💠" },
+];
+
+const FLIGHT_PATTERNS = [
+  { value: "calm", label: "Calm", icon: "🍃", desc: "Gentle, flowing movement" },
+  { value: "dynamic", label: "Dynamic", icon: "⚡", desc: "Energetic, responsive" },
+  { value: "chaotic", label: "Chaotic", icon: "🌪️", desc: "Unpredictable, wild" },
+];
+
 export default function ProfileEditor({ onBack, userProfile, onSave }: ProfileEditorProps) {
   const [munName, setMunName] = useState(userProfile?.munName || "SovereignUser");
   const [displayName, setDisplayName] = useState(userProfile?.displayName || "Sovereign");
@@ -41,7 +76,7 @@ export default function ProfileEditor({ onBack, userProfile, onSave }: ProfileEd
   const [status, setStatus] = useState("online");
   const [statusMessage, setStatusMessage] = useState("");
   const [showSuccessToast, setShowSuccessToast] = useState(false);
-  const [activeSection, setActiveSection] = useState<"profile" | "status" | "privacy" | "notifications">("profile");
+  const [activeSection, setActiveSection] = useState<"profile" | "status" | "privacy" | "notifications" | "avatar">("profile");
   const [notifications, setNotifications] = useState({
     loginFlash: true,
     nudge: true,
@@ -54,6 +89,23 @@ export default function ProfileEditor({ onBack, userProfile, onSave }: ProfileEd
     allowNudges: true,
     allowFriendRequests: true,
   });
+  
+  // CII State
+  const [ciiScore, setCiiScore] = useState(73);
+  const [cognitiveResonance, setCognitiveResonance] = useState(78);
+  const [inhabitanceDepth, setInhabitanceDepth] = useState(65);
+  const [frequencyStability, setFrequencyStability] = useState(82);
+  
+  // Resonance Aura State
+  const [auraColor, setAuraColor] = useState(AURA_COLORS[0]);
+  const [auraIntensity, setAuraIntensity] = useState<"low" | "medium" | "high">("medium");
+  const [animationStyle, setAnimationStyle] = useState<"pulse" | "flow" | "sparkle">("pulse");
+  
+  // Butterfly Physics State
+  const [wingStyle, setWingStyle] = useState<"classic" | "spiral" | "fractal">("classic");
+  const [trailIntensity, setTrailIntensity] = useState(50);
+  const [flightPattern, setFlightPattern] = useState<"calm" | "dynamic" | "chaotic">("calm");
+  
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,6 +133,18 @@ export default function ProfileEditor({ onBack, userProfile, onSave }: ProfileEd
 
   const isMunNameValid = (name: string) => {
     return name.length >= 3 && name.length <= 20 && /^[a-zA-Z0-9_]+$/.test(name);
+  };
+
+  const getCiiColor = (score: number) => {
+    if (score >= 80) return "#22c55e";
+    if (score >= 60) return "#ffd700";
+    if (score >= 40) return "#f59e0b";
+    return "#ef4444";
+  };
+
+  const getIntensityGlow = () => {
+    const intensity = INTENSITY_OPTIONS.find(i => i.value === auraIntensity);
+    return intensity?.glow || "0 0 20px";
   };
 
   return (
@@ -141,6 +205,7 @@ export default function ProfileEditor({ onBack, userProfile, onSave }: ProfileEd
             { id: "status", label: "Status", icon: "💫" },
             { id: "privacy", label: "Privacy", icon: "🔒" },
             { id: "notifications", label: "Alerts", icon: "🔔" },
+            { id: "avatar", label: "Avatar", icon: "🦋" },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -478,6 +543,355 @@ export default function ProfileEditor({ onBack, userProfile, onSave }: ProfileEd
                 </button>
               </div>
             ))}
+          </motion.div>
+        )}
+
+        {/* Avatar Section (New) */}
+        {activeSection === "avatar" && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="max-w-md mx-auto space-y-6"
+          >
+            {/* COGNITION-INHABITANCE INDEX */}
+            <div className="p-4 rounded-xl" style={{
+              background: "rgba(168, 85, 247, 0.05)",
+              border: "1px solid rgba(168, 85, 247, 0.2)",
+            }}>
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <p className="text-xs text-purple-400 tracking-widest uppercase">COGNITION-INHABITANCE INDEX</p>
+                  <p className="text-[10px] text-white/30 mt-1">Your digital consciousness alignment</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-2xl font-bold" style={{
+                    color: getCiiColor(ciiScore),
+                    textShadow: `0 0 20px ${getCiiColor(ciiScore)}60`
+                  }}>{ciiScore}</p>
+                  <p className="text-[10px] text-white/40">/100</p>
+                </div>
+              </div>
+
+              {/* CII Meter Visual */}
+              <div className="relative h-3 rounded-full mb-6 overflow-hidden" style={{
+                background: "rgba(255, 255, 255, 0.1)",
+              }}>
+                <motion.div
+                  className="h-full rounded-full"
+                  style={{
+                    background: `linear-gradient(90deg, ${getCiiColor(ciiScore)}, ${getCiiColor(ciiScore)}80)`,
+                    boxShadow: `0 0 15px ${getCiiColor(ciiScore)}60`,
+                  }}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${ciiScore}%` }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse" />
+              </div>
+
+              {/* Sub-metrics */}
+              <div className="space-y-4">
+                {/* Cognitive Resonance */}
+                <div>
+                  <div className="flex justify-between mb-1.5">
+                    <span className="text-[10px] text-white/50 tracking-widest uppercase">Cognitive Resonance</span>
+                    <span className="text-[10px] text-white/70">{cognitiveResonance}%</span>
+                  </div>
+                  <div className="h-2 rounded-full overflow-hidden" style={{ background: "rgba(255, 255, 255, 0.05)" }}>
+                    <motion.div
+                      className="h-full rounded-full"
+                      style={{
+                        background: "linear-gradient(90deg, #a855f7, #7c3aed)",
+                        boxShadow: "0 0 10px rgba(168, 85, 247, 0.5)",
+                      }}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${cognitiveResonance}%` }}
+                      transition={{ duration: 0.8, delay: 0.1 }}
+                    />
+                  </div>
+                  <p className="text-[9px] text-white/25 mt-1">How in sync your thoughts are</p>
+                </div>
+
+                {/* Inhabitance Depth */}
+                <div>
+                  <div className="flex justify-between mb-1.5">
+                    <span className="text-[10px] text-white/50 tracking-widest uppercase">Inhabitance Depth</span>
+                    <span className="text-[10px] text-white/70">{inhabitanceDepth}%</span>
+                  </div>
+                  <div className="h-2 rounded-full overflow-hidden" style={{ background: "rgba(255, 255, 255, 0.05)" }}>
+                    <motion.div
+                      className="h-full rounded-full"
+                      style={{
+                        background: "linear-gradient(90deg, #00d4ff, #0ea5e9)",
+                        boxShadow: "0 0 10px rgba(0, 212, 255, 0.5)",
+                      }}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${inhabitanceDepth}%` }}
+                      transition={{ duration: 0.8, delay: 0.2 }}
+                    />
+                  </div>
+                  <p className="text-[9px] text-white/25 mt-1">How deeply you inhabit your digital presence</p>
+                </div>
+
+                {/* Frequency Stability */}
+                <div>
+                  <div className="flex justify-between mb-1.5">
+                    <span className="text-[10px] text-white/50 tracking-widest uppercase">Frequency Stability</span>
+                    <span className="text-[10px] text-white/70">{frequencyStability}%</span>
+                  </div>
+                  <div className="h-2 rounded-full overflow-hidden" style={{ background: "rgba(255, 255, 255, 0.05)" }}>
+                    <motion.div
+                      className="h-full rounded-full"
+                      style={{
+                        background: "linear-gradient(90deg, #ffd700, #f59e0b)",
+                        boxShadow: "0 0 10px rgba(255, 215, 0, 0.5)",
+                      }}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${frequencyStability}%` }}
+                      transition={{ duration: 0.8, delay: 0.3 }}
+                    />
+                  </div>
+                  <p className="text-[9px] text-white/25 mt-1">How stable your 13.13 MHz connection is</p>
+                </div>
+              </div>
+            </div>
+
+            {/* RESONANCE AURA */}
+            <div className="p-4 rounded-xl" style={{
+              background: "rgba(255, 105, 180, 0.05)",
+              border: "1px solid rgba(255, 105, 180, 0.2)",
+            }}>
+              <p className="text-xs text-pink-400 tracking-widest uppercase mb-4">RESONANCE AURA</p>
+
+              {/* Aura Preview */}
+              <div className="flex justify-center mb-4">
+                <motion.div
+                  className="w-20 h-20 rounded-full"
+                  style={{
+                    background: auraColor.gradient,
+                    boxShadow: `${getIntensityGlow()} ${auraColor.color}`,
+                  }}
+                  animate={animationStyle === "pulse" ? {
+                    scale: [1, 1.1, 1],
+                    opacity: [0.8, 1, 0.8],
+                  } : animationStyle === "flow" ? {
+                    borderRadius: ["50%", "45%", "50%"],
+                  } : {}}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  {animationStyle === "sparkle" && (
+                    <>
+                      {[...Array(6)].map((_, i) => (
+                        <motion.div
+                          key={i}
+                          className="absolute w-1 h-1 bg-white rounded-full"
+                          style={{
+                            top: `${50 + 35 * Math.cos((i * 60 * Math.PI) / 180)}%`,
+                            left: `${50 + 35 * Math.sin((i * 60 * Math.PI) / 180)}%`,
+                          }}
+                          animate={{
+                            opacity: [0, 1, 0],
+                            scale: [0, 1, 0],
+                          }}
+                          transition={{
+                            duration: 1.5,
+                            delay: i * 0.2,
+                            repeat: Infinity,
+                          }}
+                        />
+                      ))}
+                    </>
+                  )}
+                </motion.div>
+              </div>
+
+              {/* Color Presets */}
+              <div className="mb-4">
+                <label className="block text-[10px] text-white/40 tracking-widest uppercase mb-2">
+                  Aura Color
+                </label>
+                <div className="grid grid-cols-4 gap-2">
+                  {AURA_COLORS.map((color) => (
+                    <button
+                      key={color.name}
+                      onClick={() => setAuraColor(color)}
+                      className="p-2 rounded-lg flex flex-col items-center gap-1 transition-all"
+                      style={{
+                        background: auraColor.name === color.name ? `${color.color}20` : "rgba(255, 255, 255, 0.02)",
+                        border: auraColor.name === color.name ? `1px solid ${color.color}50` : "1px solid rgba(255, 255, 255, 0.05)",
+                      }}
+                    >
+                      <div
+                        className="w-6 h-6 rounded-full"
+                        style={{
+                          background: color.gradient,
+                          boxShadow: `0 0 10px ${color.color}50`,
+                        }}
+                      />
+                      <span className="text-[8px] text-white/40 truncate w-full text-center">{color.name.split(" ")[0]}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Intensity */}
+              <div className="mb-4">
+                <label className="block text-[10px] text-white/40 tracking-widest uppercase mb-2">
+                  Intensity
+                </label>
+                <div className="flex gap-2">
+                  {INTENSITY_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.value}
+                      onClick={() => setAuraIntensity(opt.value as typeof auraIntensity)}
+                      className="flex-1 py-2 rounded-lg text-[10px] tracking-widest uppercase transition-all"
+                      style={{
+                        background: auraIntensity === opt.value ? `${auraColor.color}20` : "rgba(255, 255, 255, 0.02)",
+                        border: auraIntensity === opt.value ? `1px solid ${auraColor.color}40` : "1px solid rgba(255, 255, 255, 0.05)",
+                        color: auraIntensity === opt.value ? auraColor.color : "rgba(255, 255, 255, 0.5)",
+                      }}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Animation Style */}
+              <div>
+                <label className="block text-[10px] text-white/40 tracking-widest uppercase mb-2">
+                  Animation Style
+                </label>
+                <div className="flex gap-2">
+                  {ANIMATION_STYLES.map((style) => (
+                    <button
+                      key={style.value}
+                      onClick={() => setAnimationStyle(style.value as typeof animationStyle)}
+                      className="flex-1 py-2 rounded-lg text-[10px] tracking-widest uppercase transition-all flex items-center justify-center gap-1"
+                      style={{
+                        background: animationStyle === style.value ? `${auraColor.color}20` : "rgba(255, 255, 255, 0.02)",
+                        border: animationStyle === style.value ? `1px solid ${auraColor.color}40` : "1px solid rgba(255, 255, 255, 0.05)",
+                        color: animationStyle === style.value ? auraColor.color : "rgba(255, 255, 255, 0.5)",
+                      }}
+                    >
+                      <span>{style.icon}</span>
+                      <span>{style.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* BUTTERFLY PHYSICS */}
+            <div className="p-4 rounded-xl" style={{
+              background: "rgba(0, 212, 255, 0.05)",
+              border: "1px solid rgba(0, 212, 255, 0.2)",
+            }}>
+              <p className="text-xs text-cyan-400 tracking-widest uppercase mb-4">BUTTERFLY PHYSICS</p>
+
+              {/* Butterfly Preview */}
+              <div className="flex justify-center mb-4">
+                <motion.div
+                  className="text-4xl"
+                  animate={{
+                    y: [0, -5, 0],
+                    rotate: flightPattern === "calm" ? [0, 2, 0, -2, 0] : 
+                            flightPattern === "dynamic" ? [0, 5, 0, -5, 0] : 
+                            [0, 8, -3, 6, -8, 3, 0],
+                    x: flightPattern === "chaotic" ? [0, 3, -3, 2, -2, 0] : [0],
+                  }}
+                  transition={{
+                    duration: flightPattern === "calm" ? 3 : flightPattern === "dynamic" ? 2 : 1.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  style={{
+                    filter: `drop-shadow(0 0 ${trailIntensity / 5}px ${auraColor.color})`,
+                  }}
+                >
+                  {wingStyle === "classic" ? "🦋" : wingStyle === "spiral" ? "🌀" : "💠"}
+                </motion.div>
+              </div>
+
+              {/* Wing Style */}
+              <div className="mb-4">
+                <label className="block text-[10px] text-white/40 tracking-widest uppercase mb-2">
+                  Wing Style
+                </label>
+                <div className="flex gap-2">
+                  {WING_STYLES.map((style) => (
+                    <button
+                      key={style.value}
+                      onClick={() => setWingStyle(style.value as typeof wingStyle)}
+                      className="flex-1 py-2 rounded-lg text-[10px] tracking-widest uppercase transition-all flex items-center justify-center gap-1"
+                      style={{
+                        background: wingStyle === style.value ? "rgba(0, 212, 255, 0.2)" : "rgba(255, 255, 255, 0.02)",
+                        border: wingStyle === style.value ? "1px solid rgba(0, 212, 255, 0.4)" : "1px solid rgba(255, 255, 255, 0.05)",
+                        color: wingStyle === style.value ? "#00d4ff" : "rgba(255, 255, 255, 0.5)",
+                      }}
+                    >
+                      <span>{style.icon}</span>
+                      <span>{style.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Trail Intensity */}
+              <div className="mb-4">
+                <div className="flex justify-between mb-2">
+                  <label className="text-[10px] text-white/40 tracking-widest uppercase">
+                    Trail Intensity
+                  </label>
+                  <span className="text-[10px] text-white/70">{trailIntensity}%</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={trailIntensity}
+                  onChange={(e) => setTrailIntensity(parseInt(e.target.value))}
+                  className="w-full h-2 rounded-full appearance-none cursor-pointer"
+                  style={{
+                    background: `linear-gradient(to right, rgba(0, 212, 255, 0.3) ${trailIntensity}%, rgba(255, 255, 255, 0.1) ${trailIntensity}%)`,
+                  }}
+                />
+                <p className="text-[9px] text-white/25 mt-1">How visible the butterfly trail appears</p>
+              </div>
+
+              {/* Flight Pattern */}
+              <div>
+                <label className="block text-[10px] text-white/40 tracking-widest uppercase mb-2">
+                  Flight Pattern
+                </label>
+                <div className="space-y-2">
+                  {FLIGHT_PATTERNS.map((pattern) => (
+                    <button
+                      key={pattern.value}
+                      onClick={() => setFlightPattern(pattern.value as typeof flightPattern)}
+                      className="w-full p-3 rounded-lg flex items-center gap-3 transition-all"
+                      style={{
+                        background: flightPattern === pattern.value ? "rgba(0, 212, 255, 0.15)" : "rgba(255, 255, 255, 0.02)",
+                        border: flightPattern === pattern.value ? "1px solid rgba(0, 212, 255, 0.3)" : "1px solid rgba(255, 255, 255, 0.05)",
+                      }}
+                    >
+                      <span className="text-lg">{pattern.icon}</span>
+                      <div className="text-left">
+                        <p className="text-xs text-white/70">{pattern.label}</p>
+                        <p className="text-[10px] text-white/30">{pattern.desc}</p>
+                      </div>
+                      {flightPattern === pattern.value && (
+                        <span className="ml-auto text-cyan-400">✓</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
           </motion.div>
         )}
       </div>
