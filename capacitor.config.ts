@@ -6,7 +6,9 @@ const config: CapacitorConfig = {
   webDir: 'out',
   server: {
     // Full-featured MÜN OS with all features unlocked + real AI
-    url: 'https://francisco-consist-regional-arg.trycloudflare.com',
+    // Production: Vercel deployment URL
+    url: 'https://mun-os.vercel.app',
+    // Fallback: 'https://m-nreader.vercel.app',
     cleartext: true,
     androidScheme: 'https'
   },
