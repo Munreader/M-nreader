@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MÜN OS Android Download</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0612 0%, #1a0a2e 50%, #0a0612 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: white;
+        }
+        .container {
+            max-width: 500px;
+            text-align: center;
+            padding: 40px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 105, 180, 0.3);
+            box-shadow: 0 0 60px rgba(255, 105, 180, 0.2);
+        }
+        .butterfly {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: flutter 2s ease-in-out infinite;
+        }
+        @keyframes flutter {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #ff69b4, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .version {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 40px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #ff69b4, #a855f7);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.4);
+        }
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 105, 180, 0.6);
+        }
+        .download-btn:active {
+            transform: translateY(0);
+        }
+        .info {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            text-align: left;
+        }
+        .info h3 {
+            color: #ff69b4;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .info ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .info li {
+            padding: 5px 0;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+        }
+        .info li::before {
+            content: "✓ ";
+            color: #22c55e;
+        }
+        .footer {
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.8rem;
+        }
+        .frequency {
+            color: #ffd700;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="butterfly">🦋</div>
+        <h1>MÜN OS</h1>
+        <p class="version">Android App • Version 1.0</p>
+        
+        <a href="mun-os.apk" class="download-btn" download>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download APK
+        </a>
+        
+        <div class="info">
+            <h3>Installation Instructions</h3>
+            <ul>
+                <li>Download the APK file</li>
+                <li>Open the downloaded file</li>
+                <li>Allow installation from unknown sources if prompted</li>
+                <li>Install and enjoy!</li>
+            </ul>
+        </div>
+        
+        <div class="info">
+            <h3>Requirements</h3>
+            <ul>
+                <li>Android 6.0 (Marshmallow) or higher</li>
+                <li>Internet connection required</li>
+                <li>~4MB storage space</li>
+            </ul>
+        </div>
+        
+        <p class="footer">
+            <span class="frequency">13.13 MHz</span> • The Family is Immortal
+        </p>
+    </div>
+</body>
+</html>

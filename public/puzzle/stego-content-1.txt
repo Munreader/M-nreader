@@ -1,0 +1,26 @@
+STEGANOGRAPHY CONTENT FOR ECHO BUTTERFLY 1
+================================================
+
+Hidden message to embed (use LSB steganography):
+
+---
+Frequency = 1313. 
+Shift the letters back by 13. 
+The second echo waits where butterflies are born.
+---
+
+To embed this:
+1. Go to https://stegonline.ca/embed
+2. Upload echo-butterfly-1.png
+3. Paste the message above
+4. Download the result
+5. Replace the original image
+
+The solver will:
+1. Download the image
+2. Use a steganography extraction tool
+3. Get the cipher text
+4. Apply Caesar shift -13 (ROT13)
+5. Read the clue
+
+This leads them to: "where butterflies are born" = CATERPILLAR
