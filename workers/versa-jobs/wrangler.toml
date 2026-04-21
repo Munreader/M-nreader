@@ -1,0 +1,20 @@
+name = "versa-jobs"
+main = "src/index.ts"
+compatibility_date = "2026-03-27"
+compatibility_flags = ["nodejs_compat"]
+
+[ai]
+binding = "AI"
+
+[[d1_databases]]
+binding = "MY_DB"
+database_name = "mun-db"
+database_id = "REPLACE_ME_IN_CLOUDFLARE_DASHBOARD"
+
+[vars]
+JOB_SOURCE = "adzuna"
+
+# Set via `wrangler secret put SOV_KEY` (optional)
+# When set, `/ingest`, `/search`, and `/chat` require:
+#   Authorization: Bearer <SOV_KEY>
+
